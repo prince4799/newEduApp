@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "592476467897",
+    "project_id": "eduapp-fc3dc",
+    "storage_bucket": "eduapp-fc3dc.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:592476467897:android:0e1c84c5601b89fe652168",
+        "android_client_info": {
+          "package_name": "com.rahul"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "592476467897-c7or25g1qubpcjb5185sfke167vqt3ti.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDCyKRq8ekPNL49kSQbQajXd3sGXQ5ArdQ"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "592476467897-c7or25g1qubpcjb5185sfke167vqt3ti.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
