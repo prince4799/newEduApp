@@ -20,7 +20,8 @@ import {
   useWindowDimensions,
   TextInput,
   KeyboardAvoidingView,
-  Alert
+  Alert,
+  ImageBackground
 } from 'react-native';
 // import {
 //   Colors,
@@ -63,8 +64,11 @@ const SignUp = () => {
 
   return (
     <SafeAreaView style={styles.container}>
+            <ImageBackground style={{height:height,width:width,justifyContent:'center',alignItems:'center'}} resizeMode='cover' source={require("../../Assets/Images/gradient_bg.png")} >
 
-      <View style={{ ...styles.form(height, width), borderRadius: 10, elevation: 5,backgroundColor: COLORS.T_background }}>
+<ImageBackground style={{ ...styles.form(height, width), elevation:8 }} source={require("../../Assets/Images/half_bg.png")} >
+
+      <View style={{ ...styles.form(height, width),  }}>
         <ScrollView   style={{}}>
 
           <View style={{ alignSelf: 'center' }}>
@@ -118,6 +122,9 @@ const SignUp = () => {
         </ScrollView>
 
       </View>
+      </ImageBackground>
+      </ImageBackground>
+
     </SafeAreaView>
   );
 };
@@ -130,8 +137,8 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   form: (deviceHeight, deviceWidth) => ({
-    height: (deviceHeight / 10) * 9,
-    width: (deviceWidth / 10) * 9,
+    height: (deviceHeight / 10) * 8,
+    width: (deviceWidth / 10) * 8,
     backgroundColor: COLORS['T-Background']
 
   }),

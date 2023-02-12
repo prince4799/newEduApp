@@ -6,46 +6,70 @@
  * @flow strict-local
  */
 
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import { GoogleSignin } from '@react-native-google-signin/google-signin';
 
 import {
   Button,
+  Image,
+  ImageBackground,
+  KeyboardAvoidingView,
   SafeAreaView,
   ScrollView,
   StatusBar,
   StyleSheet,
-  Image,
   Text,
-  useColorScheme,
-  View,
   TouchableOpacity,
-  useWindowDimensions,
   TextInput,
-  KeyboardAvoidingView,
-  ImageBackground
+  useColorScheme,
+  useWindowDimensions,
+  View,
 } from 'react-native';
+import Animated from "react-native-reanimated";
+
 
 import { COLORS } from '../../Constants/Colors';
 // import * as FirebaseAuth from "../../Firebase/FirebaseAuth"
 // import { SignInUser } from '../../Firebase/FirebaseAuth';
 import {SignInUser,CreateNewUser} from '../../Firebase/FirebaseAuth'
 import * as firebaseDB from '../../Firebase/FirebaseDB';
-const Login = () => {
+const Login = ({navigation}) => {
 
   const { height, width, scale, fontScale } = useWindowDimensions()
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const portrait = (height / 10) * 5;
   const landscape = (height / 10) * 8
+  const rotateY = new Animated.Value(0);
+  // const AnimatedBackground = Animated.createAnimatedComponent(View);
+
+  const handleFlip = () => {
+    Animated.spring(rotateY, {
+      toValue:  1,
+      friction: 8,
+      tension: 10,
+      useNativeDriver:true
+    }).start();
+  };
+  const flipToFrontStyle = {
+    transform: [
+      {
+        rotateY: rotateY.interpolate({
+          inputRange: [0, 1],
+          outputRange: ['0deg', '180deg']
+        })
+      }
+    ]
+  };
+
 
   return (
     <SafeAreaView style={styles.container}>
-            <ImageBackground style={{height:height,width:width,justifyContent:'center',alignItems:'center'}} resizeMode='cover' source={require("../../Assets/Images/gradient_bg.png")} >
+            <ImageBackground style={{height:height,width:width,justifyContent:'center',alignItems:'center',}} resizeMode='cover' source={require("../../Assets/Images/gradient_bg.png")} >
+      <Animated.View style={{flipToFrontStyle}}>
+      <ImageBackground style={{ ...styles.form(height, width),}} source={require("../../Assets/Images/half_bg.png")} >
 
-      <ImageBackground style={{ ...styles.form(height, width), elevation:8 }} source={require("../../Assets/Images/half_bg.png")} >
-
-      <View style={{ ...styles.form(height, width), borderRadius: 10, }}>
+      <View style={{ ...styles.form(height, width), }}>
         <ScrollView style={{ height: (height / 10) * 8, }}>
 
           <View style={{ alignSelf: 'center' }}>
@@ -104,12 +128,15 @@ const Login = () => {
                   source={require('../../Assets/Images/google.png')} />
               </TouchableOpacity>
             </View>
+            
           </KeyboardAvoidingView>
         </ScrollView>
+          {/* <Text onPress={()=>flipToFrontStyle()} style={styles.link}>Create New Account.</Text> */}
 
       </View>
-
+                  <Text onPress={()=> navigation.navigate('SignUp')} style={[styles.link]}>Create  An Account</Text>
       </ImageBackground>
+      </Animated.View>
       </ImageBackground>
 
     </SafeAreaView>
@@ -122,12 +149,12 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
+
   },
   form: (deviceHeight, deviceWidth) => ({
     height: (deviceHeight / 10) * 8,
     width: (deviceWidth / 10) * 8,
     backgroundColor: COLORS['T-Background'],
-    
 
 
   }),
@@ -172,6 +199,13 @@ const styles = StyleSheet.create({
     alignSelf: 'center',
     textAlign: 'center',
     color: COLORS.ButtonText
+  },
+  link:{
+    color:COLORS.Links,
+    textDecorationLine:'underline',
+    alignSelf:'center',
+    // backgroundColor:'red',
+    bottom:'5%'
   }
 });
 

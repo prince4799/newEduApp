@@ -5,6 +5,8 @@ import { DarkTheme, NavigationContainer } from '@react-navigation/native';
 import { createMaterialTopTabNavigator } from '@react-navigation/material-top-tabs';
 import SignUp from '../../Screens/SignUp/SignUp';
 import Login from '../../Screens/Login/Login';
+import Home from '../../Screens/Home/Home'
+import Splash from '../../Screens/Splash/Splash'
 import { COLORS } from '../../Constants/Colors';
 
 const Tab = createMaterialTopTabNavigator();
@@ -14,7 +16,6 @@ var route = "SignUp"
 export default function SignUpRegisterDrawer() {
 
   return (
-    <NavigationContainer >
 
       <Tab.Navigator
 
@@ -106,6 +107,11 @@ export default function SignUpRegisterDrawer() {
 
 
       >
+       
+        <Tab.Screen
+          headerShown={false}
+          name="Home" component={Home} />
+       
         <Tab.Screen
           headerShown={false}
           name="Login" component={Login} />
@@ -114,7 +120,6 @@ export default function SignUpRegisterDrawer() {
           headerShown={false}
           name="SignUp" component={SignUp} />
       </Tab.Navigator>
-    </NavigationContainer >
   );
 }
 
