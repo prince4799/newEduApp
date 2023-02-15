@@ -9,6 +9,7 @@ import React from 'react';
 import { NavigationContainer } from '@react-navigation/native'
 import * as AppStack from './app/Navigators/StackNavigator/AppStack'
 import Home from "./app/Screens/Home/Home"
+import BottomTab from './app/Navigators/BottomNavigation/BottomTab';
 
 
 
@@ -17,10 +18,11 @@ import Home from "./app/Screens/Home/Home"
 function App(): JSX.Element {
 
   return (
-    // <NavigationContainer>
-    //   <AppStack.default />
-    // </NavigationContainer>
-    <Home/>
+    <NavigationContainer>
+      {/* <AppStack.default /> */}
+      <BottomTab/>
+    </NavigationContainer>
+    // <Home/>
 );
 }
 

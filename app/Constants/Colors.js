@@ -5,6 +5,7 @@ export const COLORS = {
     "T_background":'#FB7BA2',
     "Font": "#E5E6E4",
     "Border": "#d0ffdb",
-    "Links" :"#FB7BA2"
+    "Links" :"#FB7BA2",
+    "Blue": "#6bc5f2"
 // DEC4FC
 }

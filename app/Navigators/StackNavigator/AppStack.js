@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { createStackNavigator } from '@react-navigation/stack';
 import Splash from '../../Screens/Splash/Splash'
-import SignUpRegisterDrawer from '../TopDrawers/SignUpRegisterDrawer'
+import SignUpRegisterDrawer from '../TopNavigation/SignUpRegisterDrawer'
 
 
 
