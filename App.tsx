@@ -19,10 +19,8 @@ function App(): JSX.Element {
 
   return (
     <NavigationContainer>
-      {/* <AppStack.default /> */}
-      <BottomTab/>
+      <AppStack.default />
     </NavigationContainer>
-    // <Home/>
 );
 }
 

@@ -107,11 +107,6 @@ export default function SignUpRegisterDrawer() {
 
 
       >
-       
-        <Tab.Screen
-          headerShown={false}
-          name="Home" component={Home} />
-       
         <Tab.Screen
           headerShown={false}
           name="Login" component={Login} />

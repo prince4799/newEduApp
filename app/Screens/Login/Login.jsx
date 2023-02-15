@@ -99,7 +99,9 @@ const Login = ({navigation}) => {
             <View style={{ bottom: 0, top: '40%' }}>
 
               <TouchableOpacity
-              onPress={()=>SignInUser({email,password})}
+              // onPress={()=>SignInUser({email,password})}
+                onPress={()=> navigation.navigate('BottomTab')}
+
               // onPress={()=>firebaseDB.FirebaseDBPush({email,password})}
               // onPress={()=>firebaseDB.FirebaseDBRead()}
 

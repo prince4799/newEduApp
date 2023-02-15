@@ -5,17 +5,17 @@ import Animated, { SlideInRight, ZoomIn, ZoomOut } from 'react-native-reanimated
 import { IMAGES } from '../../Assets/Images/Images';
 import { COLORS } from '../../Constants/Colors';
 import Home from "../../Screens/Home/Home"
+import Profile from '../../Screens/Profile/Profie';
 
 const Tab = createBottomTabNavigator();
 
 
-function TabBar(): JSX.Element {
-  const [buttonIndex,setButtonIndex]=useState(0);
+function TabBar({...props}): JSX.Element {
+  const [buttonIndex,setButtonIndex]=useState(1);
 
-  function  changeButton(index:number):void{
-    console.log("here..............",index,buttonIndex)
+  function  changeButton(index:number,screen:string):void{
     setButtonIndex(index)
-    
+    props.navigation.navigate(screen)
   }
 
 
@@ -30,21 +30,26 @@ function TabBar(): JSX.Element {
         alignItems: 'center',
         justifyContent: 'space-around'
       }}>
+        {/* ===========first tab button=========== */}
       <View style={{
         height: '100%',
         width: '30%',
         alignSelf: 'center',
-        justifyContent: 'center'
+        justifyContent: 'center',
       }} >
         {buttonIndex ==1 ?<Animated.View
           entering={ZoomIn}
           exiting={ZoomOut}
           style={styles.buttonBackground} >
-          <Text onPress={()=>changeButton(0)} style={styles.buttonTextStyle}>Home</Text>
+          <Text style={styles.buttonTextStyle}>Home</Text>
         </Animated.View>:
-        <Text onPress={()=>changeButton(1)} style={styles.buttonTextStyle}>Home</Text>
+        <Animated.Text
+        entering={ZoomIn}
+        exiting={ZoomOut} onPress={()=>changeButton(1,'Home')} style={styles.buttonTextStyle}>Home</Animated.Text>
         }
       </View>
+        {/* ===========Second tab button=========== */}
+
       <View style={{
         height: '100%',
         width: '30%',
@@ -55,11 +60,17 @@ function TabBar(): JSX.Element {
           entering={ZoomIn}
           exiting={ZoomOut}
           style={styles.buttonBackground} >
-          <Text onPress={()=>changeButton(0)} style={styles.buttonTextStyle}>Home</Text>
+          <Text  style={styles.buttonTextStyle}>Course</Text>
         </Animated.View>:
-        <Text onPress={()=>changeButton(2)} style={styles.buttonTextStyle}>Home</Text>
+        <Animated.Text
+        entering={ZoomIn}
+        exiting={ZoomOut}
+        onPress={()=>changeButton(2,'Home')} style={styles.buttonTextStyle}>Course</Animated.Text>
         }
       </View>
+
+        {/* ===========third tab button=========== */}
+
       <View style={{
         height: '100%',
         width: '30%',
@@ -70,9 +81,11 @@ function TabBar(): JSX.Element {
           entering={ZoomIn}
           exiting={ZoomOut}
           style={styles.buttonBackground} >
-          <Text onPress={()=>changeButton(0)} style={styles.buttonTextStyle}>Home</Text>
+          <Text style={styles.buttonTextStyle}>Profile</Text>
         </Animated.View>:
-        <Text onPress={()=>changeButton(3)} style={styles.buttonTextStyle}>Home</Text>
+        <Animated.Text
+        entering={ZoomIn}
+        exiting={ZoomOut} onPress={()=>changeButton(3,'Profile')} style={styles.buttonTextStyle}>Profile</Animated.Text>
         }
       </View>
 
@@ -92,7 +105,7 @@ function BottomTab() {
       }}
     >
       <Tab.Screen name="Home" component={Home} />
-      {/* <Tab.Screen name="Settings" component={SettingsScreen} /> */}
+      <Tab.Screen name="Profile" component={Profile} />
     </Tab.Navigator>
   );
 }
@@ -104,12 +117,16 @@ const styles = StyleSheet.create({
       color:COLORS.ButtonText,
       fontWeight:'900',
       textAlignVertical:'center',
+      height:'100%',
+      width:'100%'
   },
   buttonBackground: {
-    height: '50%',
+    height: '70%',
     // width: '30%',
     borderRadius: 50,
     backgroundColor: COLORS.Button,
-    alignItems: 'center'
+    alignItems: 'center',
+    elevation:5,
+    justifyContent:'center'
   }
 })

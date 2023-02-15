@@ -47,14 +47,18 @@ const Home = () => {
             textAlign: 'center',
             top: CONSTANTS.DIMENSIONS.HEIGHT / 3,
           }}
+          onPress={(e) => {
+            console.log("positions", e.nativeEvent.locationX, e.nativeEvent.locationY);
+          }}
         >Welcome Back ! {`\n`}userName</Text>
         <View
           style={{
             height: CONSTANTS.DIMENSIONS.HEIGHT,
             width: CONSTANTS.DIMENSIONS.HEIGHT,
             backgroundColor: "#fff",
+            opacity: 0,
             marginTop: CONSTANTS.DIMENSIONS.HEIGHT / 3,
-            borderRadius:CONSTANTS.DIMENSIONS.HEIGHT/2,
+            borderRadius: CONSTANTS.DIMENSIONS.HEIGHT / 2,
           }} />
         <View
           style={{
@@ -63,7 +67,7 @@ const Home = () => {
             backgroundColor: '#fff',
             borderRadius: 20,
             // margin: 5,
-            top: CONSTANTS.DIMENSIONS.HEIGHT/8,
+            top: CONSTANTS.DIMENSIONS.HEIGHT / 8,
             justifyContent: 'center',
             flexDirection: 'row',
             elevation: 5,
@@ -98,7 +102,7 @@ const Home = () => {
             alignItems: 'center',
             justifyContent: 'center',
             elevation: 5,
-            marginTop: CONSTANTS.DIMENSIONS.HEIGHT/4 ,
+            marginTop: CONSTANTS.DIMENSIONS.HEIGHT / 4,
           }}>
           <Text
             style={{
@@ -129,19 +133,35 @@ const Home = () => {
               justifyContent: 'center',
               alignItems: 'center',
               marginTop: CONSTANTS.DIMENSIONS.HEIGHT / 6,
-              paddingBottom: 20,
+              paddingBottom: CONSTANTS.DIMENSIONS.HEIGHT / 1.6,
             }}
           >
-            <Text style={{
-              fontSize: 18,
-              fontWeight: 'bold',
-              color: '#fff',
-              alignSelf: 'flex-start',
-              // backgroundColor:'red',
-              textAlignVertical:'center',
-              marginLeft: 10,
-              marginTop: 10,
-            }}>My Activities{`\n`}</Text>
+            <View style={{
+              flexDirection: 'row',
+              justifyContent: 'space-between',
+              width:CONSTANTS.DIMENSIONS.WIDTH*10,
+            }}>
+              <Text style={{
+                fontSize: 18,
+                fontWeight: 'bold',
+                color: '#fff',
+                alignSelf: 'flex-start',
+                // backgroundColor:'red',
+                textAlignVertical: 'center',
+                marginLeft: 10,
+                marginTop: 10,
+              }}>My Activities{`\n`}</Text>
+              <Text style={{
+                fontSize: 18,
+                fontWeight: 'bold',
+                color: '#fff',
+                alignSelf: 'flex-start',
+                textAlignVertical: 'center',
+                marginTop: 10,
+                textDecorationLine:'underline',
+
+              }}>View All{`\n`}</Text>
+            </View>
             <FlatList
               showsHorizontalScrollIndicator={false}
               data={[1, 2, 3, 4,]}

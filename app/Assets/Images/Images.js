@@ -10,7 +10,11 @@ export const IMAGES={
     phone:require("./phone.png"),
     user:require("./user.png"),
     gender:require("./gender.png"),
-    glass:require("./glass.png")
+    glass:require("./glass.png"),
+    logout:require("./logout.png"),
+    rightarrow:require("./rightarrow.png"),
+    aboutus:require("./aboutus.png"),
+    payment:require('./payment.png')
 
 
 }
