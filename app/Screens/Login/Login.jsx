@@ -43,14 +43,6 @@ const Login = ({navigation}) => {
   const rotateY = new Animated.Value(0);
   // const AnimatedBackground = Animated.createAnimatedComponent(View);
 
-  const handleFlip = () => {
-    Animated.spring(rotateY, {
-      toValue:  1,
-      friction: 8,
-      tension: 10,
-      useNativeDriver:true
-    }).start();
-  };
   const flipToFrontStyle = {
     transform: [
       {

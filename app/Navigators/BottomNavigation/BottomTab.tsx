@@ -6,6 +6,7 @@ import { IMAGES } from '../../Assets/Images/Images';
 import { COLORS } from '../../Constants/Colors';
 import Home from "../../Screens/Home/Home"
 import Profile from '../../Screens/Profile/Profie';
+import Courses from '../../Screens/CourseCategories/Courses';
 
 const Tab = createBottomTabNavigator();
 
@@ -65,7 +66,7 @@ function TabBar({...props}): JSX.Element {
         <Animated.Text
         entering={ZoomIn}
         exiting={ZoomOut}
-        onPress={()=>changeButton(2,'Home')} style={styles.buttonTextStyle}>Course</Animated.Text>
+        onPress={()=>changeButton(2,'Courses')} style={styles.buttonTextStyle}>Course</Animated.Text>
         }
       </View>
 
@@ -106,6 +107,7 @@ function BottomTab() {
     >
       <Tab.Screen name="Home" component={Home} />
       <Tab.Screen name="Profile" component={Profile} />
+      <Tab.Screen name="Courses" component={Courses} />
     </Tab.Navigator>
   );
 }

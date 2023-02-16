@@ -34,6 +34,7 @@ import { COLORS } from '../../Constants/Colors';
 import * as firebaseDB from "../../Firebase/FirebaseDB"
 import * as firebaseAuth from "../../Firebase/FirebaseAuth"
 import {CreateNewUser} from "../../Firebase/FirebaseAuth"
+import { DIMENSIONS } from '../../Constants/Constants';
 // import { async } from '@firebase/util';
 
 const SignUp = () => {
@@ -110,6 +111,11 @@ const SignUp = () => {
                 placeholder='Enter Your Password' />
               <Image style={{ ...styles.inputImg, }} source={require('../../Assets/Images/eye.png')} />
             </View>
+            <View
+            style={{
+              // marginTop:50
+            }}>
+
             <TouchableOpacity onPress={()=> SiginUpValidation({name,email,phone})} style={{ ...styles.button,width:(width / 10) * 6, marginTop:60,}}>
               <Text style={{color:COLORS.ButtonText}}>SIGNUP NOW</Text>
             </TouchableOpacity>
@@ -118,6 +124,8 @@ const SignUp = () => {
               <Image style={{...styles.inputImg, height:30,width:30,tintColor:null}} source={require('../../Assets/Images/google.png')} />
 
             </TouchableOpacity>
+            </View>
+
             </KeyboardAvoidingView>
         </ScrollView>
 
@@ -165,7 +173,7 @@ const styles = StyleSheet.create({
 
   },
   button: {
-    height: 35,
+    height: 40,
     width: 120,
     backgroundColor: COLORS.Button,
     borderRadius: 50,
@@ -173,8 +181,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     alignSelf: 'center',
     marginVertical: 10,
-    elevation:3
-
+    elevation:3,
 
   },
   buttonText: {

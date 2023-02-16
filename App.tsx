@@ -21,6 +21,7 @@ function App(): JSX.Element {
     <NavigationContainer>
       <AppStack.default />
     </NavigationContainer>
+    // <ExtenFunc/>
 );
 }
 

@@ -14,7 +14,9 @@ export const IMAGES={
     logout:require("./logout.png"),
     rightarrow:require("./rightarrow.png"),
     aboutus:require("./aboutus.png"),
-    payment:require('./payment.png')
+    payment:require('./payment.png'),
+    editing:require('./editing.png'),
+    online:require('./online-learning.json')
 
 
 }

@@ -8,7 +8,7 @@ import {
   ImageBackground,
   TouchableOpacity
 } from 'react-native';
-import Animated, { log } from 'react-native-reanimated';
+import Animated, { FadeInUp, log,SlideInLeft,SlideInRight,ZoomIn } from 'react-native-reanimated';
 import * as CONSTANTS from '../../Constants/Constants'
 import { IMAGES } from "../../Assets/Images/Images"
 import { FlatList, ScrollView, TextInput } from 'react-native-gesture-handler';
@@ -151,7 +151,10 @@ const Home = () => {
                 marginLeft: 10,
                 marginTop: 10,
               }}>My Activities{`\n`}</Text>
-              <Text style={{
+              <Text 
+              onPress={()=>console.log("..View All..")
+              }
+              style={{
                 fontSize: 18,
                 fontWeight: 'bold',
                 color: '#fff',
@@ -162,13 +165,14 @@ const Home = () => {
 
               }}>View All{`\n`}</Text>
             </View>
-            <FlatList
+            <Animated.FlatList
+            entering={FadeInUp}
               showsHorizontalScrollIndicator={false}
               data={[1, 2, 3, 4,]}
               horizontal
               renderItem={({ item }) =>
-                <View
-
+                <Animated.View
+                  entering={FadeInUp}
                   style={{
                     elevation: 10,
                     height: CONSTANTS.DIMENSIONS.HEIGHT * 2,
@@ -188,9 +192,7 @@ const Home = () => {
                       width: CONSTANTS.DIMENSIONS.WIDTH * 1.5,
                       backgroundColor: COLORS.T_background,
                       borderTopRightRadius: CONSTANTS.DIMENSIONS.HEIGHT,
-                    }} >
-
-                    </View>
+                    }}/ >
                     <Text style={{ marginLeft: 5, fontWeight: 'bold', }}>$5000{`\n`}per month</Text>
                   </View>
                   <Text style={{ fontSize: CONSTANTS.DIMENSIONS.HEIGHT / 5, fontWeight: 'bold', paddingTop: 5, }}>Zumba Training</Text>
@@ -202,7 +204,7 @@ const Home = () => {
                     backgroundColor: '#d3d3d3'
                   }} />
                   <Text style={{ color: '#9c9998', fontSize: CONSTANTS.DIMENSIONS.HEIGHT / 7, fontWeight: '700' }} >Zumba Training</Text>
-                </View>
+                </Animated.View>
               }
             />
           </ImageBackground>
