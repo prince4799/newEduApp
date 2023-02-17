@@ -18,13 +18,13 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 // import * as CONSTANTS from '../../Constants/Constants'
 
 // function ExtenFunc(ObjectData:Object | any  , screenName: string, navigation :any): JSX.Element {
-    //  export function ExtenFunc(ObjectData:Object | any  , screenName: string, title:string): JSX.Element {
-export const VideoLists :React.FC<Props>=({
-    ObjectData ,
-     screenName,
-    title ,
+//  export function ExtenFunc(ObjectData:Object | any  , screenName: string, title:string): JSX.Element {
+export const VideoLists: React.FC<any> = ({
+    ObjectData,
+    screenName,
+    title,
     navigation
-})=>{
+}) => {
     return (
         <SafeAreaView style={{ flex: 1 }}>
             <ImageBackground
@@ -32,26 +32,27 @@ export const VideoLists :React.FC<Props>=({
                 style={styles.flatlistContainer}
             >
                 <View style={{
-                    height:DIMENSIONS.HEIGHT/2,
-                    alignItems:'center',
-                    flexDirection:'row',
-                    justifyContent:'space-between',
+                    height: DIMENSIONS.HEIGHT / 2,
+                    alignItems: 'center',
+                    flexDirection: 'row',
+                    justifyContent: 'space-between',
                     // backgroundColor:'red',
-                    width:'100%'}}>
+                    width: '100%'
+                }}>
 
-                <Text style={styles.flatlisttitle}>{title}</Text>
-                <Text
-                    onPress={() => navigation.navigate(screenName)}
-                    style={{
-                        fontSize: 18,
-                        fontWeight: 'bold',
-                        color: '#fff',
-                        alignSelf: 'flex-start',
-                        textAlignVertical: 'center',
-                        marginTop: 10,
-                        textDecorationLine: 'underline',
+                    <Text style={styles.flatlisttitle}>{title}</Text>
+                    <Text
+                        onPress={() => navigation.navigate(screenName)}
+                        style={{
+                            fontSize: 18,
+                            fontWeight: 'bold',
+                            color: '#fff',
+                            alignSelf: 'flex-start',
+                            textAlignVertical: 'center',
+                            marginTop: 10,
+                            textDecorationLine: 'underline',
 
-                    }}>View All{`\n`}</Text>
+                        }}>View All{`\n`}</Text>
                 </View>
 
                 <FlatList
