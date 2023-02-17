@@ -7,6 +7,7 @@ import { COLORS } from '../../Constants/Colors';
 import Home from "../../Screens/Home/Home"
 import Profile from '../../Screens/Profile/Profie';
 import Courses from '../../Screens/CourseCategories/Courses';
+import { SafeAreaView } from 'react-native-safe-area-context';
 
 const Tab = createBottomTabNavigator();
 
@@ -21,15 +22,21 @@ function TabBar({...props}): JSX.Element {
 
 
   return (
+    <SafeAreaView style={{backgroundColor:'#fff'}} >
     <ImageBackground
+    resizeMode='cover'
+    imageStyle={{ borderTopLeftRadius: 10,
+      borderTopRightRadius: 10}}
       source={IMAGES.gradientbg}
       style={{
         backgroundColor: COLORS.Font,
         height: 50,
+        zIndex:-9,
         width: '100%',
         flexDirection: 'row',
         alignItems: 'center',
-        justifyContent: 'space-around'
+        justifyContent: 'space-around',
+        borderRadius:50,
       }}>
         {/* ===========first tab button=========== */}
       <View style={{
@@ -93,6 +100,7 @@ function TabBar({...props}): JSX.Element {
 
 
     </ImageBackground>
+    </SafeAreaView>
   )
 }
 

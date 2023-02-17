@@ -28,7 +28,7 @@ export const VideoLists: React.FC<any> = ({
     return (
         <SafeAreaView style={{ flex: 1 }}>
             <ImageBackground
-                source={IMAGES.gradientbg}
+                source={IMAGES.fullbg}
                 style={styles.flatlistContainer}
             >
                 <View style={{
@@ -99,12 +99,14 @@ const styles = StyleSheet.create({
         color: COLORS.ButtonText,
     },
     flatlistContainer: {
-        height: DIMENSIONS.HEIGHT * 3,
+        height: DIMENSIONS.HEIGHT * 2.2,
         // width: DIMENSIONS.WIDTH * 10,
         backgroundColor: '#555',
         justifyContent: 'center',
         alignItems: 'center',
-        marginVertical: 5,
+        marginVertical: 2,
+        padding:5,
+
     },
     flatlisttitle: {
         fontSize: 18,
@@ -115,19 +117,20 @@ const styles = StyleSheet.create({
         textAlignVertical: 'center',
         marginLeft: 10,
         marginTop: 10,
+        
     },
     flatlistcard: {
-        elevation: 10,
-        height: DIMENSIONS.HEIGHT * 2,
-        width: DIMENSIONS.WIDTH * 4,
+        elevation: 5,
+        height: DIMENSIONS.HEIGHT+20 ,
+        width: DIMENSIONS.HEIGHT+20 ,
         backgroundColor: '#fff',
         borderBottomLeftRadius: DIMENSIONS.HEIGHT / 2,
         borderBottomRightRadius: DIMENSIONS.HEIGHT / 2,
         borderTopRightRadius: DIMENSIONS.HEIGHT / 2,
         padding: 10,
-        marginHorizontal: 10,
+        marginHorizontal: 5,
         marginTop: 10,
-
+        // marginBottom:5,
     }
 });
 const card = (width: any, height: any): ViewStyle => ({

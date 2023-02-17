@@ -1,4 +1,4 @@
-import React, { useState, useRef ,} from 'react';
+import React, { useState, useRef, } from 'react';
 
 import {
     Button,
@@ -15,43 +15,53 @@ import {
     useColorScheme,
     useWindowDimensions,
     View,
-    
+
 } from 'react-native';
 import Lottie from 'lottie-react-native';
 import Animated from "react-native-reanimated";
 import { FlatList } from 'react-native-gesture-handler';
 import { DIMENSIONS } from '../../../Constants/Constants';
 import { IMAGES } from '../../../Assets/Images/Images';
-import {VideoLists}  from '../../../Assets/Utils/ExtenFunc';
+import { VideoLists } from '../../../Assets/Utils/ExtenFunc';
 
 
-function Yoga({navigation}): JSX.Element {
+function Yoga(navigation: any): JSX.Element {
     return (
         <SafeAreaView
             style={{
                 flex: 1,
+                paddingBottom:0
             }}>
             <ScrollView
-                style={{ flex: 1,  }}>
-                <VideoLists ObjectData={[1,2,3,4,]}
-                screenName={'Profile'} title={"Zumba Classes"} 
-                navigation={navigation}/>
+                style={{ flex: 1, }}>
+                <VideoLists ObjectData={[1, 2, 3, 4,]}
+                    screenName={'Profile'} title={"Yoga Classes"}
+                    navigation={navigation} />
+
+                <VideoLists ObjectData={[1, 3, 4,]}
+                    screenName={'Profile'} title={"Zumba Classes"}
+                    navigation={navigation} />
+
+                <VideoLists ObjectData={[1, 3, 2, 5, 6, 7, 4,]}
+                    screenName={'Profile'} title={"Sports Classes"}
+                    navigation={navigation} />
+
             </ScrollView>
         </SafeAreaView>
     )
 }
 export default Yoga;
 
-const styles=StyleSheet.create({
-    flatlistContainer:{
+const styles = StyleSheet.create({
+    flatlistContainer: {
         height: DIMENSIONS.HEIGHT * 3,
         // width: DIMENSIONS.WIDTH * 10,
         backgroundColor: '#555',
         justifyContent: 'center',
         alignItems: 'center',
-        marginVertical:5,
+        marginVertical: 5,
     },
-    flatlisttitle:{
+    flatlisttitle: {
         fontSize: 18,
         fontWeight: 'bold',
         color: '#fff',
@@ -61,7 +71,7 @@ const styles=StyleSheet.create({
         marginLeft: 10,
         marginTop: 10,
     },
-    flatlistcard:{
+    flatlistcard: {
         elevation: 10,
         height: DIMENSIONS.HEIGHT * 2,
         width: DIMENSIONS.WIDTH * 4,
@@ -73,5 +83,5 @@ const styles=StyleSheet.create({
         marginHorizontal: 10,
         marginTop: 10,
 
-      }
+    }
 })

@@ -86,6 +86,7 @@ const Profile = () => {
                     opacity: 1,
                 }}>
                 <ImageBackground
+                imageStyle={{borderRadius:10,}}
                     source={IMAGES.gradientbg}
                     style={styles.card}>
                     <Text
@@ -94,6 +95,8 @@ const Profile = () => {
                     >User Type{`\n`}Student</Text>
                 </ImageBackground>
                 <ImageBackground
+                imageStyle={{borderRadius:10,}}
+
                     source={IMAGES.gradientbg}
                     style={styles.card}>
                     <Text
@@ -178,6 +181,8 @@ const styles = StyleSheet.create({
         opacity: 1,
         justifyContent: 'center',
         elevation: 5,
+        backgroundColor:'#fff',
+        borderRadius:10,
 
     },
     cardtext: {

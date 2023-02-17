@@ -8,7 +8,7 @@ import {
   ImageBackground,
   TouchableOpacity
 } from 'react-native';
-import Animated, { FadeInUp, log,SlideInLeft,SlideInRight,ZoomIn } from 'react-native-reanimated';
+import Animated, { FadeInUp, log, SlideInLeft, SlideInRight, ZoomIn } from 'react-native-reanimated';
 import * as CONSTANTS from '../../Constants/Constants'
 import { IMAGES } from "../../Assets/Images/Images"
 import { FlatList, ScrollView, TextInput } from 'react-native-gesture-handler';
@@ -93,6 +93,9 @@ const Home = () => {
             }} />
         </View>
         <ImageBackground
+          imageStyle={{
+            borderRadius: 15,
+          }}
           source={IMAGES.gradientbg}
           resizeMode={'stretch'}
           style={{
@@ -102,6 +105,7 @@ const Home = () => {
             alignItems: 'center',
             justifyContent: 'center',
             elevation: 5,
+            borderRadius: 15,
             marginTop: CONSTANTS.DIMENSIONS.HEIGHT / 4,
           }}>
           <Text
@@ -139,7 +143,7 @@ const Home = () => {
             <View style={{
               flexDirection: 'row',
               justifyContent: 'space-between',
-              width:CONSTANTS.DIMENSIONS.WIDTH*10,
+              width: CONSTANTS.DIMENSIONS.WIDTH * 10,
             }}>
               <Text style={{
                 fontSize: 18,
@@ -151,22 +155,22 @@ const Home = () => {
                 marginLeft: 10,
                 marginTop: 10,
               }}>My Activities{`\n`}</Text>
-              <Text 
-              onPress={()=>console.log("..View All..")
-              }
-              style={{
-                fontSize: 18,
-                fontWeight: 'bold',
-                color: '#fff',
-                alignSelf: 'flex-start',
-                textAlignVertical: 'center',
-                marginTop: 10,
-                textDecorationLine:'underline',
+              <Text
+                onPress={() => console.log("..View All..")
+                }
+                style={{
+                  fontSize: 18,
+                  fontWeight: 'bold',
+                  color: '#fff',
+                  alignSelf: 'flex-start',
+                  textAlignVertical: 'center',
+                  marginTop: 10,
+                  textDecorationLine: 'underline',
 
-              }}>View All{`\n`}</Text>
+                }}>View All{`\n`}</Text>
             </View>
             <Animated.FlatList
-            entering={FadeInUp}
+              entering={FadeInUp}
               showsHorizontalScrollIndicator={false}
               data={[1, 2, 3, 4,]}
               horizontal
@@ -192,7 +196,7 @@ const Home = () => {
                       width: CONSTANTS.DIMENSIONS.WIDTH * 1.5,
                       backgroundColor: COLORS.T_background,
                       borderTopRightRadius: CONSTANTS.DIMENSIONS.HEIGHT,
-                    }}/ >
+                    }} />
                     <Text style={{ marginLeft: 5, fontWeight: 'bold', }}>$5000{`\n`}per month</Text>
                   </View>
                   <Text style={{ fontSize: CONSTANTS.DIMENSIONS.HEIGHT / 5, fontWeight: 'bold', paddingTop: 5, }}>Zumba Training</Text>
