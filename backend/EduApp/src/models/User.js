@@ -29,6 +29,20 @@ const UserSchema = new mongoose.Schema({
         // validate:[isMobilePhone('en-IN', ),"Pleease Enter valid mobile no."]
 
     },
+    userType: {
+        type: String,
+        unique: false,
+        required: false,
+        default:'Public'
+        // validate:[isMobilePhone('en-IN', ),"Pleease Enter valid mobile no."]
+    },
+    paid: {
+        type: String,
+        unique: false,
+        required: false,
+        default:'live'
+        // validate:[isMobilePhone('en-IN', ),"Pleease Enter valid mobile no."]
+    },
 
 })
 mongoose.set('strictQuery', true);
