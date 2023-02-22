@@ -21,9 +21,14 @@ router.post("/signup", async (req, res) => {
     const user = new User({ email, password, username, contact })
     await user.save();
     const tokenKey = jwt.sign({ userID: user._id }, jwtKey)
-    res.status(200).send({ "msg": "User saved successfully", "status": "true", tokenKey })
+    res.status(200).send(success({ "msg": "User saved successfully",tokenKey }))
   } catch (err) {
-    res.status(400).send({ "msg": Object.keys(err.keyValue) + " is invalid", "status": false })
+    if(err.keyValue){
+      res.status(400).send(error({ "msg": Object.keys(err.keyValue) + " is invalid"}))
+    }
+      else{
+        res.status(400).send({error:error(err.message)})
+      }
     console.log(err.message, err);
   }
 })
@@ -54,7 +59,14 @@ router.post("/signin", async (req, res) => {
       try {
         await value.comparePassword(password)
         const token = jwt.sign({ userID: user._id }, jwtKey)
-        res.status(200).send({ tokenID:token, success:success('Successfully loged in') })
+        let screenName=''
+        if(value.userType== 'Admin'){
+          screenName='Admin'
+        }
+        else{
+          screenName='Public'
+        }
+        res.status(200).send({ tokenID:token, success:success('Successfully loged in'),screen:screenName })
       } catch (err) {
         console.log(err);
         return res.status(401).send(error('Password or Email/ Username not matched.'))

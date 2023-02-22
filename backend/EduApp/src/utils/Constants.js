@@ -1,12 +1,12 @@
 const datetime=new Date();
 
-  const error=(message='')=>{
+  const error=(message=null)=>{
 
     console.log();
 
     return{
         message:message,
-        Status:false,
+        status:false,
         timestamp: datetime.toLocaleString()
     }
 }
@@ -15,7 +15,7 @@ const datetime=new Date();
 
     return{
         message:message,
-        Status:true,
+        status:true,
         timestamp: datetime.toLocaleString() 
     }
 }

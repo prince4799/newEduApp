@@ -1,6 +1,7 @@
 'use strict';
 const mongoose = require('mongoose')
 const bcrypt = require('bcrypt')
+const {isEmail}= require('validator')
 // const {isEmail,isMobilePhone}=require('validator')
 
 const UserSchema = new mongoose.Schema({
@@ -8,7 +9,7 @@ const UserSchema = new mongoose.Schema({
         type: String,
         unique: true,
         required: [true, "Please Enter Email"],
-        // validate:[isEmail,"Please Enter valid Email."]
+        validate:[isEmail,"Please Enter valid Email."]
     },
     password: {
         type: String,
@@ -40,7 +41,7 @@ const UserSchema = new mongoose.Schema({
         type: String,
         unique: false,
         required: false,
-        default:'live'
+        default:'demo'  //live for paid only
         // validate:[isMobilePhone('en-IN', ),"Pleease Enter valid mobile no."]
     },
 
