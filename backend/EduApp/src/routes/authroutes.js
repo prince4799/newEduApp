@@ -4,13 +4,14 @@ const express = require('express')
 var app = express();
 app.use(express.json());
 const {error,success}=require('../utils/Constants')
-
+const passport=require('passport')
 const mongoose = require('mongoose')
 const jwt = require('jsonwebtoken')
 const { jwtKey } = require('../confidential/jwtKey')
 const router = express.Router();
 const User = mongoose.model('User');
 
+const passportSetup=require('../models/GoogleAuth')
 
 router.post("/signup", async (req, res) => {
 
@@ -78,6 +79,10 @@ router.post("/signin", async (req, res) => {
     return res.status(401).send(error("Password or Email/Username is missing."))
   }
 })
+
+router.post("/google",passport.authenticate('google',{
+  scope:['profile']
+}))
 
 /*router.post("/login",async(req,res,next)=>{
   const {userid,password}=req.body;

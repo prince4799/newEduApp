@@ -5,6 +5,7 @@ const { jwtKey } = require('../confidential/jwtKey')
 
 module.exports = (req, res, next) => {
     const { authorization } = req.headers
+    console.log("!!...Wait ",authorization);
 
     if (!authorization) {
         return res.status(401).send("You must be logged in.")
@@ -24,7 +25,7 @@ module.exports = (req, res, next) => {
                 return res.status(401).send(err);
             });
             req.user = user;
-            next();
+            return next();
         }
 
 

@@ -13,8 +13,10 @@ const {mongoUrl}=require("./src/confidential/mongoKey")
 require('./src/models/User')
 const jwtAuth=require('./src/middleware/authkeys')
 const router=require('./src/routes/authroutes');
+const contentrouter=require('./src/routes/contentroute')
 app.use(bodyParser.json())
-app.use(router)
+app.use("/auth",router)
+// app.use("/contents",contentrouter)
 
 
 
