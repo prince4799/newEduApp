@@ -9,7 +9,7 @@ import {
     TouchableOpacity
 } from 'react-native';
 import Animated, { FadeInUp, log, SlideInLeft, SlideInRight, ZoomIn } from 'react-native-reanimated';
-import { DIMENSIONS } from '../../Constants/Constants'
+import { CONSTANTS, DIMENSIONS } from '../../Constants/Constants'
 import { IMAGES } from "../../Assets/Images/Images"
 import { FlatList, ScrollView, TextInput } from 'react-native-gesture-handler';
 import { COLORS } from '../../Constants/Colors';
@@ -137,3 +137,58 @@ const card = (width: any, height: any): ViewStyle => ({
 
 })
 
+/*export async function signupAPICalling(endpoint: string, data: any): Promise<any> {
+    const URL = CONSTANTS.BASE_URL + endpoint
+    // try {
+   const reponse= await fetch(URL, {
+        method: 'POST',
+
+        body: JSON.stringify({
+            "username": data.username,
+            "email": data.email,
+            "password": data.password,
+            "contact": data.phone
+        })
+    }).then(res => res.json()).then((res) => {
+        console.log("=======", JSON.stringify(res))
+        return res;
+    })
+        .catch(err => {
+            console.log(">>>>>>>>>>", err)
+            return JSON.stringify(err);
+        })
+        console.log("=+++++=", JSON.stringify(reponse.error))
+
+        return JSON.stringify(reponse.error);
+}*/
+
+export async function signupAPICalling(endpoint: string, data: { username: string, email: string, password: string, phone: string }): Promise<any> {
+    const URL = CONSTANTS.BASE_URL + endpoint;
+    // try {
+      const response = await fetch(URL, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          username: data.username,
+          email: data.email,
+          password: data.password,
+          contact: data.phone,
+        }),
+      });
+    
+      const jsonResponse = await response.json();
+      console.log('=======', JSON.stringify(jsonResponse));
+      
+      return jsonResponse;
+
+      
+     
+
+
+    // } catch (error) {
+    //   console.log('>>>>>>>>>>', error);
+    //   throw new Error('Failed to sign up.');
+    //   return error
+    // }
+  }
+  

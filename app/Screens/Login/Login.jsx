@@ -20,10 +20,12 @@ import {
   StyleSheet,
   Text,
   TouchableOpacity,
+  ToastAndroid,
   TextInput,
   useColorScheme,
   useWindowDimensions,
   View,
+  Alert,
 } from 'react-native';
 import Animated from "react-native-reanimated";
 
@@ -33,11 +35,14 @@ import { COLORS } from '../../Constants/Colors';
 // import { SignInUser } from '../../Firebase/FirebaseAuth';
 import { SignInUser, CreateNewUser } from '../../Firebase/FirebaseAuth'
 import * as firebaseDB from '../../Firebase/FirebaseDB';
+import { LoginProvider, useLogin } from '../../Statemanagement/Login/LoginContext';
 const Login = ({ navigation }) => {
 
   const { height, width, scale, fontScale } = useWindowDimensions()
-  const [email, setEmail] = useState('')
+  const [id, setId] = useState('')
   const [password, setPassword] = useState('')
+  const { state, dispatch, loginUser } = useLogin();
+
   const portrait = (height / 10) * 5;
   const landscape = (height / 10) * 8
   const rotateY = new Animated.Value(0);
@@ -53,6 +58,37 @@ const Login = ({ navigation }) => {
       }
     ]
   };
+
+  const loginValidation = ({ id, password }) => {
+
+    if (!id || !password) {
+      Alert.alert('Enter the Credentials!')
+      return;
+    }
+    const user = { id, password }
+    loginUser(user)
+    console.log("state from Login", state)
+
+    if(state.error){
+      ToastAndroid.showWithGravityAndOffset(
+        state.error.message,
+        ToastAndroid.LONG,
+        ToastAndroid.BOTTOM,
+        25,
+        50,
+      )
+    } else {
+      ToastAndroid.showWithGravityAndOffset(
+        state.user.message,
+        ToastAndroid.LONG,
+        ToastAndroid.BOTTOM,
+        25,
+        50,
+      )
+      props.navigation.navigate('BottomTab')
+    }
+
+  }
 
 
 
@@ -75,8 +111,8 @@ const Login = ({ navigation }) => {
                   <View style={{ ...styles.inputContainer }} >
                     <Image style={styles.inputImg} source={require('../../Assets/Images/mail.png')} />
                     <TextInput style={styles.inputs}
-                      value={email}
-                      onChangeText={(text) => setEmail(text)}
+                      value={id}
+                      onChangeText={(text) => setId(text)}
                       placeholder='Enter Your Mail' />
                   </View>
                   <View style={styles.inputContainer}>
@@ -92,48 +128,43 @@ const Login = ({ navigation }) => {
                   <View style={{ bottom: 0, top: '40%' }}>
 
                     <TouchableOpacity
-                      // onPress={()=>SignInUser({email,password})}
-                      onPress={() => navigation.navigate('BottomTab')}
-
-                      // onPress={()=>firebaseDB.FirebaseDBPush({email,password})}
-                      // onPress={()=>firebaseDB.FirebaseDBRead()}
-
+                      onPress={() => loginValidation({ id, password })}
+                      // onPress={() => navigation.navigate('BottomTab')}
                       style={{
                         ...styles.button,
                         width: (width / 10) * 6,
                       }}>
                       <Text style={styles.buttonText}>LOGIN</Text>
                     </TouchableOpacity>
-
-
                     <TouchableOpacity
                       style={{
                         ...styles.button,
                         width: (width / 10) * 6,
                         alignItems: 'center',
                       }}
-                      onPress={() => {
+                     /* onPress={() => {
                         try {
 
-                          fetch('http://192.168.101.57:5500/auth/google',
+                          fetch('http://192.168.101.184:3000/api/user/createNew',
                             {
                               method: 'POST',
-                              headers:{
-                                "Content-Type":"application/json"
+                              headers: {
+                                "Content-Type": "application/json"
                               },
-                            //   body: JSON.stringify({
-                            //     "userid":"manav",
-                            //     "password":"1234",
-                            //     // "email":"manav@mail.com",
-                            //     // "contact":9988556
-                            // })
+
+                              body: JSON.stringify({
+                                "username": "Prince",
+                                "password": "prince@123",
+                                "id": "prince@gmail.com"
+                              })
                             })
                             .then((res) => res.json())
                             .then(res => console.log(JSON.stringify(res)))
                         } catch (err) {
                           console.log("errr in hitting api", err)
+                          throw err;
                         }
-                      }}
+                      }}*/
                     >
                       <Text style={styles.buttonText}>SignIn with google</Text>
                       <Image
@@ -146,11 +177,9 @@ const Login = ({ navigation }) => {
                         source={require('../../Assets/Images/google.png')} />
                     </TouchableOpacity>
                   </View>
-
                 </KeyboardAvoidingView>
               </ScrollView>
               {/* <Text onPress={()=>flipToFrontStyle()} style={styles.link}>Create New Account.</Text> */}
-
             </View>
             <Text onPress={() => navigation.navigate('SignUp')} style={[styles.link]}>Create  An Account</Text>
           </ImageBackground>
@@ -227,4 +256,14 @@ const styles = StyleSheet.create({
   }
 });
 
-export default Login;
+// export default Login;
+
+const LoginWrapper = (props) => {
+  return (
+    <LoginProvider>
+      <Login {...props} />
+    </LoginProvider>
+  );
+};
+
+export default LoginWrapper;

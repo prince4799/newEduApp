@@ -3,11 +3,13 @@ import React, { useState } from 'react';
 
 import { DarkTheme, NavigationContainer } from '@react-navigation/native';
 import { createMaterialTopTabNavigator } from '@react-navigation/material-top-tabs';
-import SignUp from '../../Screens/SignUp/SignUp';
-import Login from '../../Screens/Login/Login';
+// import SignUp from '../../Screens/SignUp/SignUp';
+import SignupWrapper from '../../Screens/SignUp/SignUp';
+
 import Home from '../../Screens/Home/Home'
 import Splash from '../../Screens/Splash/Splash'
 import { COLORS } from '../../Constants/Colors';
+import LoginWrapper from '../../Screens/Login/Login';
 
 const Tab = createMaterialTopTabNavigator();
 var tabIndex = 0;
@@ -109,11 +111,11 @@ export default function SignUpRegisterDrawer() {
       >
         <Tab.Screen
           headerShown={false}
-          name="Login" component={Login} />
+          name="Login" component={LoginWrapper} />
        
         <Tab.Screen
           headerShown={false}
-          name="SignUp" component={SignUp} />
+          name="SignUp" component={SignupWrapper} />
       </Tab.Navigator>
   );
 }
