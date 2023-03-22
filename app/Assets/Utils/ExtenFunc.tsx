@@ -1,4 +1,8 @@
 import React, { useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react';
+import NetInfo from '@react-native-community/netinfo';
+
+import AsyncStorage from '@react-native-community/async-storage';
+
 import {
     View,
     Text,
@@ -9,13 +13,14 @@ import {
     TouchableOpacity
 } from 'react-native';
 import Animated, { FadeInUp, log, SlideInLeft, SlideInRight, ZoomIn } from 'react-native-reanimated';
-import { CONSTANTS, DIMENSIONS } from '../../Constants/Constants'
+// import { CONSTANTS DIMENSIONS } from '../../Constants/Constants'
+import * as CONSTANTS  from '../../Constants/Constants'
+
 import { IMAGES } from "../../Assets/Images/Images"
 import { FlatList, ScrollView, TextInput } from 'react-native-gesture-handler';
 import { COLORS } from '../../Constants/Colors';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
-// import * as CONSTANTS from '../../Constants/Constants'
 
 // function ExtenFunc(ObjectData:Object | any  , screenName: string, navigation :any): JSX.Element {
 //  export function ExtenFunc(ObjectData:Object | any  , screenName: string, title:string): JSX.Element {
@@ -32,7 +37,7 @@ export const VideoLists: React.FC<any> = ({
                 style={styles.flatlistContainer}
             >
                 <View style={{
-                    height: DIMENSIONS.HEIGHT / 2,
+                    height:CONSTANTS.DIMENSIONS.HEIGHT / 2,
                     alignItems: 'center',
                     flexDirection: 'row',
                     justifyContent: 'space-between',
@@ -99,8 +104,8 @@ const styles = StyleSheet.create({
         color: COLORS.ButtonText,
     },
     flatlistContainer: {
-        height: DIMENSIONS.HEIGHT * 3,
-        // width: DIMENSIONS.WIDTH * 10,
+        height: CONSTANTS.DIMENSIONS.HEIGHT * 3,
+        // width: CONSTANTS.DIMENSIONS.WIDTH * 10,
         backgroundColor: '#555',
         justifyContent: 'center',
         alignItems: 'center',
@@ -118,12 +123,12 @@ const styles = StyleSheet.create({
     },
     flatlistcard: {
         elevation: 10,
-        height: DIMENSIONS.HEIGHT * 2,
-        width: DIMENSIONS.WIDTH * 4,
+        height: CONSTANTS.DIMENSIONS.HEIGHT * 2,
+        width: CONSTANTS.DIMENSIONS.WIDTH * 4,
         backgroundColor: '#fff',
-        borderBottomLeftRadius: DIMENSIONS.HEIGHT / 2,
-        borderBottomRightRadius: DIMENSIONS.HEIGHT / 2,
-        borderTopRightRadius: DIMENSIONS.HEIGHT / 2,
+        borderBottomLeftRadius: CONSTANTS.DIMENSIONS.HEIGHT / 2,
+        borderBottomRightRadius: CONSTANTS.DIMENSIONS.HEIGHT / 2,
+        borderTopRightRadius: CONSTANTS.DIMENSIONS.HEIGHT / 2,
         padding: 10,
         marginHorizontal: 10,
         marginTop: 10,
@@ -175,20 +180,83 @@ export async function signupAPICalling(endpoint: string, data: { username: strin
           contact: data.phone,
         }),
       });
-    
       const jsonResponse = await response.json();
       console.log('=======', JSON.stringify(jsonResponse));
-      
       return jsonResponse;
-
-      
-     
-
-
     // } catch (error) {
     //   console.log('>>>>>>>>>>', error);
     //   throw new Error('Failed to sign up.');
     //   return error
     // }
   }
+  
+  export const storeData = async (key: string, value: string, module: string): Promise<string> => {
+    try {
+      await AsyncStorage.setItem(key, value);
+      return 'In'+ CONSTANTS.ASYNC_SUCCESS; // or any other string value you want to return on successful storage of data
+    } catch (error:any) {
+    //   console.log(error);
+      return 'In'+module+CONSTANTS.ASYNC_ERROR+ error.message; // or any other error string you want to return on failure
+    }
+  };
+/*
+  export const retrieveData = async (key: string, module: string): Promise<string | null | any> => {
+    try {
+      const value = await AsyncStorage.getItem(key);
+      if (value === null) {
+        console.log("try-if",value)
+        return null
+        //   return 'In' + module + CONSTANTS.ASYNC_ERROR + 'Data not found!'; // or any other error string you want to return if the data is not found
+        } 
+        console.log("try-else",value)
+
+          return value; // return the value if it exists
+      
+    } catch (error:any) {
+      return 'In' + module + CONSTANTS.ASYNC_ERROR + error.message; // or any other error string you want to return if an error occurs while retrieving the data
+    }
+  };
+  */
+  export const retrieveData = async (key: string, module: string): Promise<object> => {
+
+
+
+    try {
+        
+        const value = await AsyncStorage.getItem(key);
+        if (value === null) {
+          const valobj={
+            "status": 'false',
+            "value": value
+          }
+          return valobj;
+        }
+        const parsedValue = JSON.parse(value);
+        const valobj={
+          "status": 'true',
+          "value": parsedValue
+        }
+        return valobj;
+    } catch (error:any) {
+       const valobj={
+        "status": 'true',
+        "value": null
+      }
+      return  valobj;
+    }
+  };
+  
+  
+ export const removeData = async (key : string): Promise<string> => {
+    try {
+      await AsyncStorage.removeItem(key);
+      return key+'Succefully removed'
+    } catch (error: any) {
+      console.log(error);
+      return key+'error in removing'+error.message
+    }
+  };
+  
+  
+
   

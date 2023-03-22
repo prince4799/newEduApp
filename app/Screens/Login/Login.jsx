@@ -26,6 +26,7 @@ import {
   useWindowDimensions,
   View,
   Alert,
+  Linking,
 } from 'react-native';
 import Animated from "react-native-reanimated";
 
@@ -36,6 +37,7 @@ import { COLORS } from '../../Constants/Colors';
 import { SignInUser, CreateNewUser } from '../../Firebase/FirebaseAuth'
 import * as firebaseDB from '../../Firebase/FirebaseDB';
 import { LoginProvider, useLogin } from '../../Statemanagement/Login/LoginContext';
+import { NET_STATUS } from '../../Constants/Constants';
 const Login = ({ navigation }) => {
 
   const { height, width, scale, fontScale } = useWindowDimensions()
@@ -90,7 +92,16 @@ const Login = ({ navigation }) => {
 
   }
 
-
+  const checkNet=()=>{
+    if (!NET_STATUS){
+      Alert.alert(
+        'Internet is not available',
+        'Please turn on your internet connection and try again.',
+        [
+          {text: 'Settings', onPress: () => Linking.openSettings()},
+        ],
+      );}
+  }
 
   return (
     <SafeAreaView style={styles.container}>

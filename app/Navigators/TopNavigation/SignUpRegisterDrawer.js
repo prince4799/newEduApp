@@ -3,7 +3,6 @@ import React, { useState } from 'react';
 
 import { DarkTheme, NavigationContainer } from '@react-navigation/native';
 import { createMaterialTopTabNavigator } from '@react-navigation/material-top-tabs';
-// import SignUp from '../../Screens/SignUp/SignUp';
 import SignupWrapper from '../../Screens/SignUp/SignUp';
 
 import Home from '../../Screens/Home/Home'
@@ -22,50 +21,10 @@ export default function SignUpRegisterDrawer() {
       <Tab.Navigator
 
 
-        // tabBarOptions={{
-        //   headerShown: false,
-        //   activeTintColor: COLORS.Button,
-        //   backgroundColor: COLORS.Button,
-        //   tabBarStyle: { backgroundColor: 'powderblue' },
-        //   labelStyle: {
-        //     textTransform: "uppercase",
-        //   },
-        //   inactiveTintColor: COLORS.Border,
-        //   tabBarIndicatorStyle: {
-        //     height: null,
-        //     top: '10%',
-        //     bottom: '10%',
-        //     width: '45%',
-        //     left: '2.5%',
-        //     borderRadius: 100,
-        //     backgroundColor: COLORS.ButtonText,
-        //   },
-        //   style: {
-        //     alignSelf: "center",
-        //     width: '70%',
-        //     borderRadius: 100,
-        //     // backgroundColor: "black",
-        //     elevation: 5, // shadow on Android
-
-        //   },
-        //   tabStyle: {
-        //     borderRadius: 100,
-        //     // backgroundColor: COLORS.Background,
-
-        //   },
-        // }}
-
+        
         screenOptions={{
           activeTintColor: COLORS.Font,
-          // indicatorStyle: {
-          //   height: null,
-          //   top: '10%',
-          //   bottom: '10%',
-          //   width: '100%',
-          //   left: '2.5%',
-          //   borderRadius: 100,
-          //   backgroundColor: "yellow",
-          // },
+        
           style: {
             alignSelf: "center",
             width: '100%',
@@ -120,4 +79,4 @@ export default function SignUpRegisterDrawer() {
   );
 }
 
-// export default  SignUpRegisterDrawer
+
