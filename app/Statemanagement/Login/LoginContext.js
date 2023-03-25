@@ -15,29 +15,32 @@ export const LoginProvider = ({ children }) => {
     dispatch(loginRequest());
     console.log("loginuser",user)
     try {
-      const response = await fetch('http://192.168.101.57:5500/auth/signin', {
+      const response = await fetch('http://192.168.102.158:5500/auth/signin', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          "userid":user.id,
-          "password":user.password,
-          // "userid":9621205058,
+          "userid":user.id.toString(),
+          "password":user.password.toString(),
+          // "userid":"vipero",
           // "password":"Qwerty56"
         }),
       });
 
       const data = await response.json();
-      // console.log(">>>>",state);
-      if(data.status==200)
-      dispatch(loginSuccess(data));
+      // console.log(">>loginprovider>>",data);
+      if(data.statuscode==200){
+        dispatch(loginSuccess(data));
+      }
       else{
         dispatch(loginFailure(data));
       }
     } catch (error) {
       console.log("....",error);
-      dispatch(loginFailure(error.message));
-
-      
+      const customError={
+        "message":error.message,
+        "statuscode":900,
+      }
+      dispatch(loginFailure(customError));
     }
   };
 

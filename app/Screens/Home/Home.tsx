@@ -8,11 +8,13 @@ import {
   ImageBackground,
   TouchableOpacity
 } from 'react-native';
-import Animated, { FadeInUp, log,SlideInLeft,SlideInRight,ZoomIn } from 'react-native-reanimated';
+import Animated, { FadeInUp, log, SlideInLeft, SlideInRight, ZoomIn } from 'react-native-reanimated';
 import * as CONSTANTS from '../../Constants/Constants'
 import { IMAGES } from "../../Assets/Images/Images"
 import { FlatList, ScrollView, TextInput } from 'react-native-gesture-handler';
 import { COLORS } from '../../Constants/Colors';
+import AnimatedView from '../../Components/AnimatedView';
+import { useNetInfo } from '@react-native-community/netinfo';
 
 // import * as CONSTANTS from '../../Constants/Constants'
 
@@ -21,7 +23,17 @@ const Home = () => {
   const [search, setSearch] = useState('')
   const scrollX = useRef(new Animated.Value(0)).current
 
+  const netInfo = useNetInfo();
+  const net = netInfo.isConnected;
+
+
   return (
+ 
+    // <AnimatedView
+    //       netStatus={false}
+    //     />
+   
+    
     <ScrollView style={{ flex: 1 }}>
       <View
         // aria-busy={true}
@@ -30,15 +42,17 @@ const Home = () => {
           style={{
             // height: _height * 10,
             height: CONSTANTS.DIMENSIONS.HEIGHT * 10,
-
+            
             width: CONSTANTS.DIMENSIONS.WIDTH * 10,
             justifyContent: 'center',
             alignItems: 'center',
             position: 'absolute',
             top: - CONSTANTS.DIMENSIONS.HEIGHT * 2,
             zIndex: -1,
-
+            
           }} source={IMAGES.halfbg} />
+          
+
         <Text
           style={{
             color: '#fff',
@@ -51,6 +65,7 @@ const Home = () => {
             console.log("positions", e.nativeEvent.locationX, e.nativeEvent.locationY);
           }}
         >Welcome Back ! {`\n`}userName</Text>
+
         <View
           style={{
             height: CONSTANTS.DIMENSIONS.HEIGHT,
@@ -83,6 +98,7 @@ const Home = () => {
               padding: 5,
             }}
           />
+          
           <Image source={IMAGES.glass}
             style={{
               height: "50%",
@@ -92,6 +108,8 @@ const Home = () => {
               tintColor: '#dbd7d7'
             }} />
         </View>
+        {net?<AnimatedView netStatus={true} />:<AnimatedView netStatus={false} /> }
+
         <ImageBackground
           source={IMAGES.gradientbg}
           resizeMode={'stretch'}
@@ -104,6 +122,7 @@ const Home = () => {
             elevation: 5,
             marginTop: CONSTANTS.DIMENSIONS.HEIGHT / 4,
           }}>
+
           <Text
             style={{
               color: '#fff',
@@ -139,7 +158,7 @@ const Home = () => {
             <View style={{
               flexDirection: 'row',
               justifyContent: 'space-between',
-              width:CONSTANTS.DIMENSIONS.WIDTH*10,
+              width: CONSTANTS.DIMENSIONS.WIDTH * 10,
             }}>
               <Text style={{
                 fontSize: 18,
@@ -151,22 +170,22 @@ const Home = () => {
                 marginLeft: 10,
                 marginTop: 10,
               }}>My Activities{`\n`}</Text>
-              <Text 
-              onPress={()=>console.log("..View All..")
-              }
-              style={{
-                fontSize: 18,
-                fontWeight: 'bold',
-                color: '#fff',
-                alignSelf: 'flex-start',
-                textAlignVertical: 'center',
-                marginTop: 10,
-                textDecorationLine:'underline',
+              <Text
+                onPress={() => console.log("..View All..")
+                }
+                style={{
+                  fontSize: 18,
+                  fontWeight: 'bold',
+                  color: '#fff',
+                  alignSelf: 'flex-start',
+                  textAlignVertical: 'center',
+                  marginTop: 10,
+                  textDecorationLine: 'underline',
 
-              }}>View All{`\n`}</Text>
+                }}>View All{`\n`}</Text>
             </View>
             <Animated.FlatList
-            entering={FadeInUp}
+              entering={FadeInUp}
               showsHorizontalScrollIndicator={false}
               data={[1, 2, 3, 4,]}
               horizontal
@@ -192,7 +211,7 @@ const Home = () => {
                       width: CONSTANTS.DIMENSIONS.WIDTH * 1.5,
                       backgroundColor: COLORS.T_background,
                       borderTopRightRadius: CONSTANTS.DIMENSIONS.HEIGHT,
-                    }}/ >
+                    }} />
                     <Text style={{ marginLeft: 5, fontWeight: 'bold', }}>$5000{`\n`}per month</Text>
                   </View>
                   <Text style={{ fontSize: CONSTANTS.DIMENSIONS.HEIGHT / 5, fontWeight: 'bold', paddingTop: 5, }}>Zumba Training</Text>
@@ -213,7 +232,8 @@ const Home = () => {
 
       </View>
     </ScrollView>
-  );
+  
+    );
 };
 
 const styles = StyleSheet.create({

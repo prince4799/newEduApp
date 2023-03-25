@@ -6,7 +6,7 @@
  * @flow strict-local
  */
 
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { GoogleSignin } from '@react-native-google-signin/google-signin';
 
 import {
@@ -38,18 +38,30 @@ import { SignInUser, CreateNewUser } from '../../Firebase/FirebaseAuth'
 import * as firebaseDB from '../../Firebase/FirebaseDB';
 import { LoginProvider, useLogin } from '../../Statemanagement/Login/LoginContext';
 import { NET_STATUS } from '../../Constants/Constants';
+import { initialState } from '../../Statemanagement/Login/LoginReducer';
+import AnimatedView from '../../Components/AnimatedView';
 const Login = ({ navigation }) => {
 
   const { height, width, scale, fontScale } = useWindowDimensions()
   const [id, setId] = useState('')
+  const [checkValid, setCheckValid] = useState(false)
   const [password, setPassword] = useState('')
   const { state, dispatch, loginUser } = useLogin();
-
+  const [isFlipped, setIsFlipped] = useState(false);
   const portrait = (height / 10) * 5;
   const landscape = (height / 10) * 8
   const rotateY = new Animated.Value(0);
   // const AnimatedBackground = Animated.createAnimatedComponent(View);
+  const flipCard = () => {
 
+    setIsFlipped(!isFlipped);
+    // console.log(">>>",isFlipped)
+    Animated.timing(rotateY, {
+      toValue: isFlipped ? 0 : 1,
+      duration: 500,
+      useNativeDriver: true,
+    }).start();
+  };
   const flipToFrontStyle = {
     transform: [
       {
@@ -61,57 +73,71 @@ const Login = ({ navigation }) => {
     ]
   };
 
-  const loginValidation = ({ id, password }) => {
+  // useEffect=(()=>{
+  //   flipCard();
+  // },[])
 
-    if (!id || !password) {
-      Alert.alert('Enter the Credentials!')
-      return;
-    }
-    const user = { id, password }
-    loginUser(user)
-    console.log("state from Login", state)
-
-    if(state.error){
+  useEffect(() => {
+    if (state && state.error && state !== initialState && checkValid) {
       ToastAndroid.showWithGravityAndOffset(
         state.error.message,
         ToastAndroid.LONG,
         ToastAndroid.BOTTOM,
         25,
         50,
-      )
-    } else {
+      );
+      return;
+    }
+    if (state.user && state && state !== initialState && checkValid) {
       ToastAndroid.showWithGravityAndOffset(
         state.user.message,
         ToastAndroid.LONG,
         ToastAndroid.BOTTOM,
         25,
         50,
-      )
-      props.navigation.navigate('BottomTab')
+      );
+      console.log("=====", state.user.token)
+      navigation.navigate('BottomTab');
     }
 
-  }
+  }, [state])
 
-  const checkNet=()=>{
-    if (!NET_STATUS){
-      Alert.alert(
-        'Internet is not available',
-        'Please turn on your internet connection and try again.',
-        [
-          {text: 'Settings', onPress: () => Linking.openSettings()},
-        ],
-      );}
+  const loginValidation = ({ id, password }) => {
+    console.log("net",NET_STATUS);
+    if (NET_STATUS== false) {
+      ToastAndroid.showWithGravityAndOffset(
+        'Internet not available!',
+        ToastAndroid.LONG,
+        ToastAndroid.BOTTOM,
+        25,
+        50,
+      )
+      return;
+    }
+    if (!id || !password) {
+      ToastAndroid.showWithGravityAndOffset(
+        'Enter the Credentials!',
+        ToastAndroid.LONG,
+        ToastAndroid.BOTTOM,
+        25,
+        50,
+      )
+      return;
+    }
+    const user = { id, password }
+    loginUser(user)
+    console.log("state from Login", state)
+    setCheckValid(true)
   }
-
-  return (
+return (
     <SafeAreaView style={styles.container}>
+
       <ImageBackground style={{ height: height, width: width, justifyContent: 'center', alignItems: 'center', }} resizeMode='cover' source={require("../../Assets/Images/gradient_bg.png")} >
         <Animated.View style={{ flipToFrontStyle }}>
           <ImageBackground style={{ ...styles.form(height, width), }} source={require("../../Assets/Images/half_bg.png")} >
-
             <View style={{ ...styles.form(height, width), }}>
               <ScrollView style={{ height: (height / 10) * 8, }}>
-
+             
                 <View style={{ alignSelf: 'center' }}>
                   <Text style={{ fontWeight: 'bold', fontSize: 24, top: 10, color: COLORS.Font }}>LOGIN</Text>
                   <View style={{ height: '20%', width: '25%', backgroundColor: '#fff', top: 0, margin: 10 }} />
@@ -139,8 +165,8 @@ const Login = ({ navigation }) => {
                   <View style={{ bottom: 0, top: '40%' }}>
 
                     <TouchableOpacity
-                      onPress={() => loginValidation({ id, password })}
-                      // onPress={() => navigation.navigate('BottomTab')}
+                      // onPress={() => loginValidation({ id, password })}
+                      onPress={() => navigation.replace('BottomTab')}
                       style={{
                         ...styles.button,
                         width: (width / 10) * 6,
@@ -153,29 +179,30 @@ const Login = ({ navigation }) => {
                         width: (width / 10) * 6,
                         alignItems: 'center',
                       }}
-                     /* onPress={() => {
-                        try {
+                    // onPress={()=>flipCard()}
+                    /* onPress={() => {
+                       try {
 
-                          fetch('http://192.168.101.184:3000/api/user/createNew',
-                            {
-                              method: 'POST',
-                              headers: {
-                                "Content-Type": "application/json"
-                              },
+                         fetch('http://192.168.101.184:3000/api/user/createNew',
+                           {
+                             method: 'POST',
+                             headers: {
+                               "Content-Type": "application/json"
+                             },
 
-                              body: JSON.stringify({
-                                "username": "Prince",
-                                "password": "prince@123",
-                                "id": "prince@gmail.com"
-                              })
-                            })
-                            .then((res) => res.json())
-                            .then(res => console.log(JSON.stringify(res)))
-                        } catch (err) {
-                          console.log("errr in hitting api", err)
-                          throw err;
-                        }
-                      }}*/
+                             body: JSON.stringify({
+                               "username": "Prince",
+                               "password": "prince@123",
+                               "id": "prince@gmail.com"
+                             })
+                           })
+                           .then((res) => res.json())
+                           .then(res => console.log(JSON.stringify(res)))
+                       } catch (err) {
+                         console.log("errr in hitting api", err)
+                         throw err;
+                       }
+                     }}*/
                     >
                       <Text style={styles.buttonText}>SignIn with google</Text>
                       <Image

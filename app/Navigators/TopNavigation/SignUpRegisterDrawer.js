@@ -19,12 +19,8 @@ export default function SignUpRegisterDrawer() {
   return (
 
       <Tab.Navigator
-
-
-        
         screenOptions={{
           activeTintColor: COLORS.Font,
-        
           style: {
             alignSelf: "center",
             width: '100%',
@@ -64,9 +60,6 @@ export default function SignUpRegisterDrawer() {
             
           },
         }}
-
-
-
       >
         <Tab.Screen
           headerShown={false}
