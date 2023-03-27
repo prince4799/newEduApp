@@ -40,6 +40,8 @@ import { LoginProvider, useLogin } from '../../Statemanagement/Login/LoginContex
 import { NET_STATUS } from '../../Constants/Constants';
 import { initialState } from '../../Statemanagement/Login/LoginReducer';
 import AnimatedView from '../../Components/AnimatedView';
+import { IMAGES } from '../../Assets/Images/Images'
+import RadioButton from '../../Components/RadioButton';
 const Login = ({ navigation }) => {
 
   const { height, width, scale, fontScale } = useWindowDimensions()
@@ -51,6 +53,8 @@ const Login = ({ navigation }) => {
   const portrait = (height / 10) * 5;
   const landscape = (height / 10) * 8
   const rotateY = new Animated.Value(0);
+  const [secureText, setSecureText] = useState < boolean > (false)
+  const [userType,setUserType]=useState<String>('')
   // const AnimatedBackground = Animated.createAnimatedComponent(View);
   const flipCard = () => {
 
@@ -103,8 +107,8 @@ const Login = ({ navigation }) => {
   }, [state])
 
   const loginValidation = ({ id, password }) => {
-    console.log("net",NET_STATUS);
-    if (NET_STATUS== false) {
+    console.log("net", NET_STATUS);
+    if (NET_STATUS == false) {
       ToastAndroid.showWithGravityAndOffset(
         'Internet not available!',
         ToastAndroid.LONG,
@@ -129,7 +133,7 @@ const Login = ({ navigation }) => {
     console.log("state from Login", state)
     setCheckValid(true)
   }
-return (
+  return (
     <SafeAreaView style={styles.container}>
 
       <ImageBackground style={{ height: height, width: width, justifyContent: 'center', alignItems: 'center', }} resizeMode='cover' source={require("../../Assets/Images/gradient_bg.png")} >
@@ -137,7 +141,7 @@ return (
           <ImageBackground style={{ ...styles.form(height, width), }} source={require("../../Assets/Images/half_bg.png")} >
             <View style={{ ...styles.form(height, width), }}>
               <ScrollView style={{ height: (height / 10) * 8, }}>
-             
+
                 <View style={{ alignSelf: 'center' }}>
                   <Text style={{ fontWeight: 'bold', fontSize: 24, top: 10, color: COLORS.Font }}>LOGIN</Text>
                   <View style={{ height: '20%', width: '25%', backgroundColor: '#fff', top: 0, margin: 10 }} />
@@ -145,24 +149,49 @@ return (
                 </View>
 
                 <KeyboardAvoidingView style={{ height: height > width ? portrait : landscape, width: '90%', alignSelf: 'center', marginBottom: 80, }} behavior='padding' >
+
                   <View style={{ ...styles.inputContainer }} >
                     <Image style={styles.inputImg} source={require('../../Assets/Images/mail.png')} />
                     <TextInput style={styles.inputs}
                       value={id}
                       onChangeText={(text) => setId(text)}
-                      placeholder='Enter Your Mail' />
+                      placeholder='Mail/Username' />
                   </View>
                   <View style={styles.inputContainer}>
                     <Image style={styles.inputImg} source={require('../../Assets/Images/padlock.png')} />
 
                     <TextInput style={styles.inputs}
                       value={password}
+                      secureTextEntry={secureText}
                       onChangeText={(text) => setPassword(text)}
-                      placeholder='Enter Your Password' />
-                    <Image style={{ ...styles.inputImg, }} source={require('../../Assets/Images/eye.png')} />
+                      placeholder='Password' />
+                    <TouchableOpacity onPress={() => setSecureText(!secureText)}>
+                      <Image style={{ ...styles.inputImg, }} source={secureText ? IMAGES.eyeopen : IMAGES.eyeclosed} />
+                    </TouchableOpacity>
                   </View>
-
-                  <View style={{ bottom: 0, top: '40%' }}>
+                  <View style={{
+                    flexDirection: 'row',
+                    top: '5%', 
+                    alignItems: 'center',
+                  }}>
+                    <RadioButton
+                      label={"Admin"}
+                      value={userType}
+                      selectedValue={'Admin'}
+                      onSelect={()=>
+                        setUserType('Admin')
+                      }
+                    />
+                    <RadioButton
+                      label={"User"}
+                      value={userType}
+                      selectedValue={'User'}
+                      onSelect={()=>
+                        setUserType('User')
+                      }
+                    />
+                  </View>
+                  <View style={{ bottom: 0, top: '30%' }}>
 
                     <TouchableOpacity
                       // onPress={() => loginValidation({ id, password })}

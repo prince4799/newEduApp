@@ -4,13 +4,17 @@ import { IMAGES } from '../../Assets/Images/Images';
 import { COLORS } from '../../Constants/Colors';
 import { DIMENSIONS } from '../../Constants/Constants';
 import Animated, { BounceInLeft, BounceInRight } from 'react-native-reanimated';
+import { useNetInfo } from '@react-native-community/netinfo';
+import AnimatedView from '../../Components/AnimatedView';
+
 
 const Profile = () => {
-
+    const netInfo = useNetInfo();
+    const net = netInfo.isConnected;
     return (
         <SafeAreaView
             style={{ flex: 1, backgroundColor: '#fff' }}>
-
+                <AnimatedView netStatus={net} style={{ top: 320, position: 'absolute' }} />
             <Image
                 source={IMAGES.halfbg}
                 style={{

@@ -88,7 +88,6 @@ const Home = () => {
             elevation: 5,
           }}
         >
-
           <TextInput
             value={search}
             placeholder='Explore'
@@ -108,8 +107,7 @@ const Home = () => {
               tintColor: '#dbd7d7'
             }} />
         </View>
-        {net?<AnimatedView netStatus={true} />:<AnimatedView netStatus={false} /> }
-
+       <AnimatedView netStatus={net} style={{top:130}} />
         <ImageBackground
           source={IMAGES.gradientbg}
           resizeMode={'stretch'}

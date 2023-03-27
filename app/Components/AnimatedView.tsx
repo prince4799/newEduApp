@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import { View, StyleSheet, Text } from 'react-native';
+import { View, StyleSheet, Text, StyleProp,ViewStyle } from 'react-native';
 import Animated, {
     useSharedValue,
     useAnimatedStyle,
@@ -9,9 +9,11 @@ import { useIsFocused } from '@react-navigation/native';
 import { DIMENSIONS, NET_STATUS } from '../Constants/Constants';
 import { SafeAreaView } from 'react-native-safe-area-context';
 interface Props {
-    netStatus: boolean;
+    netStatus: boolean|null;
+    style?: StyleProp<ViewStyle>;
+
 }
-const AnimatedView: React.FC<Props> = ({ netStatus, }) => {
+const AnimatedView: React.FC<Props> = ({ netStatus,style }) => {
     const isFocused = useIsFocused();
     const translateY = useSharedValue(-DIMENSIONS.HEIGHT*6);
     const slideIn = () => {
@@ -45,7 +47,7 @@ const AnimatedView: React.FC<Props> = ({ netStatus, }) => {
     }, [netStatus])
 
     return (
-                <Animated.View style={[styles.view, animatedStyle]}>
+                <Animated.View style={[styles.view, animatedStyle,style]}>
                     <Text style={{ color: '#fff', fontSize: 12, fontWeight: '300' }}>
                         No Internet Connection.
                     </Text>
@@ -57,17 +59,14 @@ const AnimatedView: React.FC<Props> = ({ netStatus, }) => {
 const styles = StyleSheet.create({
     view: {
         width: '100%',
-        // heights:200,
         height: DIMENSIONS.HEIGHT / 1.8,
         backgroundColor: '#000',
         borderBottomLeftRadius: 20,
         borderBottomRightRadius: 20,
         justifyContent: 'center',
         alignItems: 'center',
-        // position: 'absolute',
-        top:130,
         zIndex:9,
-        flex:1
+       
     }
 });
 

@@ -100,10 +100,10 @@ const Splash = ({ navigation }) => {
     extFun.retrieveData('@isLoggedIn', MODULE_NAME).then(
       (val) => {
         if (val.status === 'false' && isConnected && route.name === 'Splash') {
-              navigation.navigate('SignUpRegisterDrawer')
+              navigation.replace('SignUpRegisterDrawer')
         }
          else if (isConnected ==true && route.name === 'Splash') 
-              navigation.navigate('BottomTab')
+              navigation.replace('BottomTab')
       });
   };
 
@@ -143,10 +143,23 @@ const Splash = ({ navigation }) => {
 */
   return (
     <View style={styles.container}>
-        <AnimatedView
+      <View
+          style={{
+            height: CONSTANTS.DIMENSIONS.HEIGHT / 2,
+            width: CONSTANTS.DIMENSIONS.WIDTH * 10,
+            justifyContent: 'center',
+            flexDirection: 'row',
+            top:0,
+            alignSelf:'flex-start',
+          }}
+        >
+          <AnimatedView
           netStatus={isConnected}
         />
+        </View>
+        
     </View>
+    
   );
 
 };
