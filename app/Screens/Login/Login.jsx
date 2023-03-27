@@ -6,110 +6,251 @@
  * @flow strict-local
  */
 
-import React, { useState } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { GoogleSignin } from '@react-native-google-signin/google-signin';
 
 import {
   Button,
+  Image,
+  ImageBackground,
+  KeyboardAvoidingView,
   SafeAreaView,
   ScrollView,
   StatusBar,
   StyleSheet,
-  Image,
   Text,
-  useColorScheme,
-  View,
   TouchableOpacity,
-  useWindowDimensions,
+  ToastAndroid,
   TextInput,
-  KeyboardAvoidingView,
-  ImageBackground
+  useColorScheme,
+  useWindowDimensions,
+  View,
+  Alert,
+  Linking,
 } from 'react-native';
+import Animated from "react-native-reanimated";
+
 
 import { COLORS } from '../../Constants/Colors';
 // import * as FirebaseAuth from "../../Firebase/FirebaseAuth"
 // import { SignInUser } from '../../Firebase/FirebaseAuth';
-import {SignInUser,CreateNewUser} from '../../Firebase/FirebaseAuth'
+import { SignInUser, CreateNewUser } from '../../Firebase/FirebaseAuth'
 import * as firebaseDB from '../../Firebase/FirebaseDB';
-const Login = () => {
+import { LoginProvider, useLogin } from '../../Statemanagement/Login/LoginContext';
+import { NET_STATUS } from '../../Constants/Constants';
+import { initialState } from '../../Statemanagement/Login/LoginReducer';
+import AnimatedView from '../../Components/AnimatedView';
+import { IMAGES } from '../../Assets/Images/Images'
+import RadioButton from '../../Components/RadioButton';
+const Login = ({ navigation }) => {
 
   const { height, width, scale, fontScale } = useWindowDimensions()
-  const [email, setEmail] = useState('')
+  const [id, setId] = useState('')
+  const [checkValid, setCheckValid] = useState(false)
   const [password, setPassword] = useState('')
+  const { state, dispatch, loginUser } = useLogin();
+  const [isFlipped, setIsFlipped] = useState(false);
   const portrait = (height / 10) * 5;
   const landscape = (height / 10) * 8
+  const rotateY = new Animated.Value(0);
+  const [secureText, setSecureText] = useState < boolean > (false)
+  const [userType,setUserType]=useState<String>('')
+  // const AnimatedBackground = Animated.createAnimatedComponent(View);
+  const flipCard = () => {
 
+    setIsFlipped(!isFlipped);
+    // console.log(">>>",isFlipped)
+    Animated.timing(rotateY, {
+      toValue: isFlipped ? 0 : 1,
+      duration: 500,
+      useNativeDriver: true,
+    }).start();
+  };
+  const flipToFrontStyle = {
+    transform: [
+      {
+        rotateY: rotateY.interpolate({
+          inputRange: [0, 1],
+          outputRange: ['0deg', '180deg']
+        })
+      }
+    ]
+  };
+
+  // useEffect=(()=>{
+  //   flipCard();
+  // },[])
+
+  useEffect(() => {
+    if (state && state.error && state !== initialState && checkValid) {
+      ToastAndroid.showWithGravityAndOffset(
+        state.error.message,
+        ToastAndroid.LONG,
+        ToastAndroid.BOTTOM,
+        25,
+        50,
+      );
+      return;
+    }
+    if (state.user && state && state !== initialState && checkValid) {
+      ToastAndroid.showWithGravityAndOffset(
+        state.user.message,
+        ToastAndroid.LONG,
+        ToastAndroid.BOTTOM,
+        25,
+        50,
+      );
+      console.log("=====", state.user.token)
+      navigation.navigate('BottomTab');
+    }
+
+  }, [state])
+
+  const loginValidation = ({ id, password }) => {
+    console.log("net", NET_STATUS);
+    if (NET_STATUS == false) {
+      ToastAndroid.showWithGravityAndOffset(
+        'Internet not available!',
+        ToastAndroid.LONG,
+        ToastAndroid.BOTTOM,
+        25,
+        50,
+      )
+      return;
+    }
+    if (!id || !password) {
+      ToastAndroid.showWithGravityAndOffset(
+        'Enter the Credentials!',
+        ToastAndroid.LONG,
+        ToastAndroid.BOTTOM,
+        25,
+        50,
+      )
+      return;
+    }
+    const user = { id, password }
+    loginUser(user)
+    console.log("state from Login", state)
+    setCheckValid(true)
+  }
   return (
     <SafeAreaView style={styles.container}>
-            <ImageBackground style={{height:height,width:width,justifyContent:'center',alignItems:'center'}} resizeMode='cover' source={require("../../Assets/Images/gradient_bg.png")} >
 
-      <ImageBackground style={{ ...styles.form(height, width), elevation:8 }} source={require("../../Assets/Images/half_bg.png")} >
+      <ImageBackground style={{ height: height, width: width, justifyContent: 'center', alignItems: 'center', }} resizeMode='cover' source={require("../../Assets/Images/gradient_bg.png")} >
+        <Animated.View style={{ flipToFrontStyle }}>
+          <ImageBackground style={{ ...styles.form(height, width), }} source={require("../../Assets/Images/half_bg.png")} >
+            <View style={{ ...styles.form(height, width), }}>
+              <ScrollView style={{ height: (height / 10) * 8, }}>
 
-      <View style={{ ...styles.form(height, width), borderRadius: 10, }}>
-        <ScrollView style={{ height: (height / 10) * 8, }}>
+                <View style={{ alignSelf: 'center' }}>
+                  <Text style={{ fontWeight: 'bold', fontSize: 24, top: 10, color: COLORS.Font }}>LOGIN</Text>
+                  <View style={{ height: '20%', width: '25%', backgroundColor: '#fff', top: 0, margin: 10 }} />
+                  <Text>APP LOGO</Text>
+                </View>
 
-          <View style={{ alignSelf: 'center' }}>
-            <Text style={{ fontWeight: 'bold', fontSize: 24, top:10, color: COLORS.Font }}>LOGIN</Text>
-            <View style={{ height: '20%', width: '25%', backgroundColor: '#fff', top: 0, margin: 10 }} />
-            <Text>APP LOGO</Text>
-          </View>
+                <KeyboardAvoidingView style={{ height: height > width ? portrait : landscape, width: '90%', alignSelf: 'center', marginBottom: 80, }} behavior='padding' >
 
-          <KeyboardAvoidingView style={{ height: height > width ? portrait : landscape, width: '90%', alignSelf: 'center', marginBottom: 80, }} behavior='padding' >
-            <View style={{ ...styles.inputContainer }} >
-              <Image style={styles.inputImg} source={require('../../Assets/Images/mail.png')} />
-              <TextInput style={styles.inputs}
-                value={email}
-                onChangeText={(text) => setEmail(text)}
-                placeholder='Enter Your Mail' />
+                  <View style={{ ...styles.inputContainer }} >
+                    <Image style={styles.inputImg} source={require('../../Assets/Images/mail.png')} />
+                    <TextInput style={styles.inputs}
+                      value={id}
+                      onChangeText={(text) => setId(text)}
+                      placeholder='Mail/Username' />
+                  </View>
+                  <View style={styles.inputContainer}>
+                    <Image style={styles.inputImg} source={require('../../Assets/Images/padlock.png')} />
+
+                    <TextInput style={styles.inputs}
+                      value={password}
+                      secureTextEntry={secureText}
+                      onChangeText={(text) => setPassword(text)}
+                      placeholder='Password' />
+                    <TouchableOpacity onPress={() => setSecureText(!secureText)}>
+                      <Image style={{ ...styles.inputImg, }} source={secureText ? IMAGES.eyeopen : IMAGES.eyeclosed} />
+                    </TouchableOpacity>
+                  </View>
+                  <View style={{
+                    flexDirection: 'row',
+                    top: '5%', 
+                    alignItems: 'center',
+                  }}>
+                    <RadioButton
+                      label={"Admin"}
+                      value={userType}
+                      selectedValue={'Admin'}
+                      onSelect={()=>
+                        setUserType('Admin')
+                      }
+                    />
+                    <RadioButton
+                      label={"User"}
+                      value={userType}
+                      selectedValue={'User'}
+                      onSelect={()=>
+                        setUserType('User')
+                      }
+                    />
+                  </View>
+                  <View style={{ bottom: 0, top: '30%' }}>
+
+                    <TouchableOpacity
+                      // onPress={() => loginValidation({ id, password })}
+                      onPress={() => navigation.replace('BottomTab')}
+                      style={{
+                        ...styles.button,
+                        width: (width / 10) * 6,
+                      }}>
+                      <Text style={styles.buttonText}>LOGIN</Text>
+                    </TouchableOpacity>
+                    <TouchableOpacity
+                      style={{
+                        ...styles.button,
+                        width: (width / 10) * 6,
+                        alignItems: 'center',
+                      }}
+                    // onPress={()=>flipCard()}
+                    /* onPress={() => {
+                       try {
+
+                         fetch('http://192.168.101.184:3000/api/user/createNew',
+                           {
+                             method: 'POST',
+                             headers: {
+                               "Content-Type": "application/json"
+                             },
+
+                             body: JSON.stringify({
+                               "username": "Prince",
+                               "password": "prince@123",
+                               "id": "prince@gmail.com"
+                             })
+                           })
+                           .then((res) => res.json())
+                           .then(res => console.log(JSON.stringify(res)))
+                       } catch (err) {
+                         console.log("errr in hitting api", err)
+                         throw err;
+                       }
+                     }}*/
+                    >
+                      <Text style={styles.buttonText}>SignIn with google</Text>
+                      <Image
+                        style={{
+                          ...styles.inputImg,
+                          height: 30,
+                          width: 30,
+                          tintColor: null
+                        }}
+                        source={require('../../Assets/Images/google.png')} />
+                    </TouchableOpacity>
+                  </View>
+                </KeyboardAvoidingView>
+              </ScrollView>
+              {/* <Text onPress={()=>flipToFrontStyle()} style={styles.link}>Create New Account.</Text> */}
             </View>
-            <View style={styles.inputContainer}>
-              <Image style={styles.inputImg} source={require('../../Assets/Images/padlock.png')} />
-
-              <TextInput style={styles.inputs}
-                value={password}
-                onChangeText={(text) => setPassword(text)}
-                placeholder='Enter Your Password' />
-              <Image style={{ ...styles.inputImg, }} source={require('../../Assets/Images/eye.png')} />
-            </View>
-
-            <View style={{ bottom: 0, top: '40%' }}>
-
-              <TouchableOpacity
-              onPress={()=>SignInUser({email,password})}
-              // onPress={()=>firebaseDB.FirebaseDBPush({email,password})}
-              // onPress={()=>firebaseDB.FirebaseDBRead()}
-
-              style={{
-                ...styles.button,
-                width: (width / 10) * 6,
-              }}>
-                <Text style={styles.buttonText}>LOGIN</Text>
-              </TouchableOpacity>
-
-            
-              <TouchableOpacity
-                style={{
-                  ...styles.button,
-                  width: (width / 10) * 6,
-                  alignItems: 'center',
-                }}>
-                <Text style={styles.buttonText}>SignIn with google</Text>
-                <Image
-                  style={{
-                    ...styles.inputImg,
-                    height: 30,
-                    width: 30,
-                    tintColor: null
-                  }}
-                  source={require('../../Assets/Images/google.png')} />
-              </TouchableOpacity>
-            </View>
-          </KeyboardAvoidingView>
-        </ScrollView>
-
-      </View>
-
-      </ImageBackground>
+            <Text onPress={() => navigation.navigate('SignUp')} style={[styles.link]}>Create  An Account</Text>
+          </ImageBackground>
+        </Animated.View>
       </ImageBackground>
 
     </SafeAreaView>
@@ -122,12 +263,12 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
+
   },
   form: (deviceHeight, deviceWidth) => ({
     height: (deviceHeight / 10) * 8,
     width: (deviceWidth / 10) * 8,
     backgroundColor: COLORS['T-Background'],
-    
 
 
   }),
@@ -172,7 +313,24 @@ const styles = StyleSheet.create({
     alignSelf: 'center',
     textAlign: 'center',
     color: COLORS.ButtonText
+  },
+  link: {
+    color: COLORS.Links,
+    textDecorationLine: 'underline',
+    alignSelf: 'center',
+    // backgroundColor:'red',
+    bottom: '5%'
   }
 });
 
-export default Login;
+// export default Login;
+
+const LoginWrapper = (props) => {
+  return (
+    <LoginProvider>
+      <Login {...props} />
+    </LoginProvider>
+  );
+};
+
+export default LoginWrapper;

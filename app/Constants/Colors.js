@@ -1,9 +1,11 @@
 export const COLORS = {
     "Button": "#FB7BA2",
     "ButtonText":'#E5E6E4',
-    "Background": "#001805",
+    "Background": "#000",
     "T_background":'#FB7BA2',
     "Font": "#E5E6E4",
     "Border": "#d0ffdb",
+    "Links" :"#FB7BA2",
+    "Blue": "#6bc5f2"
 // DEC4FC
 }
