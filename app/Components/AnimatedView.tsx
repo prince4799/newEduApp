@@ -20,7 +20,7 @@ const AnimatedView: React.FC<Props> = ({ netStatus,style }) => {
         translateY.value = withTiming(-DIMENSIONS.HEIGHT*4.8, { duration: 2000 });
     };
     const slideOut = () => {
-        translateY.value = withTiming(-DIMENSIONS.HEIGHT*6, { duration: 2000 }, () => {
+        translateY.value = withTiming(-DIMENSIONS.HEIGHT*6, { duration: 2500 }, () => {
         });
     };
         //   console.log("");
@@ -47,9 +47,9 @@ const AnimatedView: React.FC<Props> = ({ netStatus,style }) => {
     }, [netStatus])
 
     return (
-                <Animated.View style={[styles.view, animatedStyle,style]}>
+                <Animated.View style={[styles.view, animatedStyle,style ,{ backgroundColor:netStatus?'green': '#000',}]}>
                     <Text style={{ color: '#fff', fontSize: 12, fontWeight: '300' }}>
-                        No Internet Connection.
+                       {netStatus?'Internet Connected': 'No Internet Connection.'}
                     </Text>
                 </Animated.View>
     );
@@ -60,7 +60,7 @@ const styles = StyleSheet.create({
     view: {
         width: '100%',
         height: DIMENSIONS.HEIGHT / 1.8,
-        backgroundColor: '#000',
+       
         borderBottomLeftRadius: 20,
         borderBottomRightRadius: 20,
         justifyContent: 'center',

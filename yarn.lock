@@ -6143,14 +6143,7 @@
   dependencies:
     "minimatch" "^3.0.2"
 
-"node-fetch@^2.2.0", "node-fetch@^2.6.0":
-  "integrity" "sha512-RZ6dBYuj8dRSfxpUSu+NsdF1dpPpluJxwOp+6IoDp/sH2QNDSvurYsAa+F1WxY2RjA1iP93xhcsUoYbF2XBqVg=="
-  "resolved" "https://registry.npmjs.org/node-fetch/-/node-fetch-2.6.8.tgz"
-  "version" "2.6.8"
-  dependencies:
-    "whatwg-url" "^5.0.0"
-
-"node-fetch@2.6.7":
+"node-fetch@^2.2.0", "node-fetch@^2.6.0", "node-fetch@2.6.7":
   "integrity" "sha512-ZjMPFEfVx5j+y2yF35Kzx5sF7kDzxuDj6ziH4FFbOp87zKDZNx8yExJIb05OGF4Nlt9IHFIMBkRl41VdvcNdbQ=="
   "resolved" "https://registry.npmjs.org/node-fetch/-/node-fetch-2.6.7.tgz"
   "version" "2.6.7"
@@ -8150,7 +8143,7 @@
     "y18n" "^4.0.0"
     "yargs-parser" "^18.1.2"
 
-"yargs@^16.1.1":
+"yargs@^16.1.1", "yargs@^16.2.0":
   "integrity" "sha512-D1mvvtDG0L5ft/jGWkLpG1+m0eQxOfaBvTNELraWj22wSVUMWxZUvYgJYcKh6jGGIkJFhH4IZPQhR4TKpc8mBw=="
   "resolved" "https://registry.npmjs.org/yargs/-/yargs-16.2.0.tgz"
   "version" "16.2.0"
@@ -8163,20 +8156,20 @@
     "y18n" "^5.0.5"
     "yargs-parser" "^20.2.2"
 
-"yargs@^16.2.0":
-  "integrity" "sha512-D1mvvtDG0L5ft/jGWkLpG1+m0eQxOfaBvTNELraWj22wSVUMWxZUvYgJYcKh6jGGIkJFhH4IZPQhR4TKpc8mBw=="
-  "resolved" "https://registry.npmjs.org/yargs/-/yargs-16.2.0.tgz"
-  "version" "16.2.0"
+"yargs@^17.3.1":
+  "integrity" "sha512-1/9UrdHjDZc0eOU0HxOHoS78C69UD3JRMvzlJ7S79S2nTaWRA/whGCTV8o9e/N/1Va9YIV7Q4sOxD8VV4pCWOw=="
+  "resolved" "https://registry.npmjs.org/yargs/-/yargs-17.6.2.tgz"
+  "version" "17.6.2"
   dependencies:
-    "cliui" "^7.0.2"
+    "cliui" "^8.0.1"
     "escalade" "^3.1.1"
     "get-caller-file" "^2.0.5"
     "require-directory" "^2.1.1"
-    "string-width" "^4.2.0"
+    "string-width" "^4.2.3"
     "y18n" "^5.0.5"
-    "yargs-parser" "^20.2.2"
+    "yargs-parser" "^21.1.1"
 
-"yargs@^17.3.1", "yargs@^17.5.1":
+"yargs@^17.5.1":
   "integrity" "sha512-1/9UrdHjDZc0eOU0HxOHoS78C69UD3JRMvzlJ7S79S2nTaWRA/whGCTV8o9e/N/1Va9YIV7Q4sOxD8VV4pCWOw=="
   "resolved" "https://registry.npmjs.org/yargs/-/yargs-17.6.2.tgz"
   "version" "17.6.2"

@@ -16,7 +16,11 @@ export const IMAGES={
     aboutus:require("./aboutus.png"),
     payment:require('./payment.png'),
     editing:require('./editing.png'),
-    online:require('./online-learning.json')
-
-
+    online:require('./online-learning.json'),
+    manageUser:require('./manage_users.png'),
+    manageVideos:require('./manage_videos.png'),
+    manageCategories:require('./manage_categories.png'),
+    logoutAdmin:require('./logoutAdmin.png'),
+    back:require('./back.png'),
+    downArrow:require('./downarrow.png')
 }
