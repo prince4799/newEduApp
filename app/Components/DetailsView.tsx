@@ -9,11 +9,10 @@ import {
     ViewStyle,
     LayoutAnimation,
     NativeModules,
-    Animated
 } from 'react-native';
 import { IMAGES } from '../Assets/Images/Images';
 import { DIMENSIONS } from '../Constants/Constants';
-import {
+import Animated,{
     useAnimatedStyle,
     withSpring,
     useSharedValue,
@@ -31,41 +30,56 @@ UIManager.setLayoutAnimationEnabledExperimental &&
 interface Props {
     style?: StyleProp<ViewStyle>
     item?: Object | any
+    index: Number
+    onChildData: Function
 }
 
-const DetailsView: React.FC<Props> = ({ style, item }) => {
+const DetailsView: React.FC<Props> = ({ style, item, index, onChildData }) => {
     const progressRef = React.useRef(DIMENSIONS.HEIGHT * 3);
     // const progress: Animated.SharedValue<number> = useSharedValue(DIMENSIONS.HEIGHT * 3);
     const [showDetails, setShowDetails] = useState(false);
-
+    const [deleteAnim, setDeleteAnim] = useState(false);
+    
 
     return (
-        <View style={[style, styles.container, { top: 5, flex: 1, height: '100%' }]}>
+       <View style={[style,
+            styles.container,
+            {  
+                //  opacity:index&&showDetails?0.5:1,
+                top: 5,
+                flex: 1,
+                height: '100%',
+                justifyContent: 'center',
+                alignItems: 'center',
+                padding:10,
+            }]}>
             <View
                 style={{
-                    borderWidth: 2,
-                    borderColor: "#0333A1",
-                    marginStart: 20,
+                    // borderWidth: 2,
+                    // borderColor: "#0333A1",
+                    // marginStart: 20,
                     borderRadius: 10,
                     width: "90%",
                     justifyContent: 'center',
-                    padding: 5
+                    padding: 5,
+                    // elevation: 1
                 }}
             >
                 {/* ==========Avatar======== */}
                 <View
                     style={{
-                        width: 55,
-                        height: 55,
+                        width:showDetails? 55:40,
+                        height: showDetails? 55:40,
                         justifyContent: "center",
-                        backgroundColor: "#fff",
+                        // backgroundColor: "#989879",
                         position: showDetails ? 'relative' : 'absolute',
                         borderRadius: 100,
                         borderColor: "#0333A1",
                         alignSelf: showDetails ? "center" : 'auto',
                         borderWidth: 2,
                         zIndex: 5,
-                        margin:5,
+                        // backgroundColor: 'red',
+                        margin: 5,
                     }}
                 >
                     <Image
@@ -73,13 +87,14 @@ const DetailsView: React.FC<Props> = ({ style, item }) => {
                             height: 20,
                             width: 20,
                             alignSelf: "center",
-                            padding: 15
+                            padding: 15,
+                            // backgroundColor: 'red'
                         }}
                         source={IMAGES.user}
                     />
                 </View>
                 {/* ==========Name========== */}
-                <View style={styles.textContainer}>
+                <View style={{ ...styles.textContainer, alignItems: 'center', marginStart: showDetails ? 20 : 60 }}>
                     <Text>Name:</Text>
                     <Text
                         style={styles.cardtext}
@@ -88,7 +103,7 @@ const DetailsView: React.FC<Props> = ({ style, item }) => {
                     </Text>
                 </View>
                 {/* ==============email============ */}
-                <View style={styles.textContainer}>
+                <View style={{ ...styles.textContainer, alignItems: 'center', marginStart: showDetails ? 20 : 60 }}>
                     <Text>Email:</Text>
                     <Text
                         style={styles.cardtext}
@@ -96,7 +111,7 @@ const DetailsView: React.FC<Props> = ({ style, item }) => {
                     </Text>
                 </View>
                 {/* ===========Contact============= */}
-                <View style={styles.textContainer}>
+                <View style={{ ...styles.textContainer, alignItems: 'center', marginStart: showDetails ? 20 : 60 }}>
                     <Text>Contact:</Text>
                     <Text
                         style={styles.cardtext}
@@ -106,7 +121,7 @@ const DetailsView: React.FC<Props> = ({ style, item }) => {
                 {
                     showDetails ?
                         <View>
-                            <View style={styles.textContainer}>
+                            <View style={{ ...styles.textContainer, alignItems: 'center', marginStart: showDetails ? 20 : 60 }}>
                                 <Text>Contact:</Text>
                                 <Text
                                     style={styles.cardtext}
@@ -119,16 +134,26 @@ const DetailsView: React.FC<Props> = ({ style, item }) => {
                                 alignItems: 'center',
                                 padding: 15,
                             }}>
-                                <Text style={{
-                                    backgroundColor: '#78eb78',
-                                    width: '45%',
-                                    height: showDetails ? 30 : 0,
-                                    textAlignVertical: 'center',
-                                    textAlign: 'center',
-                                    fontWeight: '700',
-                                    marginRight: 4.5,
-                                }}>UPDATE</Text>
-                                <Text style={{
+                                <Text
+                                   
+                                    style={{
+                                        backgroundColor: '#78eb78',
+                                        width: '45%',
+                                        height: showDetails ? 30 : 0,
+                                        textAlignVertical: 'center',
+                                        textAlign: 'center',
+                                        fontWeight: '700',
+                                        marginRight: 4.5,
+                                    }}>UPDATE</Text>
+                                <Text
+                                 onPress={() => 
+                                    {
+                                      setTimeout(()=>{
+                                         onChildData(index)
+                                         setShowDetails(!showDetails)
+                                     },2000)}
+                                 }
+                                style={{
                                     backgroundColor: '#f76060',
                                     width: '45%',
                                     height: showDetails ? 30 : 0,
@@ -175,8 +200,6 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         flexDirection: "row",
         height: '100%',
-        alignSelf: 'center',
-        justifyContent: 'center',
 
     },
 

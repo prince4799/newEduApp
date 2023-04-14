@@ -22,5 +22,6 @@ export const IMAGES={
     manageCategories:require('./manage_categories.png'),
     logoutAdmin:require('./logoutAdmin.png'),
     back:require('./back.png'),
-    downArrow:require('./downarrow.png')
+    downArrow:require('./downarrow.png'),
+    search:require('./search.png')
 }

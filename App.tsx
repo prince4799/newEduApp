@@ -13,8 +13,7 @@ import Home from "./app/Screens/Home/Home"
 import BottomTab from './app/Navigators/BottomNavigation/BottomTab';
 import AdminDashboard from './app/Screens/Admin/AdminDashboard';
 import AdminManageUsers from './app/Screens/Admin/AdminManageUsers';
-
-
+import AdminManageContent from './app/Screens/Admin/AdminManageContent';
 
 
 
@@ -23,11 +22,11 @@ function App(): JSX.Element {
   return (<>
   <StatusBar hidden={true}/>
   {/* <AdminDashboard/> */}
-  <AdminManageUsers/>
+  {/* <AdminManageUsers/> */}
+  <AdminManageContent/>
     {/* <NavigationContainer>
       <AppStack.default />
     </NavigationContainer> */}
-     
   </>
 );
 }
