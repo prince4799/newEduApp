@@ -16,6 +16,7 @@ import { IMAGES } from "../Assets/Images/Images"
 import { FlatList, ScrollView, TextInput } from 'react-native-gesture-handler';
 import { COLORS } from '../Constants/Colors';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import { ScrollViewComponent } from 'react-native';
 
 
 export const VideoLists: React.FC<any> = ({
@@ -59,16 +60,89 @@ export const VideoLists: React.FC<any> = ({
                         <View
                             style={styles.flatlistcard}>
                         </View>
-                    }/>
+                    } />
             </ImageBackground>
         </SafeAreaView>
-    )};
+    )
+};
+
+const myData = [1, 2, 5, 6, 7, 8, 9, 0, 3]
+
+
+export const VideoPlayLists: React.FC<any> = ({
+    ObjectData,
+    screenName,
+    title,
+    navigation }) => {
+    return (
+        <SafeAreaView style={{ flex: 1 }}>
+            <ImageBackground
+                source={IMAGES.gradientbg}
+            // style={styles.flatlistContainer}
+            >
+
+                <Text style={{
+                    height: '10%',
+                    textAlign: 'center',
+                    fontSize: 18,
+                    verticalAlign: 'middle',
+                }}>{'Name of Category'.toUpperCase()}</Text>
+
+                <View style={{ height: '90%', width: '100%' }}>
+                    <FlatList
+                        bounces
+                        data={myData}
+                        // style={{flexDirection;}}
+                        renderItem={({ item }) =>
+
+                            // {/* Thumbnail */}
+                            <View
+                                style={styles.videoList}>
+                                <View style={{
+                                    justifyContent: 'center',
+                                    // backgroundColor: 'red',
+                                    width: '30%',
+                                    borderRadius: 5,
+                                }}>
+                                    <Image
+                                        style={{ height: '100%', width: '100%', }}
+                                        source={IMAGES.aboutus} />
+                                </View>
+                                {/* Details */}
+                                <View
+                                    style={{ width: '70%',justifyContent:'space-around'}}>
+                                    <Text style={{ ...styles.text, fontSize: 20 }}>Title</Text>
+                                    <Text style={{ ...styles.text, fontSize: 12 }}>Category</Text>
+                                </View>
+                            </View>
+
+                        } />
+                </View>
+
+            </ImageBackground>
+        </SafeAreaView>
+    )
+}
 
 const styles = StyleSheet.create({
     container: {
         flex: 1,
         backgroundColor: '#fff',
         alignItems: 'center',
+    },
+    videoList: {
+        width: '95%',
+        height: CONSTANTS.DIMENSIONS.HEIGHT * 1.5,
+        backgroundColor: '#fff',
+        marginHorizontal: 10,
+        marginTop: 10,
+        alignSelf: 'center',
+        borderRadius: 5,
+        elevation: 5,
+        flexDirection: 'row',
+    },
+    text: {
+        padding: 5,
     },
     button: {
         height: 35,
@@ -89,7 +163,7 @@ const styles = StyleSheet.create({
         color: COLORS.ButtonText,
     },
     flatlistContainer: {
-        height: CONSTANTS.DIMENSIONS.HEIGHT * 3,
+        height: CONSTANTS.DIMENSIONS.HEIGHT * 10,
         backgroundColor: '#555',
         justifyContent: 'center',
         alignItems: 'center',
@@ -115,5 +189,6 @@ const styles = StyleSheet.create({
         padding: 10,
         marginHorizontal: 10,
         marginTop: 10,
+
     }
 });

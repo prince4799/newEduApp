@@ -1,0 +1,83 @@
+{
+  "name": "Bouncing Ball",
+  "duration": 3.0,
+  "fps": 30,
+  "width": 640,
+  "height": 480,
+  "layers": [
+    {
+      "name": "Background",
+      "type": "solid-color",
+      "properties": {
+        "color": [
+          0,
+          0,
+          0
+        ]
+      }
+    },
+    {
+      "name": "Ball",
+      "type": "shape",
+      "properties": {
+        "shape": "circle",
+        "position": [
+          320,
+          240
+        ],
+        "radius": 50,
+        "fillColor": [
+          255,
+          0,
+          0
+        ],
+        "strokeColor": [
+          0,
+          0,
+          0
+        ],
+        "strokeWidth": 1
+      },
+      "keyframes": [
+        {
+          "time": 0.0,
+          "properties": {
+            "position": [
+              320,
+              240
+            ]
+          }
+        },
+        {
+          "time": 1.0,
+          "properties": {
+            "position": [
+              320,
+              120
+            ]
+          }
+        },
+        {
+          "time": 2.0,
+          "properties": {
+            "position": [
+              320,
+              360
+            ]
+          }
+        },
+        {
+          "time": 3.0,
+          "properties": {
+            "position": [
+              320,
+              240
+            ]
+          }
+        }
+      ]
+    }
+  ]
+}
+            
+            

@@ -1,0 +1,73 @@
+{
+    "name": "Text Animation",
+    "duration": 5.0,
+    "fps": 30,
+    "width": 640,
+    "height": 480,
+    "layers": [
+      {
+        "name": "Background",
+        "type": "solid-color",
+        "properties": {
+          "color": [255, 255, 255]
+        }
+      },
+      {
+        "name": "Text",
+        "type": "text",
+        "properties": {
+          "text": "Hello, World!",
+          "font": "Arial",
+          "fontSize": 50,
+          "fillColor": [0, 0, 0],
+          "position": [320, 240],
+          "alignment": "center"
+        },
+        "keyframes": [
+          {
+            "time": 0.0,
+            "properties": {
+              "position": [320, 240],
+              "opacity": 0.0
+            }
+          },
+          {
+            "time": 1.0,
+            "properties": {
+              "position": [320, 120],
+              "opacity": 1.0
+            }
+          },
+          {
+            "time": 2.0,
+            "properties": {
+              "position": [320, 360],
+              "opacity": 1.0
+            }
+          },
+          {
+            "time": 3.0,
+            "properties": {
+              "position": [120, 240],
+              "opacity": 1.0
+            }
+          },
+          {
+            "time": 4.0,
+            "properties": {
+              "position": [500, 240],
+              "opacity": 1.0
+            }
+          },
+          {
+            "time": 5.0,
+            "properties": {
+              "position": [320, 240],
+              "opacity": 0.0
+            }
+          }
+        ]
+      }
+    ]
+  }
+  
