@@ -7,6 +7,7 @@ import { COLORS } from '../../Constants/Colors';
 import Home from "../../Screens/Home/Home"
 import Profile from '../../Screens/Profile/Profie';
 import Courses from '../../Screens/CourseCategories/Courses';
+import { strings } from '../../Constants/Strings';
 
 const Tab = createBottomTabNavigator();
 
@@ -42,11 +43,11 @@ function TabBar({...props}): JSX.Element {
           entering={ZoomIn}
           exiting={ZoomOut}
           style={styles.buttonBackground} >
-          <Text style={styles.buttonTextStyle}>Home</Text>
+          <Text style={styles.buttonTextStyle}>{strings.Home}</Text>
         </Animated.View>:
         <Animated.Text
         entering={ZoomIn}
-        exiting={ZoomOut} onPress={()=>changeButton(1,'Home')} style={styles.buttonTextStyle}>Home</Animated.Text>
+        exiting={ZoomOut} onPress={()=>changeButton(1,strings.Home)} style={styles.buttonTextStyle}>{strings.Home}</Animated.Text>
         }
       </View>
         {/* ===========Second tab button=========== */}
@@ -61,12 +62,12 @@ function TabBar({...props}): JSX.Element {
           entering={ZoomIn}
           exiting={ZoomOut}
           style={styles.buttonBackground} >
-          <Text  style={styles.buttonTextStyle}>Course</Text>
+          <Text  style={styles.buttonTextStyle}>{strings.Courses}</Text>
         </Animated.View>:
         <Animated.Text
         entering={ZoomIn}
         exiting={ZoomOut}
-        onPress={()=>changeButton(2,'Courses')} style={styles.buttonTextStyle}>Course</Animated.Text>
+        onPress={()=>changeButton(2,strings.Courses)} style={styles.buttonTextStyle}>{strings.Courses}</Animated.Text>
         }
       </View>
 
@@ -82,11 +83,11 @@ function TabBar({...props}): JSX.Element {
           entering={ZoomIn}
           exiting={ZoomOut}
           style={styles.buttonBackground} >
-          <Text style={styles.buttonTextStyle}>Profile</Text>
+          <Text style={styles.buttonTextStyle}>{strings.Profile}</Text>
         </Animated.View>:
         <Animated.Text
         entering={ZoomIn}
-        exiting={ZoomOut} onPress={()=>changeButton(3,'Profile')} style={styles.buttonTextStyle}>Profile</Animated.Text>
+        exiting={ZoomOut} onPress={()=>changeButton(3,strings.Profile)} style={styles.buttonTextStyle}>{strings.Profile}</Animated.Text>
         }
       </View>
 
@@ -105,9 +106,9 @@ function BottomTab() {
 
       }}
     >
-      <Tab.Screen name="Home" component={Home} />
-      <Tab.Screen name="Profile" component={Profile} />
-      <Tab.Screen name="Courses" component={Courses} />
+      <Tab.Screen name={strings.Home} component={Home} />
+      <Tab.Screen name={strings.Profile} component={Profile} />
+      <Tab.Screen name={strings.Courses} component={Courses} />
     </Tab.Navigator>
   );
 }
