@@ -16,6 +16,7 @@ import BottomTab from './app/Navigators/BottomNavigation/BottomTab';
 // import AdminManageContent from './app/Screens/Admin/UI/AdminManageContent';
 import AdminManageContent from './app/Screens/Admin/UI/AdminManageContent';
 import { VideoPlayLists } from './app/Components/VideoLists';
+import { Player } from './app/Components/VideoPlayer';
 
 
 
@@ -26,7 +27,8 @@ function App(): JSX.Element {
   {/* <AdminDashboard/> */}
   {/* <AdminManageUsers/> */}
   {/* <AdminManageContent/> */}
-  <VideoPlayLists/>
+  {/* <VideoPlayLists/> */}
+  <Player/>
     {/* <NavigationContainer>
       <AppStack.default />
     </NavigationContainer> */}

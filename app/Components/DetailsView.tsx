@@ -1,7 +1,13 @@
 import React, { useEffect, useState } from 'react';
 import { ViewProps } from 'react-native';
 import {
-    View, Text, StyleSheet, useWindowDimensions, Alert, Linking, SafeAreaView,
+    View,
+    Text,
+    StyleSheet,
+    useWindowDimensions,
+    Alert,
+    Linking,
+    SafeAreaView,
     Image,
     TouchableOpacity,
     ImageBackground,
@@ -12,7 +18,7 @@ import {
 } from 'react-native';
 import { IMAGES } from '../Assets/Images/Images';
 import { DIMENSIONS } from '../Constants/Constants';
-import Animated,{
+import Animated, {
     useAnimatedStyle,
     withSpring,
     useSharedValue,
@@ -20,6 +26,7 @@ import Animated,{
     Easing,
     Value,
 } from "react-native-reanimated";
+import { COLORS } from '../Constants/Colors';
 // import { SharedValue } from "react-native-reanimated";
 const { UIManager } = NativeModules;
 
@@ -39,19 +46,19 @@ const DetailsView: React.FC<Props> = ({ style, item, index, onChildData }) => {
     // const progress: Animated.SharedValue<number> = useSharedValue(DIMENSIONS.HEIGHT * 3);
     const [showDetails, setShowDetails] = useState(false);
     const [deleteAnim, setDeleteAnim] = useState(false);
-    
+
 
     return (
-       <View style={[style,
-            styles.container,
-            {  
+        <View style={[style,
+            styles2.container,
+            {
                 //  opacity:index&&showDetails?0.5:1,
                 top: 5,
                 flex: 1,
                 height: '100%',
                 justifyContent: 'center',
                 alignItems: 'center',
-                padding:10,
+                padding: 10,
             }]}>
             <View
                 style={{
@@ -68,8 +75,8 @@ const DetailsView: React.FC<Props> = ({ style, item, index, onChildData }) => {
                 {/* ==========Avatar======== */}
                 <View
                     style={{
-                        width:showDetails? 55:40,
-                        height: showDetails? 55:40,
+                        width: showDetails ? 55 : 40,
+                        height: showDetails ? 55 : 40,
                         justifyContent: "center",
                         // backgroundColor: "#989879",
                         position: showDetails ? 'relative' : 'absolute',
@@ -135,7 +142,7 @@ const DetailsView: React.FC<Props> = ({ style, item, index, onChildData }) => {
                                 padding: 15,
                             }}>
                                 <Text
-                                   
+
                                     style={{
                                         backgroundColor: '#78eb78',
                                         width: '45%',
@@ -146,22 +153,22 @@ const DetailsView: React.FC<Props> = ({ style, item, index, onChildData }) => {
                                         marginRight: 4.5,
                                     }}>UPDATE</Text>
                                 <Text
-                                 onPress={() => 
-                                    {
-                                      setTimeout(()=>{
-                                         onChildData(index)
-                                         setShowDetails(!showDetails)
-                                     },2000)}
-                                 }
-                                style={{
-                                    backgroundColor: '#f76060',
-                                    width: '45%',
-                                    height: showDetails ? 30 : 0,
-                                    fontWeight: '700',
-                                    textAlign: 'center',
-                                    marginLeft: 4.5,
-                                    textAlignVertical: 'center'
-                                }}>DELETE</Text>
+                                    onPress={() => {
+                                        setTimeout(() => {
+                                            onChildData(index)
+                                            setShowDetails(!showDetails)
+                                        }, 2000)
+                                    }
+                                    }
+                                    style={{
+                                        backgroundColor: '#f76060',
+                                        width: '45%',
+                                        height: showDetails ? 30 : 0,
+                                        fontWeight: '700',
+                                        textAlign: 'center',
+                                        marginLeft: 4.5,
+                                        textAlignVertical: 'center'
+                                    }}>DELETE</Text>
 
                             </View>
 
@@ -241,4 +248,196 @@ const styles = StyleSheet.create({
 
 export default DetailsView;
 
+interface Props {
+    secretKeyID?: string,
+    secretPassword?: string,
+}
 
+export const VideoDetailsView: React.FC<Props> = ({
+    secretKeyID,
+    secretPassword
+}) => {
+    const [showDetails, setShowDetails] = useState(false);
+
+    return (
+
+
+        <View
+            style={{
+                ...styles2.videoList,
+                flexDirection: showDetails ? 'column' : 'row',
+                height: showDetails ? DIMENSIONS.HEIGHT * 4 : DIMENSIONS.HEIGHT * 1.5,
+            }}>
+            {/* Thumbnail */}
+            <View style={{
+                justifyContent: 'center',
+                width: showDetails ? undefined : '30%',
+                borderRadius: 5,
+                height: showDetails ? '40%' : undefined
+            }}>
+                <Image
+                    resizeMode='contain'
+                    style={{
+                        height: '100%',
+                        width: '100%',
+                        alignSelf: 'center'
+
+                    }}
+                    source={IMAGES.aboutus} />
+            </View>
+            {/* Details */}
+            <View
+                style={{ width: '70%', justifyContent: 'space-around' }}>
+                <Text style={{ ...styles2.text, fontSize: 20 }}>Title</Text>
+                <Text style={{ ...styles2.text, fontSize: 12 }}>Category</Text>
+            </View>
+            {
+                secretKeyID != undefined && secretPassword != undefined && showDetails ?
+                    <View>
+                        <View style={{
+                            flexDirection: 'row',
+                            justifyContent: 'space-around',
+                            alignItems: 'center',
+                            padding: 15,
+                        }}>
+                            <Text
+
+                                style={{
+                                    backgroundColor: '#78eb78',
+                                    width: '45%',
+                                    height: showDetails ? 30 : 0,
+                                    textAlignVertical: 'center',
+                                    textAlign: 'center',
+                                    fontWeight: '700',
+                                    marginRight: 4.5,
+                                }}>UPDATE</Text>
+                            <Text
+                                // onPress={() => {
+                                //     setTimeout(() => {
+                                //         onChildData(index)
+                                //         setShowDetails(!showDetails)
+                                //     }, 2000)
+                                // }
+                                // }
+                                style={{
+                                    backgroundColor: '#f76060',
+                                    width: '45%',
+                                    height: showDetails ? 30 : 0,
+                                    fontWeight: '700',
+                                    textAlign: 'center',
+                                    marginLeft: 4.5,
+                                    textAlignVertical: 'center'
+                                }}>DELETE</Text>
+
+                        </View>
+
+                    </View> : null
+            }
+            {/* expand button */}
+            {secretKeyID != undefined && secretPassword != undefined ? <TouchableOpacity
+                onPress={() => { setShowDetails(!showDetails); LayoutAnimation.easeInEaseOut(); }}
+                style={{
+                    height: 40,
+                    width: 40,
+                    position: 'absolute',
+                    alignSelf: 'flex-end',
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                    // backgroundColor:'red',
+                    right: 0,
+                }}>
+                <Image
+                    style={[{
+                        height: 20, width: 20, transform: [
+                            { rotateZ: showDetails ? '180deg' : '0deg' }
+                        ]
+                    }]}
+                    source={IMAGES.downArrow} />
+            </TouchableOpacity> : null}
+        </View>
+    )
+}
+
+const styles2 = StyleSheet.create({
+    container: {
+        flex: 1,
+        backgroundColor: '#fff',
+        alignItems: 'center',
+    },
+    videoList: {
+        width: '95%',
+        height: DIMENSIONS.HEIGHT * 1.5,
+        backgroundColor: '#fff',
+        marginHorizontal: 10,
+        marginTop: 10,
+        alignSelf: 'center',
+        borderRadius: 5,
+        elevation: 5,
+    },
+    text: {
+        padding: 5,
+    },
+    button: {
+        height: 35,
+        width: 120,
+        backgroundColor: COLORS.Button,
+        borderRadius: 50,
+        justifyContent: 'center',
+        alignItems: 'center',
+        alignSelf: 'center',
+        marginTop: 10,
+        marginBottom: 5,
+        elevation: 3,
+        flexDirection: 'row',
+    },
+    buttonText: {
+        alignSelf: 'center',
+        textAlign: 'center',
+        color: COLORS.ButtonText,
+    },
+    flatlistContainer: {
+        height: DIMENSIONS.HEIGHT * 10,
+        backgroundColor: '#555',
+        justifyContent: 'center',
+        alignItems: 'center',
+        marginVertical: 5,
+    },
+    flatlisttitle: {
+        fontSize: 18,
+        fontWeight: 'bold',
+        color: '#fff',
+        alignSelf: 'flex-start',
+        textAlignVertical: 'center',
+        marginLeft: 10,
+        marginTop: 10,
+    },
+    flatlistcard: {
+        elevation: 10,
+        height: DIMENSIONS.HEIGHT * 2,
+        width: DIMENSIONS.WIDTH * 4,
+        backgroundColor: '#fff',
+        borderBottomLeftRadius: DIMENSIONS.HEIGHT / 2,
+        borderBottomRightRadius: DIMENSIONS.HEIGHT / 2,
+        borderTopRightRadius: DIMENSIONS.HEIGHT / 2,
+        padding: 10,
+        marginHorizontal: 10,
+        marginTop: 10,
+
+    },
+    cardtext: {
+        textAlign: 'auto',
+        fontFamily: "OpenSans-Bold",
+        width: 250,
+        color: "#000",
+        fontSize: 13,
+        marginStart: 5,
+        alignSelf: "center",
+    },
+    textContainer: {
+        flexDirection: 'row',
+        // justifyContent: 'space-between',
+        // width: "85%",
+        marginStart: 60,
+
+    }
+});

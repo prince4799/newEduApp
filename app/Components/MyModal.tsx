@@ -73,14 +73,7 @@ const MyModal: React.FC<Props> = ({
       <View style={styles.modalView}>
         <Text style={{ marginVertical: 20, fontSize: 20 }}>{modalText} </Text>
 
-        {category !== undefined && (
-          <TextInput
-            style={styles.input}
-            placeholder={category}
-            value={categoryName}
-            onChangeText={setCategoryName}
-          />
-        )}
+      
         {link !== undefined && (
           <TextInput
             style={styles.input}
@@ -89,12 +82,28 @@ const MyModal: React.FC<Props> = ({
             onChangeText={setResourceLink}
           />
         )}
+         {thumbnail !== undefined && (
+          <TextInput
+            style={styles.input}
+            placeholder={thumbnail}
+            value={resourceThumbnail}
+            onChangeText={setResourceThumbnail}
+          />
+        )}
         {title !== undefined && (
           <TextInput
             style={styles.input}
             placeholder={title}
             value={resourceTitle}
             onChangeText={setResourceTitle}
+          />
+        )}
+          {category !== undefined && (
+          <TextInput
+            style={styles.input}
+            placeholder={category}
+            value={categoryName}
+            onChangeText={setCategoryName}
           />
         )}
         {thumbnail !== undefined && (

@@ -8,15 +8,18 @@ import {
     ViewStyle,
     Image,
     ImageBackground,
-    TouchableOpacity
+    TouchableOpacity,
+    LayoutAnimation,
+    NativeModules,
 } from 'react-native';
 import Animated, { FadeInUp, log, SlideInLeft, SlideInRight, ZoomIn } from 'react-native-reanimated';
 import * as CONSTANTS from '../Constants/Constants'
 import { IMAGES } from "../Assets/Images/Images"
 import { FlatList, ScrollView, TextInput } from 'react-native-gesture-handler';
 import { COLORS } from '../Constants/Colors';
-import { SafeAreaView } from 'react-native-safe-area-context';
-import { ScrollViewComponent } from 'react-native';
+import { SafeAreaView, SafeAreaInsetsContext } from 'react-native-safe-area-context';
+import { VideoDetailsView } from './DetailsView';
+import MyModal from './MyModal';
 
 
 export const VideoLists: React.FC<any> = ({
@@ -69,11 +72,29 @@ export const VideoLists: React.FC<any> = ({
 const myData = [1, 2, 5, 6, 7, 8, 9, 0, 3]
 
 
-export const VideoPlayLists: React.FC<any> = ({
+interface Props {
+
+    SecretKey?: string,
+    SecretPassword?: string,
+}
+const { UIManager } = NativeModules;
+UIManager.setLayoutAnimationEnabledExperimental &&
+    UIManager.setLayoutAnimationEnabledExperimental(true);
+
+
+export const VideoPlayLists: React.FC<any | Props> = ({
     ObjectData,
     screenName,
     title,
-    navigation }) => {
+    navigation,
+    SecretKey = '1',
+    SecretPassword = '1'
+}) => {
+    const [showModal, setShowModal] = useState(false);
+    const onModalClose = (data: boolean) => {
+        setShowModal(false);
+    };
+
     return (
         <SafeAreaView style={{ flex: 1 }}>
             <ImageBackground
@@ -94,33 +115,58 @@ export const VideoPlayLists: React.FC<any> = ({
                         data={myData}
                         // style={{flexDirection;}}
                         renderItem={({ item }) =>
-
-                            // {/* Thumbnail */}
-                            <View
-                                style={styles.videoList}>
-                                <View style={{
-                                    justifyContent: 'center',
-                                    // backgroundColor: 'red',
-                                    width: '30%',
-                                    borderRadius: 5,
-                                }}>
-                                    <Image
-                                        style={{ height: '100%', width: '100%', }}
-                                        source={IMAGES.aboutus} />
-                                </View>
-                                {/* Details */}
-                                <View
-                                    style={{ width: '70%',justifyContent:'space-around'}}>
-                                    <Text style={{ ...styles.text, fontSize: 20 }}>Title</Text>
-                                    <Text style={{ ...styles.text, fontSize: 12 }}>Category</Text>
-                                </View>
-                            </View>
-
+                            <VideoDetailsView
+                            // secretKeyID='1'
+                            // secretPassword='2'
+                            />
                         } />
                 </View>
-
+                {/* Add Button */}
+                {
+                    SecretKey != undefined && SecretPassword != undefined ?
+                        < TouchableOpacity
+                            onPress={() => {
+                                setShowModal(true)
+                            }}
+                            style={{
+                                position: 'absolute',
+                                height: CONSTANTS.DIMENSIONS.HEIGHT / 1.5,
+                                width: CONSTANTS.DIMENSIONS.HEIGHT / 1.5,
+                                backgroundColor: "#2196f3",
+                                zIndex: 5,
+                                bottom: CONSTANTS.DIMENSIONS.HEIGHT / 50,
+                                right: CONSTANTS.DIMENSIONS.WIDTH / 10,
+                                margin: 15,
+                                borderRadius: CONSTANTS.DIMENSIONS.HEIGHT / 2,
+                                justifyContent: 'center',
+                                alignItems: 'center',
+                                elevation: 8
+                            }}>
+                            <Image
+                                source={IMAGES.plus}
+                                style={{
+                                    height: '60%',
+                                    width: '60%',
+                                    tintColor: '#fff',
+                                    alignSelf: 'center',
+                                }}
+                            />
+                        </TouchableOpacity>
+                        : null
+                }
+                {showModal ?
+                    <MyModal
+                        showModal={showModal}
+                        modalText={'Add New Video'}
+                        category={'Category'}
+                        link={'Link of the video'}
+                        thumbnail={'Link of thumbnail'}
+                        title={'Enter title'}
+                        onModalClose={onModalClose}
+                    />
+                    : null}
             </ImageBackground>
-        </SafeAreaView>
+        </SafeAreaView >
     )
 }
 
@@ -139,7 +185,6 @@ const styles = StyleSheet.create({
         alignSelf: 'center',
         borderRadius: 5,
         elevation: 5,
-        flexDirection: 'row',
     },
     text: {
         padding: 5,
@@ -189,6 +234,22 @@ const styles = StyleSheet.create({
         padding: 10,
         marginHorizontal: 10,
         marginTop: 10,
+
+    },
+    cardtext: {
+        textAlign: 'auto',
+        fontFamily: "OpenSans-Bold",
+        width: 250,
+        color: "#000",
+        fontSize: 13,
+        marginStart: 5,
+        alignSelf: "center",
+    },
+    textContainer: {
+        flexDirection: 'row',
+        // justifyContent: 'space-between',
+        // width: "85%",
+        marginStart: 60,
 
     }
 });
