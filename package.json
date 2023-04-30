@@ -1,5 +1,5 @@
 {
-  "name": "rahul",
+  "name": "EduApp",
   "version": "0.0.1",
   "private": true,
   "scripts": {
@@ -30,13 +30,16 @@
     "react-native": "0.71.1",
     "react-native-gesture-handler": "^2.8.0",
     "react-native-linear-gradient": "^2.6.2",
+    "react-native-orientation-locker": "^1.5.0",
     "react-native-pager-view": "^6.1.2",
     "react-native-reanimated": "^2.8.0",
     "react-native-safe-area-context": "^4.4.1",
     "react-native-screens": "^3.18.2",
     "react-native-tab-view": "^3.3.4",
     "react-native-vector-icons": "^9.2.0",
-    "react-native-video": "^5.2.1"
+    "react-native-video": "^5.2.1",
+    "react-native-video-controls": "^2.8.1",
+    "react-native-webview": "^12.0.2"
   },
   "devDependencies": {
     "@babel/core": "^7.20.0",

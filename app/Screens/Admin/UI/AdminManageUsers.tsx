@@ -6,15 +6,15 @@ import {
     TouchableOpacity,
     ImageBackground,
 } from 'react-native';
-import * as extFun from "../../Assets/Utils/ExtenFunc";
-import * as CONSTANTS from '../../Constants/Constants'
-import AnimatedView from '../../Components/AnimatedView';
-import { COLORS } from '../../Constants/Colors';
-import { IMAGES } from '../../Assets/Images/Images';
+import * as extFun from "../../../Assets/Utils/ExtenFunc";
+import * as CONSTANTS from '../../../Constants/Constants'
+import AnimatedView from '../../../Components/AnimatedView';
+import { COLORS } from '../../../Constants/Colors';
+import { IMAGES } from '../../../Assets/Images/Images';
 import Animated, { BounceInLeft, BounceInRight, log } from 'react-native-reanimated';
 import { FlatList, TextInput } from 'react-native-gesture-handler';
 import { Deferred } from '@firebase/util';
-import DetailsView from '../../Components/DetailsView';
+import DetailsView from '../../../Components/DetailsView';
 
 // import { useNetInfo } from '@react-native-community/netinfo';
 
@@ -235,7 +235,7 @@ const AdminManageUsers = ({ }) => {
             }}>
             <View
                 style={{
-                    height: 45,
+                    height: CONSTANTS.DIMENSIONS.HEIGHT/1.5,
                     width: '90%',
                     borderWidth: 1,
                     alignSelf: 'center',
@@ -278,11 +278,12 @@ const AdminManageUsers = ({ }) => {
                             index={index}
                             style={{
                                 height: 300,
-                                marginBottom: 20,
+                                marginBottom: 10,
                                 alignSelf: 'center',
                                 elevation: 5,
                                 backgroundColor: '#fff',
                                 borderRadius: 10,
+                                width:'95%'
                             }} />
                     </SafeAreaView>
                 }

@@ -14,7 +14,7 @@ const Profile = () => {
     return (
         <SafeAreaView
             style={{ flex: 1, backgroundColor: '#fff' }}>
-                <AnimatedView netStatus={net} style={{ top: 320, position: 'absolute' }} />
+                <AnimatedView netStatus={net} style={{ top: DIMENSIONS.HEIGHT*4.7, position: 'absolute' }} />
             <Image
                 source={IMAGES.halfbg}
                 style={{

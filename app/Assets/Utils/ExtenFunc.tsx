@@ -1,5 +1,5 @@
 import AsyncStorage from '@react-native-community/async-storage';
-import {ViewStyle} from 'react-native';
+import {ToastAndroid, ViewStyle} from 'react-native';
 import * as CONSTANTS  from '../../Constants/Constants'
 
 const card = (width: any, height: any): ViewStyle => ({
@@ -36,10 +36,10 @@ export async function signupAPICalling(endpoint: string, data: { username: strin
   export const storeData = async (key: string, value: string, module: string): Promise<string> => {
     try {
       await AsyncStorage.setItem(key, value);
-      return 'In'+ CONSTANTS.ASYNC_SUCCESS; // or any other string value you want to return on successful storage of data
+      return 'In '+ module +' '+CONSTANTS.ASYNC_SUCCESS; // or any other string value you want to return on successful storage of data
     } catch (error:any) {
     //   console.log(error);
-      return 'In'+module+CONSTANTS.ASYNC_ERROR+ error.message; // or any other error string you want to return on failure
+      return 'In'+ module+CONSTANTS.ASYNC_ERROR+ error.message; // or any other error string you want to return on failure
     }
   };
 /*
@@ -104,7 +104,7 @@ export async function signupAPICalling(endpoint: string, data: { username: strin
     secret?: string;
   }
   
-  const apiCaling = async (params: Params): Promise<any> => {
+  export const apiCaling = async (params: Params): Promise<any> => {
     const { url, body, method, headers = {}, secret } = params;
   
     if (secret) {
@@ -118,8 +118,9 @@ export async function signupAPICalling(endpoint: string, data: { username: strin
     };
   
     try {
-      const response = await fetch(url, options);
+      const response = await fetch(CONSTANTS.BASE_URL+url, options);
       const json = await response.json();
+      console.log("extenfunc",json)
       return json;
     } catch (error) {
       console.error(`Error calling API: ${error}`);
@@ -127,5 +128,13 @@ export async function signupAPICalling(endpoint: string, data: { username: strin
     }
   };
   
-
+export const alert=(message:string)=>{
+  ToastAndroid.showWithGravityAndOffset(
+    message,
+    ToastAndroid.LONG,
+    ToastAndroid.BOTTOM,
+    25,
+    50,
+  )
+}
   

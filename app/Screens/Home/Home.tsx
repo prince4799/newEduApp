@@ -107,7 +107,7 @@ const Home = () => {
               tintColor: '#dbd7d7'
             }} />
         </View>
-       <AnimatedView netStatus={net} style={{top:130}} />
+       <AnimatedView netStatus={net} style={{top:CONSTANTS.DIMENSIONS.HEIGHT*4.7,position:'absolute'}} />
         <ImageBackground
           source={IMAGES.gradientbg}
           resizeMode={'stretch'}

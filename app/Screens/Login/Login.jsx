@@ -42,6 +42,7 @@ import { initialState } from '../../Statemanagement/Login/LoginReducer';
 import AnimatedView from '../../Components/AnimatedView';
 import { IMAGES } from '../../Assets/Images/Images'
 import RadioButton from '../../Components/RadioButton';
+import { alert, storeData } from '../../Assets/Utils/ExtenFunc';
 const Login = ({ navigation }) => {
 
   const { height, width, scale, fontScale } = useWindowDimensions()
@@ -49,107 +50,55 @@ const Login = ({ navigation }) => {
   const [checkValid, setCheckValid] = useState(false)
   const [password, setPassword] = useState('')
   const { state, dispatch, loginUser } = useLogin();
-  const [isFlipped, setIsFlipped] = useState(false);
   const portrait = (height / 10) * 5;
   const landscape = (height / 10) * 8
-  const rotateY = new Animated.Value(0);
   const [secureText, setSecureText] = useState < boolean > (false)
-  const [userType,setUserType]=useState<String>('')
-  // const AnimatedBackground = Animated.createAnimatedComponent(View);
-  const flipCard = () => {
+  const [userType, setUserType] = useState < String > ('')
 
-    setIsFlipped(!isFlipped);
-    // console.log(">>>",isFlipped)
-    Animated.timing(rotateY, {
-      toValue: isFlipped ? 0 : 1,
-      duration: 500,
-      useNativeDriver: true,
-    }).start();
-  };
-  const flipToFrontStyle = {
-    transform: [
-      {
-        rotateY: rotateY.interpolate({
-          inputRange: [0, 1],
-          outputRange: ['0deg', '180deg']
-        })
-      }
-    ]
-  };
-
-  // useEffect=(()=>{
-  //   flipCard();
-  // },[])
 
   useEffect(() => {
     if (state && state.error && state !== initialState && checkValid) {
-      ToastAndroid.showWithGravityAndOffset(
-        state.error.message,
-        ToastAndroid.LONG,
-        ToastAndroid.BOTTOM,
-        25,
-        50,
-      );
+      alert(state.error.message)
       return;
     }
     if (state.user && state && state !== initialState && checkValid) {
-      ToastAndroid.showWithGravityAndOffset(
-        state.user.message,
-        ToastAndroid.LONG,
-        ToastAndroid.BOTTOM,
-        25,
-        50,
-      );
-      console.log("=====", state.user.token)
-      navigation.navigate('BottomTab');
+      alert(state.user.message)
+      // console.log("=====", state.user.token)
     }
-
   }, [state])
 
-  const loginValidation = ({ id, password }) => {
-    console.log("net", NET_STATUS);
+  const loginValidation = async({ id, password, userType }) => {
+    // console.log("id, password, userType",id, password, userType)
+    if (!id || !password || !userType) {
+      alert('Enter the Credentials!')
+      return;
+    }
     if (NET_STATUS == false) {
-      ToastAndroid.showWithGravityAndOffset(
-        'Internet not available!',
-        ToastAndroid.LONG,
-        ToastAndroid.BOTTOM,
-        25,
-        50,
-      )
+      alert('Internet not available!')
       return;
     }
-    if (!id || !password) {
-      ToastAndroid.showWithGravityAndOffset(
-        'Enter the Credentials!',
-        ToastAndroid.LONG,
-        ToastAndroid.BOTTOM,
-        25,
-        50,
-      )
-      return;
-    }
+
     const user = { id, password }
+
     loginUser(user)
-    console.log("state from Login", state)
+    // console.log('===================',state)
+    const result = await storeData('@isLoggedIn', state.user.status.toString(), module='Login.js');
+    console.log('result',result)
+
     setCheckValid(true)
   }
   return (
     <SafeAreaView style={styles.container}>
-
       <ImageBackground style={{ height: height, width: width, justifyContent: 'center', alignItems: 'center', }} resizeMode='cover' source={require("../../Assets/Images/gradient_bg.png")} >
-        <Animated.View style={{ flipToFrontStyle }}>
           <ImageBackground style={{ ...styles.form(height, width), }} source={require("../../Assets/Images/half_bg.png")} >
             <View style={{ ...styles.form(height, width), }}>
               <ScrollView style={{ height: (height / 10) * 8, }}>
-
                 <View style={{ alignSelf: 'center' }}>
                   <Text style={{ fontWeight: 'bold', fontSize: 24, top: 10, color: COLORS.Font }}>LOGIN</Text>
                   <View style={{ height: '20%', width: '25%', backgroundColor: '#fff', top: 0, margin: 10 }} />
                   <Text>APP LOGO</Text>
                 </View>
-
                 <KeyboardAvoidingView style={{ height: height > width ? portrait : landscape, width: '90%', alignSelf: 'center', marginBottom: 80, }} behavior='padding' >
-
                   <View style={{ ...styles.inputContainer }} >
                     <Image style={styles.inputImg} source={require('../../Assets/Images/mail.png')} />
                     <TextInput style={styles.inputs}
@@ -159,7 +108,6 @@ const Login = ({ navigation }) => {
                   </View>
                   <View style={styles.inputContainer}>
                     <Image style={styles.inputImg} source={require('../../Assets/Images/padlock.png')} />
-
                     <TextInput style={styles.inputs}
                       value={password}
                       secureTextEntry={secureText}
@@ -171,14 +119,14 @@ const Login = ({ navigation }) => {
                   </View>
                   <View style={{
                     flexDirection: 'row',
-                    top: '5%', 
+                    top: '5%',
                     alignItems: 'center',
                   }}>
                     <RadioButton
                       label={"Admin"}
                       value={userType}
                       selectedValue={'Admin'}
-                      onSelect={()=>
+                      onSelect={() =>
                         setUserType('Admin')
                       }
                     />
@@ -186,52 +134,27 @@ const Login = ({ navigation }) => {
                       label={"User"}
                       value={userType}
                       selectedValue={'User'}
-                      onSelect={()=>
+                      onSelect={() =>
                         setUserType('User')
                       }
                     />
                   </View>
                   <View style={{ bottom: 0, top: '30%' }}>
-
                     <TouchableOpacity
-                      // onPress={() => loginValidation({ id, password })}
-                      onPress={() => navigation.replace('BottomTab')}
+                      onPress={() => loginValidation({ id, password,userType })}
+                      // onPress={() => navigation.replace('BottomTab')}
                       style={{
                         ...styles.button,
                         width: (width / 10) * 6,
                       }}>
                       <Text style={styles.buttonText}>LOGIN</Text>
                     </TouchableOpacity>
-                    <TouchableOpacity
+                    { /* <TouchableOpacity
                       style={{
                         ...styles.button,
                         width: (width / 10) * 6,
                         alignItems: 'center',
                       }}
-                    // onPress={()=>flipCard()}
-                    /* onPress={() => {
-                       try {
-
-                         fetch('http://192.168.101.184:3000/api/user/createNew',
-                           {
-                             method: 'POST',
-                             headers: {
-                               "Content-Type": "application/json"
-                             },
-
-                             body: JSON.stringify({
-                               "username": "Prince",
-                               "password": "prince@123",
-                               "id": "prince@gmail.com"
-                             })
-                           })
-                           .then((res) => res.json())
-                           .then(res => console.log(JSON.stringify(res)))
-                       } catch (err) {
-                         console.log("errr in hitting api", err)
-                         throw err;
-                       }
-                     }}*/
                     >
                       <Text style={styles.buttonText}>SignIn with google</Text>
                       <Image
@@ -242,17 +165,14 @@ const Login = ({ navigation }) => {
                           tintColor: null
                         }}
                         source={require('../../Assets/Images/google.png')} />
-                    </TouchableOpacity>
+                    </TouchableOpacity>*/}
                   </View>
                 </KeyboardAvoidingView>
               </ScrollView>
-              {/* <Text onPress={()=>flipToFrontStyle()} style={styles.link}>Create New Account.</Text> */}
             </View>
             <Text onPress={() => navigation.navigate('SignUp')} style={[styles.link]}>Create  An Account</Text>
           </ImageBackground>
-        </Animated.View>
       </ImageBackground>
-
     </SafeAreaView>
   );
 };
