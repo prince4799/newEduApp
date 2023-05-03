@@ -6,7 +6,7 @@
  * @flow strict-local
  */
 
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState, useRef, useEffect, useLayoutEffect } from 'react';
 import { GoogleSignin } from '@react-native-google-signin/google-signin';
 
 import {
@@ -32,14 +32,11 @@ import Animated from "react-native-reanimated";
 
 
 import { COLORS } from '../../Constants/Colors';
-// import * as FirebaseAuth from "../../Firebase/FirebaseAuth"
-// import { SignInUser } from '../../Firebase/FirebaseAuth';
-import { SignInUser, CreateNewUser } from '../../Firebase/FirebaseAuth'
-import * as firebaseDB from '../../Firebase/FirebaseDB';
 import { LoginProvider, useLogin } from '../../Statemanagement/Login/LoginContext';
 import { NET_STATUS } from '../../Constants/Constants';
 import { initialState } from '../../Statemanagement/Login/LoginReducer';
 import AnimatedView from '../../Components/AnimatedView';
+import MyModal from '../../Components/MyModal'
 import { IMAGES } from '../../Assets/Images/Images'
 import RadioButton from '../../Components/RadioButton';
 import { alert, storeData } from '../../Assets/Utils/ExtenFunc';
@@ -54,21 +51,40 @@ const Login = ({ navigation }) => {
   const landscape = (height / 10) * 8
   const [secureText, setSecureText] = useState < boolean > (false)
   const [userType, setUserType] = useState < String > ('')
+  const [secret,setSecret]=useState <Object>('')
+  const [showModal,setShowModal]=useState(false)
 
 
   useEffect(() => {
     if (state && state.error && state !== initialState && checkValid) {
+      setShowModal(true)
       alert(state.error.message)
       return;
     }
     if (state.user && state && state !== initialState && checkValid) {
       alert(state.user.message)
-      // console.log("=====", state.user.token)
     }
   }, [state])
 
+  useEffect(() => {
+    if (userType === 'Admin') {
+      setShowModal(true);
+      console.log('visibility', showModal, userType);
+    }
+      if (userType === 'User') {
+      setShowModal(false);
+      console.log('visibility', showModal, userType);
+    }
+  }, [userType]);
+  const onModalClose = (data) => {
+    // Handle the data received from the MyModal component here
+    console.log(data);
+    setSecret(data)
+    setShowModal(false);
+  };
+
+
   const loginValidation = async({ id, password, userType }) => {
-    // console.log("id, password, userType",id, password, userType)
     if (!id || !password || !userType) {
       alert('Enter the Credentials!')
       return;
@@ -77,18 +93,33 @@ const Login = ({ navigation }) => {
       alert('Internet not available!')
       return;
     }
-
-    const user = { id, password }
-
-    loginUser(user)
-    // console.log('===================',state)
-    const result = await storeData('@isLoggedIn', state.user.status.toString(), module='Login.js');
-    console.log('result',result)
-
-    setCheckValid(true)
+    if(userType== 'User'){
+      const user = { id, password }
+      loginUser(user)
+      // const result = await storeData('@isLoggedIn', state.user.status.toString(), module='Login.js');
+      // console.log('result',result)
+      setCheckValid(true)
+      return
+    }
+    if(userType== 'Admin'){
+      const user = { id, password, userType, secret }
+      loginUser(user)
+      // const result = await storeData('@isLoggedIn', state.user.status.toString(), module='Login.js');
+      console.log('Admin user',user,state)
+      
+      setCheckValid(true)
+      return
+    }
   }
+
+
   return (
     <SafeAreaView style={styles.container}>
+      <MyModal
+      modalText={'Login '}
+      showModal={showModal}
+      onModalClose={onModalClose}
+      />
       <ImageBackground style={{ height: height, width: width, justifyContent: 'center', alignItems: 'center', }} resizeMode='cover' source={require("../../Assets/Images/gradient_bg.png")} >
           <ImageBackground style={{ ...styles.form(height, width), }} source={require("../../Assets/Images/half_bg.png")} >
             <View style={{ ...styles.form(height, width), }}>
@@ -117,7 +148,7 @@ const Login = ({ navigation }) => {
                       <Image style={{ ...styles.inputImg, }} source={secureText ? IMAGES.eyeopen : IMAGES.eyeclosed} />
                     </TouchableOpacity>
                   </View>
-                  <View style={{
+                  {id && password ?<View style={{
                     flexDirection: 'row',
                     top: '5%',
                     alignItems: 'center',
@@ -138,7 +169,8 @@ const Login = ({ navigation }) => {
                         setUserType('User')
                       }
                     />
-                  </View>
+                  </View>:null}
+                  
                   <View style={{ bottom: 0, top: '30%' }}>
                     <TouchableOpacity
                       onPress={() => loginValidation({ id, password,userType })}

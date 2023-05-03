@@ -107,17 +107,18 @@ export async function signupAPICalling(endpoint: string, data: { username: strin
   export const apiCaling = async (params: Params): Promise<any> => {
     const { url, body, method, headers = {}, secret } = params;
   
-    if (secret) {
+    if (secret && !url.includes('login')) {
       headers['Authorization'] = `Bearer ${secret}`;
     }
   
     const options: RequestInit = {
-      method,
-      headers,
+      method:method,
       body: body ? JSON.stringify(body) : undefined,
+      headers:headers,
     };
   
     try {
+      console.log("options",options,CONSTANTS.BASE_URL+url)
       const response = await fetch(CONSTANTS.BASE_URL+url, options);
       const json = await response.json();
       console.log("extenfunc",json)
