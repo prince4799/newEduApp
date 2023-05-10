@@ -42,7 +42,6 @@ const AnimatedView: React.FC<Props> = ({ netStatus,style }) => {
     }
 
     useEffect(() => {
-        console.log("modav", netStatus)
         modalVisibility()
     }, [netStatus])
 

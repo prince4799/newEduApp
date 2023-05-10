@@ -161,7 +161,6 @@ useEffect(() => {
 }, []);
 
 const handleOrientationChange = (orientation: any) => {
-  console.log('Orientation:', orientation);
   // Do something based on the orientation
 };
 

@@ -39,21 +39,22 @@ import AnimatedView from '../../Components/AnimatedView';
 import MyModal from '../../Components/MyModal'
 import { IMAGES } from '../../Assets/Images/Images'
 import RadioButton from '../../Components/RadioButton';
-import { alert, storeData } from '../../Assets/Utils/ExtenFunc';
+import { alert, printError, printInfo, printLog, printSucess, storeData } from '../../Assets/Utils/ExtenFunc';
+import BottomTab from '../../Navigators/BottomNavigation/BottomTab';
+import SignupWrapper from '../SignUp/SignUp';
 const Login = ({ navigation }) => {
 
-  const { height, width, scale, fontScale } = useWindowDimensions()
-  const [id, setId] = useState('')
-  const [checkValid, setCheckValid] = useState(false)
-  const [password, setPassword] = useState('')
   const { state, dispatch, loginUser } = useLogin();
+  const { height, width, scale, fontScale } = useWindowDimensions()
   const portrait = (height / 10) * 5;
   const landscape = (height / 10) * 8
-  const [secureText, setSecureText] = useState < boolean > (false)
+  const [id, setId] = useState('')
+  const [password, setPassword] = useState('')
+  const [checkValid, setCheckValid] = useState(false)
   const [userType, setUserType] = useState < String > ('')
-  const [secret,setSecret]=useState <Object>('')
-  const [showModal,setShowModal]=useState(false)
-
+  const [secureText, setSecureText] = useState < boolean > (false)
+  const [secret, setSecret] = useState < Object > ('')
+  const [showModal, setShowModal] = useState(false)
 
   useEffect(() => {
     if (state && state.error && state !== initialState && checkValid) {
@@ -69,22 +70,38 @@ const Login = ({ navigation }) => {
   useEffect(() => {
     if (userType === 'Admin') {
       setShowModal(true);
-      console.log('visibility', showModal, userType);
     }
-      if (userType === 'User') {
+    if (userType === 'User') {
       setShowModal(false);
-      console.log('visibility', showModal, userType);
     }
   }, [userType]);
   const onModalClose = (data) => {
-    // Handle the data received from the MyModal component here
-    console.log(data);
     setSecret(data)
     setShowModal(false);
   };
 
+  useEffect(() => {
+    printInfo("state form login", state)
+    if (state.user && state.user.message.includes('Successfully')) {
+      navigation.navigate('BottomTab')
+      yourAsyncFunction()
+    }
+  }, [state])
 
-  const loginValidation = async({ id, password, userType }) => {
+  const yourAsyncFunction = async () => {
+    try {
+      let {contact,token,email,username,userType,}=state.user.data
+      const $token = await storeData('@token','' +token,"Login")
+      const $username = await storeData('@username','' +username,"Login")
+      const $email = await storeData('@email','' +email,"Login")
+      const $contact= await storeData('@contact',''+contact,"Login")
+      const $userType= await storeData('@userType',''+userType,"Login")
+    } catch (error) {
+      console.error(error); // Handle any errors here
+    }
+  };
+
+  const loginValidation = async ({ id, password, userType }) => {
     if (!id || !password || !userType) {
       alert('Enter the Credentials!')
       return;
@@ -93,7 +110,7 @@ const Login = ({ navigation }) => {
       alert('Internet not available!')
       return;
     }
-    if(userType== 'User'){
+    if (userType == 'User') {
       const user = { id, password }
       loginUser(user)
       // const result = await storeData('@isLoggedIn', state.user.status.toString(), module='Login.js');
@@ -101,12 +118,11 @@ const Login = ({ navigation }) => {
       setCheckValid(true)
       return
     }
-    if(userType== 'Admin'){
+    if (userType == 'Admin') {
       const user = { id, password, userType, secret }
       loginUser(user)
       // const result = await storeData('@isLoggedIn', state.user.status.toString(), module='Login.js');
-      console.log('Admin user',user,state)
-      
+      console.log('Admin user', user, state)
       setCheckValid(true)
       return
     }
@@ -116,78 +132,78 @@ const Login = ({ navigation }) => {
   return (
     <SafeAreaView style={styles.container}>
       <MyModal
-      modalText={'Login '}
-      showModal={showModal}
-      onModalClose={onModalClose}
+        modalText={'Login '}
+        showModal={showModal}
+        onModalClose={onModalClose}
       />
       <ImageBackground style={{ height: height, width: width, justifyContent: 'center', alignItems: 'center', }} resizeMode='cover' source={require("../../Assets/Images/gradient_bg.png")} >
-          <ImageBackground style={{ ...styles.form(height, width), }} source={require("../../Assets/Images/half_bg.png")} >
-            <View style={{ ...styles.form(height, width), }}>
-              <ScrollView style={{ height: (height / 10) * 8, }}>
-                <View style={{ alignSelf: 'center' }}>
-                  <Text style={{ fontWeight: 'bold', fontSize: 24, top: 10, color: COLORS.Font }}>LOGIN</Text>
-                  <View style={{ height: '20%', width: '25%', backgroundColor: '#fff', top: 0, margin: 10 }} />
-                  <Text>APP LOGO</Text>
+        <ImageBackground style={{ ...styles.form(height, width), }} source={require("../../Assets/Images/half_bg.png")} >
+          <View style={{ ...styles.form(height, width), }}>
+            <ScrollView style={{ height: (height / 10) * 8, }}>
+              <View style={{ alignSelf: 'center' }}>
+                <Text style={{ fontWeight: 'bold', fontSize: 24, top: 10, color: COLORS.Font }}>LOGIN</Text>
+                <View style={{ height: '20%', width: '25%', backgroundColor: '#fff', top: 0, margin: 10 }} />
+                <Text>APP LOGO</Text>
+              </View>
+              <KeyboardAvoidingView style={{ height: height > width ? portrait : landscape, width: '90%', alignSelf: 'center', marginBottom: 80, }} behavior='padding' >
+                <View style={{ ...styles.inputContainer }} >
+                  <Image style={styles.inputImg} source={require('../../Assets/Images/mail.png')} />
+                  <TextInput style={styles.inputs}
+                    value={id}
+                    onChangeText={(text) => setId(text)}
+                    placeholder='Mail/Username' />
                 </View>
-                <KeyboardAvoidingView style={{ height: height > width ? portrait : landscape, width: '90%', alignSelf: 'center', marginBottom: 80, }} behavior='padding' >
-                  <View style={{ ...styles.inputContainer }} >
-                    <Image style={styles.inputImg} source={require('../../Assets/Images/mail.png')} />
-                    <TextInput style={styles.inputs}
-                      value={id}
-                      onChangeText={(text) => setId(text)}
-                      placeholder='Mail/Username' />
-                  </View>
-                  <View style={styles.inputContainer}>
-                    <Image style={styles.inputImg} source={require('../../Assets/Images/padlock.png')} />
-                    <TextInput style={styles.inputs}
-                      value={password}
-                      secureTextEntry={secureText}
-                      onChangeText={(text) => setPassword(text)}
-                      placeholder='Password' />
-                    <TouchableOpacity onPress={() => setSecureText(!secureText)}>
-                      <Image style={{ ...styles.inputImg, }} source={secureText ? IMAGES.eyeopen : IMAGES.eyeclosed} />
-                    </TouchableOpacity>
-                  </View>
-                  {id && password ?<View style={{
-                    flexDirection: 'row',
-                    top: '5%',
-                    alignItems: 'center',
-                  }}>
-                    <RadioButton
-                      label={"Admin"}
-                      value={userType}
-                      selectedValue={'Admin'}
-                      onSelect={() =>
-                        setUserType('Admin')
-                      }
-                    />
-                    <RadioButton
-                      label={"User"}
-                      value={userType}
-                      selectedValue={'User'}
-                      onSelect={() =>
-                        setUserType('User')
-                      }
-                    />
-                  </View>:null}
-                  
-                  <View style={{ bottom: 0, top: '30%' }}>
-                    <TouchableOpacity
-                      onPress={() => loginValidation({ id, password,userType })}
-                      // onPress={() => navigation.replace('BottomTab')}
-                      style={{
-                        ...styles.button,
-                        width: (width / 10) * 6,
-                      }}>
-                      <Text style={styles.buttonText}>LOGIN</Text>
-                    </TouchableOpacity>
-                    { /* <TouchableOpacity
+                <View style={styles.inputContainer}>
+                  <Image style={styles.inputImg} source={require('../../Assets/Images/padlock.png')} />
+                  <TextInput style={styles.inputs}
+                    value={password}
+                    secureTextEntry={secureText}
+                    onChangeText={(text) => setPassword(text)}
+                    placeholder='Password' />
+                  <TouchableOpacity onPress={() => setSecureText(!secureText)}>
+                    <Image style={{ ...styles.inputImg, }} source={secureText ? IMAGES.eyeopen : IMAGES.eyeclosed} />
+                  </TouchableOpacity>
+                </View>
+                {id && password ? <View style={{
+                  flexDirection: 'row',
+                  top: '5%',
+                  alignItems: 'center',
+                }}>
+                  <RadioButton
+                    label={"Admin"}
+                    value={userType}
+                    selectedValue={'Admin'}
+                    onSelect={() =>
+                      setUserType('Admin')
+                    }
+                  />
+                  <RadioButton
+                    label={"User"}
+                    value={userType}
+                    selectedValue={'User'}
+                    onSelect={() =>
+                      setUserType('User')
+                    }
+                  />
+                </View> : null}
+
+                <View style={{ bottom: 0, top: '30%' }}>
+                  <TouchableOpacity
+                    onPress={() => loginValidation({ id, password, userType })}
+                    // onPress={() => navigation.replace('BottomTab')}
+                    style={{
+                      ...styles.button,
+                      width: (width / 10) * 6,
+                    }}>
+                    <Text style={styles.buttonText}>LOGIN</Text>
+                  </TouchableOpacity>
+                  <Text onPress={() => navigation.navigate('SignUp')} style={[styles.link, { marginVertical: 10, }]}>Create  an account</Text>
+                  {/* <TouchableOpacity
                       style={{
                         ...styles.button,
                         width: (width / 10) * 6,
                         alignItems: 'center',
-                      }}
-                    >
+                      }}>
                       <Text style={styles.buttonText}>SignIn with google</Text>
                       <Image
                         style={{
@@ -198,12 +214,11 @@ const Login = ({ navigation }) => {
                         }}
                         source={require('../../Assets/Images/google.png')} />
                     </TouchableOpacity>*/}
-                  </View>
-                </KeyboardAvoidingView>
-              </ScrollView>
-            </View>
-            <Text onPress={() => navigation.navigate('SignUp')} style={[styles.link]}>Create  An Account</Text>
-          </ImageBackground>
+                </View>
+              </KeyboardAvoidingView>
+            </ScrollView>
+          </View>
+        </ImageBackground>
       </ImageBackground>
     </SafeAreaView>
   );

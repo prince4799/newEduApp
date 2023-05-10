@@ -35,14 +35,19 @@ const Splash = ({ navigation }) => {
       });
   };
 
+  useEffect(()=>{
+    navigate();
+  },[])
+
   useEffect(() => {
-    const unsubscribe = NetInfo.addEventListener((state) => {
+   NetInfo.addEventListener((state) => {
       setIsConnected(state.isConnected);
       CONSTANTS.NET_STATUS = state.isConnected;
-      console.log("CONSTANTS.NET_STATUS", CONSTANTS.NET_STATUS);
     });
-    navigate();
-    return () => unsubscribe();
+    return () =>{ NetInfo.addEventListener((state) => {
+      setIsConnected(state.isConnected);
+      CONSTANTS.NET_STATUS = state.isConnected;
+    });}
   }, []);
   
   /*

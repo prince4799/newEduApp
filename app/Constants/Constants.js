@@ -16,3 +16,7 @@ export const APP_VERSION='';
 export const IS_LOGGED_IN='';
 export const ASYNC_SUCCESS='SUCCESS';
 export const ASYNC_ERROR='ERROR';
+
+export const LOGIN_REQUEST='LOGIN_REQUEST';
+export const LOGIN_SUCCESS="LOGIN_SUCCESS";
+export const LOGIN_FAILURE="LOGIN_FAILURE";

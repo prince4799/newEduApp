@@ -6,7 +6,7 @@
  * @flow strict-local
  */
 
-import React, { useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import {
   SafeAreaView,
   ScrollView,
@@ -24,20 +24,15 @@ import {
   ImageBackground,
   ToastAndroid
 } from 'react-native';
-// import {
-//   Colors,
-//   DebugInstructions,
-//   Header,
-//   LearnMoreLinks,
-//   ReloadInstructions,
-// } from 'react-native/Libraries/NewAppScreen';
 import { COLORS } from '../../Constants/Colors';
-// import * as firebaseDB from "../../Firebase/FirebaseDB"
-// import * as firebaseAuth from "../../Firebase/FirebaseAuth"
-// import { CreateNewUser } from "../../Firebase/FirebaseAuth"
-// import { CONSTANTS, DIMENSIONS } from '../../Constants/Constants';
 import { SignupProvider, useSignup } from '../../Statemanagement/Signup/SignupContext';
 import { log } from 'react-native-reanimated';
+import { alert } from '../../Assets/Utils/ExtenFunc';
+import RadioButton from '../../Components/RadioButton';
+import { IMAGES } from '../../Assets/Images/Images';
+import MyModal from '../../Components/MyModal';
+import Icon from 'react-native-vector-icons/MaterialIcons';
+import BottomTab from '../../Navigators/BottomNavigation/BottomTab';
 // import { async } from '@firebase/util';
 
 const SignUp = (props) => {
@@ -45,65 +40,51 @@ const SignUp = (props) => {
   const { height, width, scale, fontScale } = useWindowDimensions()
   const [email, setEmail] = useState(String)
   const [phone, setPhone] = useState(String)
+  const [secureText, setSecureText] = useState < boolean > (false)
   const [username, setUsername] = useState(String)
   const [password, setPassword] = useState(String)
+  const [userType, setUserType] = useState('User')
   const { state, dispatch, signUpUser } = useSignup();
+  const [showModal, setShowModal] = useState(false)
+  const [secret, setSecret] = useState < Object > ('')
   const portrait = (height / 10) * 6;
   const landscape = height
-
-
-  /*const SiginUpValidation = async ({ password, email, phone, username }) => {
-    if (password == '' || email == '' || phone == '' || username == '') {
-      Alert.alert("None of the fields can be empty")
-    } else if (password.length < 8 || phone.length < 10 || username.length < 6) {
-      { password.length < 8 ? Alert.alert("Password Must be greater than 8 characters.") : null }
-      { phone.length < 10 ? Alert.alert("Invalid Phone No.") : null }
-      { username.length < 6 ? Alert.alert("username Must be greater than 6 characters.") : null }
-      return;
-    } else {
-      const user = { password, email, phone, username }
-      signUpUser(user);
-      console.log("state......", state)
-      if (state.error) {
-        ToastAndroid.showWithGravityAndOffset(
-          state.error.message,
-          ToastAndroid.LONG,
-          ToastAndroid.BOTTOM,
-          25,
-          50,
-        )
-      }
-      else {
-        ToastAndroid.showWithGravityAndOffset(
-          state.user.message,
-          ToastAndroid.LONG,
-          ToastAndroid.BOTTOM,
-          25,
-          50,
-        )
-        props.navigation.navigate('BottomTab')
-      }
+  var [radio, setRadio] = useState < boolean > (false)
+  const prevCountRef = useRef();
+  const onModalClose = (data) => {
+    // Handle the data received from the MyModal component here
+    console.log(data);
+    setSecret(data)
+    setShowModal(false);
+  };
+  useEffect(() => {
+    if (userType === 'Admin') {
+      setShowModal(true);
     }
-  }*/
+    if (userType === 'User') {
+      setShowModal(false);
+    }
+  }, [userType]);
 
   const SiginUpValidation = async ({ password, email, phone, username }) => {
     if (!password || !email || !phone || !username) {
-      Alert.alert("None of the fields can be empty")
+      alert("None of the fields can be empty")
+      radio = true
       return;
     }
 
     if (password.length < 8) {
-      Alert.alert("Password must be greater than 8 characters.")
+      alert("Password must be greater than 8 characters.")
       return;
     }
 
     if (phone.length < 10) {
-      Alert.alert("Invalid Phone No.")
+      alert("Invalid Phone No.")
       return;
     }
 
     if (username.length < 6) {
-      Alert.alert("Username must be greater than 6 characters.")
+      alert("Username must be greater than 6 characters.")
       return;
     }
 
@@ -112,21 +93,9 @@ const SignUp = (props) => {
 
     console.log("state from SignUp", state)
     if (state.error) {
-      ToastAndroid.showWithGravityAndOffset(
-        state.error.message,
-        ToastAndroid.LONG,
-        ToastAndroid.BOTTOM,
-        25,
-        50,
-      )
+      alert(state.error.message)
     } else {
-      ToastAndroid.showWithGravityAndOffset(
-        state.user.message,
-        ToastAndroid.LONG,
-        ToastAndroid.BOTTOM,
-        25,
-        50,
-      )
+      alert(state.user.message)
       props.navigation.navigate('BottomTab')
     }
   }
@@ -153,21 +122,24 @@ const SignUp = (props) => {
                 <Text>APP LOGO</Text>
               </View>
               <KeyboardAvoidingView style={{ height: height > width ? portrait : landscape, width: '90%', alignSelf: 'center', marginBottom: 50, }} behavior='padding' >
+                {/* UserName */}
                 <View style={{ ...styles.inputContainer, alignSelf: "stretch", }} >
                   <Image style={{ ...styles.inputImg, }} source={require('../../Assets/Images/user.png')} />
-                  <TextInput style={{ ...styles.inputs, width: '45%', color: COLORS.Font }}
+                  <TextInput style={{ ...styles.inputs,color: COLORS.Font }}
                     value={username}
-
+                    autoFocus={true}
                     onChangeText={(text) => setUsername(text)}
                     placeholder='Enter User Name' />
                 </View>
+                {/* Phone */}
                 <View style={{ ...styles.inputContainer, alignSelf: "stretch", }} >
                   <Image style={{ ...styles.inputImg, }} source={require('../../Assets/Images/phone.png')} />
-                  <TextInput style={{ ...styles.inputs, width: '45%', color: COLORS.Font }}
+                  <TextInput style={{ ...styles.inputs, color: COLORS.Font }}
                     value={phone}
                     onChangeText={(text) => setPhone(text)}
                     placeholder='Enter Mobile No.' />
                 </View>
+                {/* mail */}
                 <View style={{ ...styles.inputContainer }} >
                   <Image style={styles.inputImg} source={require('../../Assets/Images/mail.png')} />
                   <TextInput style={{ ...styles.inputs, color: COLORS.Font }}
@@ -175,15 +147,52 @@ const SignUp = (props) => {
                     onChangeText={(text) => setEmail(text)}
                     placeholder='Enter Your Mail' />
                 </View>
+                {/* Password */}
                 <View style={styles.inputContainer}>
                   <Image style={styles.inputImg} source={require('../../Assets/Images/padlock.png')} />
 
                   <TextInput style={{ ...styles.inputs, color: COLORS.Font }}
                     value={password}
                     onChangeText={(text) => setPassword(text)}
+                    secureTextEntry={secureText}
+                    onSubmitEditing={() => {
+                      if (username && password && email && phone) {
+                        setRadio(true)
+                      }
+                    }}
                     placeholder='Enter Your Password' />
-                  <Image style={{ ...styles.inputImg, }} source={require('../../Assets/Images/eye.png')} />
+                  <TouchableOpacity onPress={() => setSecureText(!secureText)}>
+                    <Image style={{ ...styles.inputImg, }} source={secureText ? IMAGES.eyeopen : IMAGES.eyeclosed} />
+                  </TouchableOpacity>
                 </View>
+                {/* RadioButton */}
+                {password && email && phone && username ? <View style={{
+                  flexDirection: 'row',
+                  top: '5%',
+                  alignItems: 'center',
+                }}>
+                  <TouchableOpacity style={{ backgroundColor: 'transparent', flexDirection: 'row', marginHorizontal: 12 }}
+                    onPress={() => {
+                      prevCountRef.current = userType
+                      if (prevCountRef.current != 'Admin') {
+                        setUserType('Admin')
+                        setShowModal(true)
+                      }
+                      else
+                        setUserType('User')
+                    }}
+                  >
+                    {userType == 'Admin' ? <Icon name="check-box" size={20} color={COLORS.Links} /> :
+                      <Icon name="check-box-outline-blank" size={20} color={COLORS.Links} />}
+                    <Text style={{ ...styles.label, color: '#000', marginLeft: 5, }}>Click on this box if you are already have special credentials and want to register as a trainer</Text>
+                  </TouchableOpacity>
+                  {/* <TouchableOpacity style={{backgroundColor:'transparent',flexDirection: 'row',}} onPress={() => 
+                  setUserType('User')}>
+                    {userType=='User' ? <Icon name="radio-button-checked" size={20} color={COLORS.Links} /> :
+                      <Icon name="radio-button-unchecked" size={20} color={COLORS.Links} />}
+                    <Text style={{ ...styles.label, color: COLORS.Links }}>User</Text>
+                  </TouchableOpacity> */}
+                </View> : null}
                 <View
                   style={{
                     // marginTop:50
@@ -193,16 +202,20 @@ const SignUp = (props) => {
                     onPress={() => SiginUpValidation({ password, email, phone, username })} style={{ ...styles.button, width: (width / 10) * 6, marginTop: 60, }}>
                     <Text style={{ color: COLORS.ButtonText }}>SIGNUP NOW</Text>
                   </TouchableOpacity>
-                  <TouchableOpacity style={{ ...styles.button, width: (width / 10) * 6, justifyContent: 'center', flexDirection: 'row', }}>
-                    <Text style={{ alignSelf: 'center', textAlign: 'center', color: COLORS.ButtonText }}>SignUp with google</Text>
-                    <Image style={{ ...styles.inputImg, height: 30, width: 30, tintColor: null }} source={require('../../Assets/Images/google.png')} />
-                  </TouchableOpacity>
+                    <Text
+                     onPress={()=>props.navigation.navigate('Login')}
+                     style={{ alignSelf: 'center', textAlign: 'center', color: COLORS.Links,textDecorationLine:'underline',marginVertical:10, }}>Already have and account? Login</Text>
                 </View>
               </KeyboardAvoidingView>
             </ScrollView>
           </View>
         </ImageBackground>
       </ImageBackground>
+      {showModal && <MyModal
+        modalText={'SignUp '}
+        showModal={true}
+        onModalClose={onModalClose}
+      />}
     </SafeAreaView>
   );
 };
@@ -257,7 +270,10 @@ const styles = StyleSheet.create({
   buttonText: {
     alignSelf: 'center',
     textAlign: 'center',
-  }
+  },
+  label: {
+    fontSize: 12,
+  },
 });
 
 
@@ -272,3 +288,6 @@ const SignupWrapper = (props) => {
 };
 
 export default SignupWrapper;
+
+
+
