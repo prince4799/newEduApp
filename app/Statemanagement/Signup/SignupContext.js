@@ -13,7 +13,50 @@ export const SignupProvider = ({ children }) => {
 
   const signUpUser = async (user) => {
     dispatch(signupRequest());
+    const options = {
+      Admin: {
+        url: 'admin/auth/create',
+        body: {
+          "username":"Derma4799",
+          "password":"Qwerty98",
+          "contact":9839479487,
+          "email":"derma@mail.com"
+      },
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      },
+      User: {
+        url: 'auth/signup',
+        body: {
+          "username":"Derma4799",
+          "password":"Qwerty98",
+          "contact":9839479487,
+          "email":"derma@mail.com"
+      },
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+      },
+    };
 
+    if (user.userType === 'Admin') {
+      options.Admin.headers[user.secret.secretKey] = user.secret.secretValue;
+    }
+
+    try {
+      const response = await apiCaling(user.userType == 'Admin' ? options.Admin : options.User);
+      if (response.statuscode == 200) {
+        console.log("reponse", response)
+        dispatch(signupSuccess(response));
+      } else {
+        dispatch(signupFailure(response));
+      }
+    } catch (error) {
+      console.error(error);
+    }
+
+   /*
     try {
       const response = await fetch('http://192.168.101.57:5500/auth/signup', {
         method: 'POST',
@@ -39,8 +82,10 @@ export const SignupProvider = ({ children }) => {
 
       
     }
-  };
+    */
+  
 
+  };
   const value = {
     state,
     dispatch,

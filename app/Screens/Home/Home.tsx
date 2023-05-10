@@ -11,48 +11,65 @@ import {
 import Animated, { FadeInUp, log, SlideInLeft, SlideInRight, ZoomIn } from 'react-native-reanimated';
 import * as CONSTANTS from '../../Constants/Constants'
 import { IMAGES } from "../../Assets/Images/Images"
-import { FlatList, ScrollView, TextInput } from 'react-native-gesture-handler';
+import { FlatList, ScrollView, State, TextInput } from 'react-native-gesture-handler';
 import { COLORS } from '../../Constants/Colors';
 import AnimatedView from '../../Components/AnimatedView';
 import { useNetInfo } from '@react-native-community/netinfo';
+import { printError, printInfo, printLog, printSucess, retrieveData } from '../../Assets/Utils/ExtenFunc';
+import { LoginProvider, useLogin } from '../../Statemanagement/Login/LoginContext';
+import { SignupProvider, useSignup } from '../../Statemanagement/Signup/SignupContext';
 
-// import * as CONSTANTS from '../../Constants/Constants'
-
-
-const Home = () => {
+const HomeScreen = () => {
   const [search, setSearch] = useState('')
   const scrollX = useRef(new Animated.Value(0)).current
-
   const netInfo = useNetInfo();
   const net = netInfo.isConnected;
+  const [username,setUsername]=useState<string>('')  
+  // useEffect(() => {
+  //   console.log("useEffect hook is triggered");
+  //   let token=retrieveData('@token','Home');
+  //   console.log("token", token);
 
+  // }, []);
+
+  const yourAsyncFunction = async () => {
+    try {
+      const token = await retrieveData('@token', 'Home');
+      const username= await retrieveData('@username','Home')
+      setUsername(username.value)
+      printSucess("token" ,token);
+      printSucess("username" ,username); // Handle the result here
+    } catch (error) {
+      printError("Home",error); // Handle any errors here
+    }
+    
+  };
+  
+
+useEffect(()=>{
+  yourAsyncFunction()
+},[])
 
   return (
- 
+
     // <AnimatedView
-    //       netStatus={false}
+    //       netStatus={false}s
     //     />
-   
-    
+
+
     <ScrollView style={{ flex: 1 }}>
       <View
-        // aria-busy={true}
         style={styles.container}>
         <Image
           style={{
-            // height: _height * 10,
             height: CONSTANTS.DIMENSIONS.HEIGHT * 10,
-            
             width: CONSTANTS.DIMENSIONS.WIDTH * 10,
             justifyContent: 'center',
             alignItems: 'center',
             position: 'absolute',
             top: - CONSTANTS.DIMENSIONS.HEIGHT * 2,
             zIndex: -1,
-            
           }} source={IMAGES.halfbg} />
-          
-
         <Text
           style={{
             color: '#fff',
@@ -64,7 +81,7 @@ const Home = () => {
           onPress={(e) => {
             console.log("positions", e.nativeEvent.locationX, e.nativeEvent.locationY);
           }}
-        >Welcome Back ! {`\n`}userName</Text>
+        >Welcome Back ! {`\n`}{username}</Text>
 
         <View
           style={{
@@ -97,7 +114,7 @@ const Home = () => {
               padding: 5,
             }}
           />
-          
+
           <Image source={IMAGES.glass}
             style={{
               height: "50%",
@@ -107,7 +124,7 @@ const Home = () => {
               tintColor: '#dbd7d7'
             }} />
         </View>
-       <AnimatedView netStatus={net} style={{top:130}} />
+        <AnimatedView netStatus={net} style={{ top: CONSTANTS.DIMENSIONS.HEIGHT * 4.7, position: 'absolute' }} />
         <ImageBackground
           source={IMAGES.gradientbg}
           resizeMode={'stretch'}
@@ -132,7 +149,7 @@ const Home = () => {
           <TouchableOpacity
             // onPress={() => SignInUser({ email, password })}
             // onPress={()=>firebaseDB.FirebaseDBPush({email,password})}
-            // onPress={()=>firebaseDB.FirebaseDBRead()}
+            onPress={()=>yourAsyncFunction()}
 
             style={{
               ...styles.button,
@@ -230,8 +247,8 @@ const Home = () => {
 
       </View>
     </ScrollView>
-  
-    );
+
+  );
 };
 
 const styles = StyleSheet.create({
@@ -269,4 +286,13 @@ const card = (width: any, height: any): ViewStyle => ({
   backgroundColor: 'red',
 
 })
+
+const Home = (props:any) => {
+  return (
+      <LoginProvider>
+        <HomeScreen {...props} />
+      </LoginProvider>
+  );
+};
+
 export default Home

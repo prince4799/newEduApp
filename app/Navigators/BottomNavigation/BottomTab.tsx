@@ -90,9 +90,6 @@ function TabBar({...props}): JSX.Element {
         exiting={ZoomOut} onPress={()=>changeButton(3,strings.Profile)} style={styles.buttonTextStyle}>{strings.Profile}</Animated.Text>
         }
       </View>
-
-
-
     </ImageBackground>
   )
 }
@@ -100,7 +97,7 @@ function TabBar({...props}): JSX.Element {
 function BottomTab() {
   return (
     <Tab.Navigator
-      tabBar={props => <TabBar {...props} />}
+      tabBar={(props:any) => <TabBar {...props} />}
       screenOptions={{
         headerShown: false,
 

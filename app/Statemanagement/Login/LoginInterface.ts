@@ -1,3 +1,5 @@
+import * as CONST from "../../Constants/Constants";
+
 export interface LoginUser {
     id: string | number;
     password: string;

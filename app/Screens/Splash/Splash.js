@@ -27,51 +27,54 @@ const Splash = ({ navigation }) => {
   const navigate = () => {
     extFun.retrieveData('@isLoggedIn', MODULE_NAME).then(
       (val) => {
-        if (val.status === 'false' && isConnected && route.name === 'Splash') {
+        if (val.status === 'false' && route.name === 'Splash') {
           navigation.replace('SignUpRegisterDrawer')
         }
-        else if (isConnected == true && route.name === 'Splash')
+        else if ( route.name === 'Splash')
           navigation.replace('BottomTab')
       });
   };
 
+  useEffect(()=>{
+    navigate();
+  },[])
+
+  useEffect(() => {
+   NetInfo.addEventListener((state) => {
+      setIsConnected(state.isConnected);
+      CONSTANTS.NET_STATUS = state.isConnected;
+    });
+    return () =>{ NetInfo.addEventListener((state) => {
+      setIsConnected(state.isConnected);
+      CONSTANTS.NET_STATUS = state.isConnected;
+    });}
+  }, []);
+  
+  /*
   const netStatusCheck=()=>{
     NetInfo.addEventListener((state) => {
       setIsConnected(state.isConnected);
       CONSTANTS.NET_STATUS = state.isConnected
+    console.log("isconnected", isConnected, CONSTANTS.NET_STATUS);
     });
   }
   useEffect(() => {
     netStatusCheck()
-    // return ()=> netStatusCheck()
   }, [CONSTANTS.NET_STATUS]);
+*/
+ 
 
-  useEffect(() => {
+ /* useEffect(() => {
     setIsConnected(CONSTANTS.NET_STATUS)
     console.log("isconnected", isConnected, CONSTANTS.NET_STATUS, '\n', route);
     if (isConnected && route.name === 'Splash' && count <= 1) {
       count = count + 1
-      navigate();
     }
   }, [isConnected, CONSTANTS.NET_STATUS]);
 
+*/
 
 
-  /*  useEffect(() => {
-      // console.log('useEffect called');
-      try {
-        NetInfo.addEventListener((state) => {
-          CONSTANTS.NET_STATUS = state.isConnected
-          // console.log("eventlistener", CONSTANTS.NET_STATUS);
-          state.isConnected ? navigate() : null;
-        })
-        navigate();
-      } catch (err) {
-        console.log(">>>>>", err)
-      }
-    }, [CONSTANTS.NET_STATUS, extFun.retrieveData,])
-  //=================================
-  */
   return (
     <View style={styles.container}>
       <View

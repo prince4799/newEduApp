@@ -1,46 +1,57 @@
 import React, { createContext, useContext, useReducer } from 'react';
 import { loginReducer, initialState } from './LoginReducer';
 import { loginRequest, loginSuccess, loginFailure } from './LoginAction';
+import { BASE_URL } from '../../Constants/Constants';
+import { alert, apiCaling, printLog } from '../../Assets/Utils/ExtenFunc';
 
 const LoginContext = createContext({
   state: initialState,
-  dispatch: () => {},
-  loginUser: () => {},
+  dispatch: () => { },
+  loginUser: () => { },
 });
 
 export const LoginProvider = ({ children }) => {
   const [state, dispatch] = useReducer(loginReducer, initialState);
-
+  // const data=''
   const loginUser = async (user) => {
     dispatch(loginRequest());
-    console.log("loginuser",user)
-    try {
-      const response = await fetch('http://192.168.102.158:5500/auth/signin', {
+    console.log("loginuser", user)
+    const options = {
+      Admin: {
+        url: 'admin/auth/login',
+        body: {
+          "userid": "Derma4799",
+          "password": "Qwerty98",
+        },
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          // "x-secret-key": "#heyram@"
+        },
+      },
+      User: {
+        url: 'auth/signin',
+        body: {
+          "userid": "Prince4799",
+          "password": "12340000"
+        },
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          "userid":user.id.toString(),
-          "password":user.password.toString(),
-          // "userid":"vipero",
-          // "password":"Qwerty56"
-        }),
-      });
+      },
+    };
+    if (user.userType === 'Admin') {
+      options.Admin.headers[user.secret.secretKey] = user.secret.secretValue;
+    }
 
-      const data = await response.json();
-      // console.log(">>loginprovider>>",data);
-      if(data.statuscode==200){
-        dispatch(loginSuccess(data));
-      }
-      else{
-        dispatch(loginFailure(data));
+    try {
+      const response = await apiCaling(user.userType == 'Admin' ? options.Admin : options.User);
+      if (response.statuscode == 200) {
+        dispatch(loginSuccess(response));
+      } else {
+        dispatch(loginFailure(response));
       }
     } catch (error) {
-      console.log("....",error);
-      const customError={
-        "message":error.message,
-        "statuscode":900,
-      }
-      dispatch(loginFailure(customError));
+      console.error(error);
     }
   };
 

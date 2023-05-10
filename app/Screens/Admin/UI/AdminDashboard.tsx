@@ -6,11 +6,11 @@ import {
     TouchableOpacity,
     ImageBackground,
 } from 'react-native';
-import * as extFun from "../../Assets/Utils/ExtenFunc";
-import * as CONSTANTS from '../../Constants/Constants'
-import AnimatedView from '../../Components/AnimatedView';
-import { COLORS } from '../../Constants/Colors';
-import { IMAGES } from '../../Assets/Images/Images';
+import * as extFun from "../../../Assets/Utils/ExtenFunc";
+import * as CONSTANTS from '../../../Constants/Constants'
+import AnimatedView from '../../../Components/AnimatedView';
+import { COLORS } from '../../../Constants/Colors';
+import { IMAGES } from '../../../Assets/Images/Images';
 import Animated, { BounceInLeft, BounceInRight } from 'react-native-reanimated';
 
 // import { useNetInfo } from '@react-native-community/netinfo';

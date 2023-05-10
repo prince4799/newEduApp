@@ -47,7 +47,6 @@ const DetailsView: React.FC<Props> = ({ style, item, index, onChildData }) => {
     const [showDetails, setShowDetails] = useState(false);
     const [deleteAnim, setDeleteAnim] = useState(false);
 
-
     return (
         <View style={[style,
             styles2.container,

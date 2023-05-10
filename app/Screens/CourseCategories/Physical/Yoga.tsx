@@ -22,10 +22,10 @@ import Animated from "react-native-reanimated";
 import { FlatList } from 'react-native-gesture-handler';
 import { DIMENSIONS } from '../../../Constants/Constants';
 import { IMAGES } from '../../../Assets/Images/Images';
-import {VideoLists}  from '../../../Assets/Utils/ExtenFunc';
+import { VideoLists } from '../../../Components/VideoLists';
 
 
-function Yoga({navigation}): JSX.Element {
+function Yoga(navigation: any): JSX.Element {
     return (
         <SafeAreaView
             style={{

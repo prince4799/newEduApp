@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import { View, Text, TouchableOpacity, Image, ImageBackground, Dimensions, StyleSheet, SafeAreaView } from 'react-native'
 import { IMAGES } from '../../Assets/Images/Images';
 import { COLORS } from '../../Constants/Colors';
@@ -6,15 +6,42 @@ import { DIMENSIONS } from '../../Constants/Constants';
 import Animated, { BounceInLeft, BounceInRight } from 'react-native-reanimated';
 import { useNetInfo } from '@react-native-community/netinfo';
 import AnimatedView from '../../Components/AnimatedView';
+import { printError, printSucess, retrieveData } from '../../Assets/Utils/ExtenFunc';
 
 
 const Profile = () => {
     const netInfo = useNetInfo();
     const net = netInfo.isConnected;
+    const [values,setValues]= useState<object>({})
+
+    const gettingData = async () => {
+        try {
+            const username = await retrieveData('@username', 'Profile')
+            const contact = await retrieveData('@username', 'Profile')
+            const userType = await retrieveData('@userType', 'Profile')
+            const email = await retrieveData('@email', 'Profile')
+            setValues({
+                username: username.value,
+                contact: contact.value,
+                userType: userType.value,
+                email: email.value
+            })
+            printSucess("values", values); // Handle the result here
+        } catch (error) {
+            printError("Home", error); // Handle any errors here
+        }
+
+    };
+
+
+    useEffect(() => {
+        gettingData()
+    }, [])
+
     return (
         <SafeAreaView
             style={{ flex: 1, backgroundColor: '#fff' }}>
-                <AnimatedView netStatus={net} style={{ top: 320, position: 'absolute' }} />
+            <AnimatedView netStatus={net} style={{ top: DIMENSIONS.HEIGHT * 4.7, position: 'absolute' }} />
             <Image
                 source={IMAGES.halfbg}
                 style={{
@@ -22,25 +49,25 @@ const Profile = () => {
                     width: DIMENSIONS.WIDTH * 10,
                     position: 'absolute'
                 }} />
-                <TouchableOpacity style={{
-                    height:DIMENSIONS.HEIGHT/2,
-                    width:DIMENSIONS.HEIGHT/2,
-                    alignSelf:'flex-end',
-                    position:'absolute',
-                    top:10,
-                    right:10,
-                    justifyContent:'center',
-                    alignItems:'center',
-                    }}>
-                        <Image
-                        source={IMAGES.editing}
-                        style={{
-                            height:'50%',
-                            width:'50%',
-                            tintColor:'#fff'
-                        }}/>
-                        <Text style={{color:'#fff',}}>Edit </Text>
-                    </TouchableOpacity>
+            <TouchableOpacity style={{
+                height: DIMENSIONS.HEIGHT / 2,
+                width: DIMENSIONS.HEIGHT / 2,
+                alignSelf: 'flex-end',
+                position: 'absolute',
+                top: 10,
+                right: 10,
+                justifyContent: 'center',
+                alignItems: 'center',
+            }}>
+                <Image
+                    source={IMAGES.editing}
+                    style={{
+                        height: '50%',
+                        width: '50%',
+                        tintColor: '#fff'
+                    }} />
+                <Text style={{ color: '#fff', }}>Edit </Text>
+            </TouchableOpacity>
             <View
                 style={{
                     height: DIMENSIONS.HEIGHT + 10,
@@ -75,11 +102,11 @@ const Profile = () => {
                         color: COLORS.Font,
 
 
-                    }}>Prince Verma</Text>
+                    }}>{values.username}</Text>
                 <Text style={{
                     fontSize: 12,
                     color: COLORS.Font,
-                }}>example@mail.com</Text>
+                }}>{values.email}</Text>
             </View>
             {/* =============Contact & User Type============= */}
             <View
@@ -95,52 +122,52 @@ const Profile = () => {
                     <Text
                         style={styles.cardtext}
                         numberOfLines={2}
-                    >User Type{`\n`}Student</Text>
+                    >User Type{`\n`}{values.userType}</Text>
                 </ImageBackground>
                 <ImageBackground
                     source={IMAGES.gradientbg}
                     style={styles.card}>
                     <Text
                         style={styles.cardtext}
-                    >Contact No. 9621205058</Text>
+                    >Contact No. {values.contact}</Text>
                 </ImageBackground>
             </View>
             <View>
                 <Animated.View
-                entering={BounceInLeft}>
-                <TouchableOpacity
-                    style={styles.button}>
-                    <Image source={IMAGES.payment}
-                        style={styles.buttonIcon} />
-                    <Text style={styles.buttonText}>Payment History </Text>
-                    <Image source={IMAGES.rightarrow}
-                        style={{ ...styles.buttonIcon, left: DIMENSIONS.WIDTH * 4 }} />
-                </TouchableOpacity>
+                    entering={BounceInLeft}>
+                    <TouchableOpacity
+                        style={styles.button}>
+                        <Image source={IMAGES.payment}
+                            style={styles.buttonIcon} />
+                        <Text style={styles.buttonText}>Payment History </Text>
+                        <Image source={IMAGES.rightarrow}
+                            style={{ ...styles.buttonIcon, left: DIMENSIONS.WIDTH * 4 }} />
+                    </TouchableOpacity>
                 </Animated.View>
                 <Animated.View
-                entering={BounceInLeft}
-                exiting={BounceInRight}>
-                  <TouchableOpacity
-                    style={styles.button}>
-                    <Image source={IMAGES.aboutus}
-                        style={styles.buttonIcon} />
-                    <Text style={styles.buttonText}>About Us!</Text>
-                    <Image source={IMAGES.rightarrow}
-                        style={{ ...styles.buttonIcon, left: DIMENSIONS.WIDTH * 4 }} />
-                </TouchableOpacity>  
+                    entering={BounceInLeft}
+                    exiting={BounceInRight}>
+                    <TouchableOpacity
+                        style={styles.button}>
+                        <Image source={IMAGES.aboutus}
+                            style={styles.buttonIcon} />
+                        <Text style={styles.buttonText}>About Us!</Text>
+                        <Image source={IMAGES.rightarrow}
+                            style={{ ...styles.buttonIcon, left: DIMENSIONS.WIDTH * 4 }} />
+                    </TouchableOpacity>
                 </Animated.View>
                 <Animated.View
-                entering={BounceInLeft}>
-                 <TouchableOpacity
-                    style={styles.button}>
-                    <Image source={IMAGES.logout}
-                        style={styles.buttonIcon} />
-                    <Text style={styles.buttonText}>Logout</Text>
-                    <Image source={IMAGES.rightarrow}
-                        style={{ ...styles.buttonIcon, left: DIMENSIONS.WIDTH * 4 }} />
-                </TouchableOpacity>   
+                    entering={BounceInLeft}>
+                    <TouchableOpacity
+                        style={styles.button}>
+                        <Image source={IMAGES.logout}
+                            style={styles.buttonIcon} />
+                        <Text style={styles.buttonText}>Logout</Text>
+                        <Image source={IMAGES.rightarrow}
+                            style={{ ...styles.buttonIcon, left: DIMENSIONS.WIDTH * 4 }} />
+                    </TouchableOpacity>
                 </Animated.View>
-                
+
 
             </View>
         </SafeAreaView>

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useReducer, useRef, useState } from 'react';
 import {
   Alert,
   Modal,
@@ -52,12 +52,36 @@ const MyModal: React.FC<Props> = ({
   const [resourceNewTitle, setResourceNewTitle] = useState<string | undefined>('')
   const [secretKey,setSecretKey]=useState<string>('')
   const [secretValue,setSecretValue]=useState<string>('')
+  const inputRef = useRef(null);
 
   const modalVisibility=()=>{
     setModalVisible(false)
-    onModalClose(modalVisible);
   }
- 
+
+  useEffect(() => {
+    setModalVisible(showModal);
+    setSecretKey('')
+    setSecretValue('')
+  }, [showModal]);
+  const onSubmit = () => {
+    // Extract the required data from the component's state
+    const rawData = {
+      categoryName,
+      resourceLink,
+      resourceTitle,
+      resourceThumbnail,
+      resourceNewTitle,
+      secretKey,
+      secretValue,
+    };
+    const data = Object.fromEntries(
+      Object.entries(rawData).filter(([key, value]) => value !== '' && value !== null && value !== undefined)
+    );
+    console.log("modal",data)
+        // Call the onModalClose function with the extracted data
+    onModalClose(data);
+    setModalVisible(false);
+  };
   return (
 
     <Modal
@@ -80,6 +104,8 @@ const MyModal: React.FC<Props> = ({
             placeholder={link}
             value={resourceLink}
             onChangeText={setResourceLink}
+            autoFocus={true}
+            ref={inputRef}
           />
         )}
          {thumbnail !== undefined && (
@@ -142,7 +168,7 @@ const MyModal: React.FC<Props> = ({
           margin: 20,
         }}>
           <Text onPress={() => modalVisibility()} style={{ ...styles.button, backgroundColor: '#f76060', }}>CANCEL</Text>
-          <Text style={{ ...styles.button, backgroundColor: '#78eb78', }}>SUBMIT</Text>
+          <Text onPress={onSubmit} style={{ ...styles.button, backgroundColor: '#78eb78', }}>SUBMIT</Text>
         </View>
       </View>
     </Modal>
