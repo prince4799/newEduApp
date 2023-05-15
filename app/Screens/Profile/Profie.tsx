@@ -21,10 +21,10 @@ const Profile = () => {
             const userType = await retrieveData('@userType', 'Profile')
             const email = await retrieveData('@email', 'Profile')
             setValues({
-                username: username.value,
-                contact: contact.value,
-                userType: userType.value,
-                email: email.value
+                username: (username as { value: string }).value,
+                contact: (contact as { value: string }).value,
+                userType: (userType as { value: string }).value,
+                email: (email as { value: string }).value
             })
             printSucess("values", values); // Handle the result here
         } catch (error) {
@@ -100,13 +100,11 @@ const Profile = () => {
                         fontSize: 24,
                         fontWeight: '700',
                         color: COLORS.Font,
-
-
-                    }}>{values.username}</Text>
+                    }}> {String((values as { username: string }).username)}</Text>
                 <Text style={{
                     fontSize: 12,
                     color: COLORS.Font,
-                }}>{values.email}</Text>
+                }}>{String((values as {email : string} ).email)}</Text>
             </View>
             {/* =============Contact & User Type============= */}
             <View
@@ -122,14 +120,14 @@ const Profile = () => {
                     <Text
                         style={styles.cardtext}
                         numberOfLines={2}
-                    >User Type{`\n`}{values.userType}</Text>
+                    >User Type{`\n`}{String((values as {userType: string}).userType )}</Text>
                 </ImageBackground>
                 <ImageBackground
                     source={IMAGES.gradientbg}
                     style={styles.card}>
                     <Text
                         style={styles.cardtext}
-                    >Contact No. {values.contact}</Text>
+                    >Contact No. {String( (values as {contact: string}).contact)}</Text>
                 </ImageBackground>
             </View>
             <View>

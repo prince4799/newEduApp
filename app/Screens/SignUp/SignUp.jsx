@@ -27,7 +27,7 @@ import {
 import { COLORS } from '../../Constants/Colors';
 import { SignupProvider, useSignup } from '../../Statemanagement/Signup/SignupContext';
 import { log } from 'react-native-reanimated';
-import { alert } from '../../Assets/Utils/ExtenFunc';
+import { alert, handleSelectionChange, printError, printInfo, printSucess, storeData } from '../../Assets/Utils/ExtenFunc';
 import RadioButton from '../../Components/RadioButton';
 import { IMAGES } from '../../Assets/Images/Images';
 import MyModal from '../../Components/MyModal';
@@ -53,7 +53,7 @@ const SignUp = (props) => {
   const prevCountRef = useRef();
   const onModalClose = (data) => {
     // Handle the data received from the MyModal component here
-    console.log(data);
+    // console.log(data);
     setSecret(data)
     setShowModal(false);
   };
@@ -66,7 +66,35 @@ const SignUp = (props) => {
     }
   }, [userType]);
 
-  const SiginUpValidation = async ({ password, email, phone, username }) => {
+  useEffect(() => {
+    printInfo("state form SignUp", JSON.stringify(state))
+    if (state.loading == false) {
+      if (state.error) {
+        alert(state.error.message)
+      }
+      if (state.user) {
+        alert(state.user.message)
+        storingData(state)
+        props.navigation.navigate('BottomTab')
+      }
+    }
+  }, [state])
+
+  const storingData = async (data) => {
+    try {
+      const $token = await storeData('@token', '' + data.token, "Login")
+      const $username = await storeData('@username', '' + username, "Login")
+      const $email = await storeData('@email', '' + email, "Login")
+      const $contact = await storeData('@contact', '' + phone, "Login")
+      const $userType = await storeData('@userType', '' + userType, "Login")
+      const $isLoggedIn = await storeData('@isLoggedIn', '' + data.user.status)
+    } catch (error) {
+      printError(error); // Handle any errors here
+    }
+  };
+
+  const SiginUpValidation = async ({ password, email, phone, username, userType }) => {
+    printSucess("SiginUpValidation", password, email, phone, username, userType)
     if (!password || !email || !phone || !username) {
       alert("None of the fields can be empty")
       radio = true
@@ -87,19 +115,22 @@ const SignUp = (props) => {
       alert("Username must be greater than 6 characters.")
       return;
     }
-
-    const user = { password, email, phone, username }
-    signUpUser(user);
-
-    console.log("state from SignUp", state)
-    if (state.error) {
-      alert(state.error.message)
-    } else {
-      alert(state.user.message)
-      props.navigation.navigate('BottomTab')
+    if (userType !== '' && userType === 'Admin') {
+      const secretKey = secret.secretKey
+      const secretValue = secret.secretValue
+      const user = { password, email, phone, username, secretValue, secretKey, userType }
+      signUpUser(user);
     }
-  }
 
+    if (userType !== '' && userType === 'User') {
+      const user = { password, email, phone, username, userType }
+      signUpUser(user);
+    }
+
+
+
+
+  }
 
   return (
     <SafeAreaView style={styles.container}>
@@ -122,15 +153,18 @@ const SignUp = (props) => {
                 <Text>APP LOGO</Text>
               </View>
               <KeyboardAvoidingView style={{ height: height > width ? portrait : landscape, width: '90%', alignSelf: 'center', marginBottom: 50, }} behavior='padding' >
+
                 {/* UserName */}
                 <View style={{ ...styles.inputContainer, alignSelf: "stretch", }} >
                   <Image style={{ ...styles.inputImg, }} source={require('../../Assets/Images/user.png')} />
-                  <TextInput style={{ ...styles.inputs,color: COLORS.Font }}
+                  <TextInput style={{ ...styles.inputs, color: COLORS.Font }}
                     value={username}
+                    onSelectionChange={(event) => handleSelectionChange(event, setUsername, username)}
                     autoFocus={true}
                     onChangeText={(text) => setUsername(text)}
                     placeholder='Enter User Name' />
                 </View>
+
                 {/* Phone */}
                 <View style={{ ...styles.inputContainer, alignSelf: "stretch", }} >
                   <Image style={{ ...styles.inputImg, }} source={require('../../Assets/Images/phone.png')} />
@@ -139,14 +173,17 @@ const SignUp = (props) => {
                     onChangeText={(text) => setPhone(text)}
                     placeholder='Enter Mobile No.' />
                 </View>
+
                 {/* mail */}
                 <View style={{ ...styles.inputContainer }} >
                   <Image style={styles.inputImg} source={require('../../Assets/Images/mail.png')} />
                   <TextInput style={{ ...styles.inputs, color: COLORS.Font }}
+                    keyboardType={'email-address'}
                     value={email}
                     onChangeText={(text) => setEmail(text)}
                     placeholder='Enter Your Mail' />
                 </View>
+
                 {/* Password */}
                 <View style={styles.inputContainer}>
                   <Image style={styles.inputImg} source={require('../../Assets/Images/padlock.png')} />
@@ -165,6 +202,7 @@ const SignUp = (props) => {
                     <Image style={{ ...styles.inputImg, }} source={secureText ? IMAGES.eyeopen : IMAGES.eyeclosed} />
                   </TouchableOpacity>
                 </View>
+
                 {/* RadioButton */}
                 {password && email && phone && username ? <View style={{
                   flexDirection: 'row',
@@ -172,40 +210,29 @@ const SignUp = (props) => {
                   alignItems: 'center',
                 }}>
                   <TouchableOpacity style={{ backgroundColor: 'transparent', flexDirection: 'row', marginHorizontal: 12 }}
-                    onPress={() => {
-                      prevCountRef.current = userType
-                      if (prevCountRef.current != 'Admin') {
-                        setUserType('Admin')
-                        setShowModal(true)
-                      }
-                      else
-                        setUserType('User')
-                    }}
+                    onPress={() => setUserType('Admin')}
                   >
-                    {userType == 'Admin' ? <Icon name="check-box" size={20} color={COLORS.Links} /> :
+                    {userType === 'Admin' ? <Icon name="check-box" size={20} color={COLORS.Links} /> :
                       <Icon name="check-box-outline-blank" size={20} color={COLORS.Links} />}
                     <Text style={{ ...styles.label, color: '#000', marginLeft: 5, }}>Click on this box if you are already have special credentials and want to register as a trainer</Text>
                   </TouchableOpacity>
-                  {/* <TouchableOpacity style={{backgroundColor:'transparent',flexDirection: 'row',}} onPress={() => 
-                  setUserType('User')}>
-                    {userType=='User' ? <Icon name="radio-button-checked" size={20} color={COLORS.Links} /> :
-                      <Icon name="radio-button-unchecked" size={20} color={COLORS.Links} />}
-                    <Text style={{ ...styles.label, color: COLORS.Links }}>User</Text>
-                  </TouchableOpacity> */}
                 </View> : null}
+
+                {/* SignUp */}
                 <View
                   style={{
                     // marginTop:50
                   }}>
                   <TouchableOpacity
-                    disabled={state.loading}
-                    onPress={() => SiginUpValidation({ password, email, phone, username })} style={{ ...styles.button, width: (width / 10) * 6, marginTop: 60, }}>
+                    // disabled={state.loading}
+                    onPress={() => SiginUpValidation({ password, email, phone, username, userType })} style={{ ...styles.button, width: (width / 10) * 6, marginTop: 60, }}>
                     <Text style={{ color: COLORS.ButtonText }}>SIGNUP NOW</Text>
                   </TouchableOpacity>
-                    <Text
-                     onPress={()=>props.navigation.navigate('Login')}
-                     style={{ alignSelf: 'center', textAlign: 'center', color: COLORS.Links,textDecorationLine:'underline',marginVertical:10, }}>Already have and account? Login</Text>
+                  <Text
+                    onPress={() => props.navigation.navigate('Login')}
+                    style={{ alignSelf: 'center', textAlign: 'center', color: COLORS.Links, textDecorationLine: 'underline', marginVertical: 10, }}>Already have an account? Login</Text>
                 </View>
+
               </KeyboardAvoidingView>
             </ScrollView>
           </View>

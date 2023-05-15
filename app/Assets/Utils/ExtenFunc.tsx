@@ -59,8 +59,6 @@ export const retrieveData = async (key: string, module: string): Promise<object>
     throw error;
   }
 };
-
-
   
 export const removeData = async (key: string): Promise<string> => {
   try {
@@ -82,8 +80,8 @@ interface Params {
 
 export const apiCaling = async (params: Params): Promise<any> => {
   const { url, body, method, headers = {}, secret } = params;
-
-  if (secret && !url.includes('login')) {
+printInfo(params)
+  if (secret && !url.includes('login'||'signup')) {
     headers['Authorization'] = `Bearer ${secret}`;
   }
 
@@ -117,22 +115,38 @@ export const alert = (message: string) => {
 export const handleFirstInputEndEditing = (reference: any) => {
   return reference.current?.focus();
 };
-
-export const printError = (message?: any, ...optionalParams: any[]) => {
-  if (debug == true)
-    console.log('\x1b[31m',message, ...optionalParams)
+//red color
+interface logInterface {
+  (message?: any, ...optionalParams: any[]): void;
 }
+
+export const printError: logInterface = (message?: any, ...optionalParams: any[]) => {
+  if (debug === true)
+    console.log('\x1b[31m', message,...optionalParams);
+};
 //green color
-export const printSucess = (message?: any, ...optionalParams: any[]) => {
+export const printSucess : logInterface = (message?: any, ...optionalParams: any[]) => {
   if (debug == true)
     console.info('\x1b[32m',message, ...optionalParams)
 }
-
-export const printInfo= (message?: any, ...optionalParams: any[]) => {
+//yellow color
+export const printInfo :logInterface= (message?: any, ...optionalParams: any[]) => {
   if (debug == true)
     console.debug('\x1b[33m',message, ...optionalParams)
 }
-export const printLog=(message?: any, ...optionalParams: any[])=>{
+//white color
+export const printLog :logInterface =(message?: any, ...optionalParams: any[])=>{
   if (debug == true)
     console.debug('\x1b[37m',message, ...optionalParams)
 }
+
+
+// Prevent from Copying text
+export   const handleSelectionChange = (event:any, setState:any,state:any) => {
+  // printError(event)
+  const { selection } = event.nativeEvent;
+  if (selection.start !== selection.end) {
+    // Clear the selected text programmatically
+    setState(state.substring(0, selection.start) + state.substring(selection.end));
+  }
+};

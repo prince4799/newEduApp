@@ -42,8 +42,9 @@ import RadioButton from '../../Components/RadioButton';
 import { alert, printError, printInfo, printLog, printSucess, storeData } from '../../Assets/Utils/ExtenFunc';
 import BottomTab from '../../Navigators/BottomNavigation/BottomTab';
 import SignupWrapper from '../SignUp/SignUp';
+import { useNetInfo } from '@react-native-community/netinfo';
 const Login = ({ navigation }) => {
-
+  const net = useNetInfo().isConnected;
   const { state, dispatch, loginUser } = useLogin();
   const { height, width, scale, fontScale } = useWindowDimensions()
   const portrait = (height / 10) * 5;
@@ -59,10 +60,12 @@ const Login = ({ navigation }) => {
   useEffect(() => {
     if (state && state.error && state !== initialState && checkValid) {
       setShowModal(true)
+      if (state.error !== undefined || state.error !== '' || state.error !== {} || state.error !== null) 
       alert(state.error.message)
       return;
     }
     if (state.user && state && state !== initialState && checkValid) {
+      if (state.user !== undefined || state.user !== '' || state.user !== {} || state.user !== null) 
       alert(state.user.message)
     }
   }, [state])
@@ -81,14 +84,13 @@ const Login = ({ navigation }) => {
   };
 
   useEffect(() => {
-    printInfo("state form login", state)
     if (state.user && state.user.message.includes('Successfully')) {
       navigation.navigate('BottomTab')
-      yourAsyncFunction()
+      storingData()
     }
   }, [state])
 
-  const yourAsyncFunction = async () => {
+  const storingData = async () => {
     try {
       let {contact,token,email,username,userType,}=state.user.data
       const $token = await storeData('@token','' +token,"Login")
@@ -96,6 +98,7 @@ const Login = ({ navigation }) => {
       const $email = await storeData('@email','' +email,"Login")
       const $contact= await storeData('@contact',''+contact,"Login")
       const $userType= await storeData('@userType',''+userType,"Login")
+      const $isLoggedIn= await storeData('@isLoggedIn',''+state.user.status)
     } catch (error) {
       console.error(error); // Handle any errors here
     }
@@ -106,7 +109,7 @@ const Login = ({ navigation }) => {
       alert('Enter the Credentials!')
       return;
     }
-    if (NET_STATUS == false) {
+    if (NET_STATUS == false|| net == false) {
       alert('Internet not available!')
       return;
     }
@@ -150,6 +153,7 @@ const Login = ({ navigation }) => {
                   <Image style={styles.inputImg} source={require('../../Assets/Images/mail.png')} />
                   <TextInput style={styles.inputs}
                     value={id}
+                    keyboardType={'email-address'}
                     onChangeText={(text) => setId(text)}
                     placeholder='Mail/Username' />
                 </View>

@@ -36,32 +36,23 @@ const Splash = ({ navigation }) => {
   };
 
   useEffect(()=>{
-    navigate();
+    // navigate();
+    navigation.replace('SignUpRegisterDrawer')
+
   },[])
 
-  useEffect(() => {
-   NetInfo.addEventListener((state) => {
-      setIsConnected(state.isConnected);
-      CONSTANTS.NET_STATUS = state.isConnected;
-    });
-    return () =>{ NetInfo.addEventListener((state) => {
-      setIsConnected(state.isConnected);
-      CONSTANTS.NET_STATUS = state.isConnected;
-    });}
-  }, []);
   
-  /*
   const netStatusCheck=()=>{
     NetInfo.addEventListener((state) => {
-      setIsConnected(state.isConnected);
-      CONSTANTS.NET_STATUS = state.isConnected
+      setIsConnected(state.isConnected.toString());
+      CONSTANTS.NET_STATUS = state.isConnected.toString()
     console.log("isconnected", isConnected, CONSTANTS.NET_STATUS);
     });
   }
   useEffect(() => {
     netStatusCheck()
-  }, [CONSTANTS.NET_STATUS]);
-*/
+  }, [isConnected]);
+
  
 
  /* useEffect(() => {
@@ -91,7 +82,6 @@ const Splash = ({ navigation }) => {
           netStatus={isConnected}
         />
       </View>
-
     </View>
 
   );

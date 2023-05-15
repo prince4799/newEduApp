@@ -32,19 +32,21 @@ const HomeScreen = () => {
 
   // }, []);
 
-  const yourAsyncFunction = async () => {
-    try {
-      const token = await retrieveData('@token', 'Home');
-      const username= await retrieveData('@username','Home')
-      setUsername(username.value)
-      printSucess("token" ,token);
-      printSucess("username" ,username); // Handle the result here
-    } catch (error) {
-      printError("Home",error); // Handle any errors here
-    }
-    
-  };
-  
+const yourAsyncFunction = async () => {
+  try {
+    const tokenPromise = retrieveData('@token', 'Home');
+    const usernamePromise = retrieveData('@username', 'Home');
+
+    const [token, username] = await Promise.all([tokenPromise, usernamePromise]);
+
+    setUsername((username as { value: string }).value);
+    printSucess("token", token);
+    printSucess("username", username); // Handle the result here
+  } catch (error) {
+    printError("Home", error); // Handle any errors here
+  }
+};
+
 
 useEffect(()=>{
   yourAsyncFunction()

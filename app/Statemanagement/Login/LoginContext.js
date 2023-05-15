@@ -14,26 +14,23 @@ export const LoginProvider = ({ children }) => {
   const [state, dispatch] = useReducer(loginReducer, initialState);
   // const data=''
   const loginUser = async (user) => {
+    const {id,password}=user
     dispatch(loginRequest());
     console.log("loginuser", user)
     const options = {
       Admin: {
         url: 'admin/auth/login',
-        body: {
-          "userid": "Derma4799",
-          "password": "Qwerty98",
-        },
+       
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          // "x-secret-key": "#heyram@"
         },
       },
       User: {
         url: 'auth/signin',
         body: {
-          "userid": "Prince4799",
-          "password": "12340000"
+          "userid": id,
+          "password": password,
         },
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },

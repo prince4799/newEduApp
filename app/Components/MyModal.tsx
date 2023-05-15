@@ -50,11 +50,11 @@ const MyModal: React.FC<Props> = ({
   const [resourceTitle, setResourceTitle] = useState<string | undefined>('');
   const [resourceThumbnail, setResourceThumbnail] = useState<string | undefined>('');
   const [resourceNewTitle, setResourceNewTitle] = useState<string | undefined>('')
-  const [secretKey,setSecretKey]=useState<string>('')
-  const [secretValue,setSecretValue]=useState<string>('')
+  const [secretKey, setSecretKey] = useState<string>('')
+  const [secretValue, setSecretValue] = useState<string>('')
   const inputRef = useRef(null);
 
-  const modalVisibility=()=>{
+  const modalVisibility = () => {
     setModalVisible(false)
   }
 
@@ -77,8 +77,8 @@ const MyModal: React.FC<Props> = ({
     const data = Object.fromEntries(
       Object.entries(rawData).filter(([key, value]) => value !== '' && value !== null && value !== undefined)
     );
-    console.log("modal",data)
-        // Call the onModalClose function with the extracted data
+    console.log("modal", data)
+    // Call the onModalClose function with the extracted data
     onModalClose(data);
     setModalVisible(false);
   };
@@ -97,7 +97,7 @@ const MyModal: React.FC<Props> = ({
       <View style={styles.modalView}>
         <Text style={{ marginVertical: 20, fontSize: 20 }}>{modalText} </Text>
 
-      
+
         {link !== undefined && (
           <TextInput
             style={styles.input}
@@ -108,7 +108,7 @@ const MyModal: React.FC<Props> = ({
             ref={inputRef}
           />
         )}
-         {thumbnail !== undefined && (
+        {thumbnail !== undefined && (
           <TextInput
             style={styles.input}
             placeholder={thumbnail}
@@ -124,7 +124,7 @@ const MyModal: React.FC<Props> = ({
             onChangeText={setResourceTitle}
           />
         )}
-          {category !== undefined && (
+        {category !== undefined && (
           <TextInput
             style={styles.input}
             placeholder={category}
@@ -154,10 +154,11 @@ const MyModal: React.FC<Props> = ({
           value={secretKey}
           onChangeText={(text) => setSecretKey(text)} />
         <TextInput
+          secureTextEntry={true}
           style={styles.input}
           placeholder={'Secret Password'}
           value={secretValue}
-          onChangeText={(text) => setSecretValue(text)} /> 
+          onChangeText={(text) => setSecretValue(text)} />
         <View style={{
           flexDirection: 'row',
           justifyContent: 'space-around',
@@ -180,7 +181,7 @@ const styles = StyleSheet.create({
 
   modalView: {
     margin: 20,
-    backgroundColor: '#e1f5fe',
+    backgroundColor: '#fff',
     borderRadius: 20,
     // padding: 35,
     alignItems: 'center',
@@ -192,7 +193,7 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.25,
     shadowRadius: 4,
     elevation: 5,
-    top:'10%'
+    top: '10%'
   },
   button: {
     borderRadius: 20,
