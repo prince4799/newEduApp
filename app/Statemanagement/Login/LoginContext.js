@@ -20,7 +20,10 @@ export const LoginProvider = ({ children }) => {
     const options = {
       Admin: {
         url: 'admin/auth/login',
-       
+        body: {
+          "userid": id,
+          "password": password,
+        },
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

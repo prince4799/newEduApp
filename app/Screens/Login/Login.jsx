@@ -79,26 +79,37 @@ const Login = ({ navigation }) => {
     }
   }, [userType]);
   const onModalClose = (data) => {
+    printSucess(data)
     setSecret(data)
     setShowModal(false);
   };
 
   useEffect(() => {
-    if (state.user && state.user.message.includes('Successfully')) {
-      navigation.navigate('BottomTab')
+    if (state.user && state.user.message.includes('Successfully') && state.user.data.screen == "Public") {
+      navigation.navigate('BottomTabUser')
+      storingData()
+    }
+    if (state.user && state.user.message.includes('Successfully') && state.user.data.screen == "Admin") {
+      navigation.navigate('BottomTabAdmin')
       storingData()
     }
   }, [state])
 
   const storingData = async () => {
     try {
-      let {contact,token,email,username,userType,}=state.user.data
+      let {contact,token,email,username,screen,}=state.user.data
       const $token = await storeData('@token','' +token,"Login")
       const $username = await storeData('@username','' +username,"Login")
       const $email = await storeData('@email','' +email,"Login")
       const $contact= await storeData('@contact',''+contact,"Login")
-      const $userType= await storeData('@userType',''+userType,"Login")
+      const $userType= await storeData('@userType',''+screen,"Login")
       const $isLoggedIn= await storeData('@isLoggedIn',''+state.user.status)
+      
+      if(Object.keys(secret).length>0 &&secret && secret.secretKey && secret.secretValue){
+        const $secretKey= await storeData('@secretKey',''+secret.secretKey,"Login")
+        const $secretVal= await storeData('@secretVal',''+secret.secretValue,"Login")
+      }
+
     } catch (error) {
       console.error(error); // Handle any errors here
     }

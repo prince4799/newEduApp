@@ -54,6 +54,7 @@ const SignUp = (props) => {
   const onModalClose = (data) => {
     // Handle the data received from the MyModal component here
     // console.log(data);
+    printSucess(data)
     setSecret(data)
     setShowModal(false);
   };
@@ -75,7 +76,7 @@ const SignUp = (props) => {
       if (state.user) {
         alert(state.user.message)
         storingData(state)
-        props.navigation.navigate('BottomTab')
+        userType== 'Public'? props.navigation.navigate('BottomTabUser'): props.navigation.navigate('BottomTabAdmin') 
       }
     }
   }, [state])

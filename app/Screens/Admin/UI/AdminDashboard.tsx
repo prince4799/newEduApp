@@ -16,10 +16,35 @@ import Animated, { BounceInLeft, BounceInRight } from 'react-native-reanimated';
 // import { useNetInfo } from '@react-native-community/netinfo';
 
 
-const AdminDashboard = ({ }) => {
+const AdminDashboard = ({ navigation}) => {
 
-    // const netInfo = useNetInfo();
-    // const net = netInfo.isConnected;
+    const [username, setUsername]=useState('')
+    const [email, setEmail]=useState('')
+
+    const asyncRetrieve = async () => {
+        try {
+          const tokenPromise = extFun.retrieveData('@token', 'Home');
+          const usernamePromise = extFun.retrieveData('@username', 'Home');
+          const emailPromise = extFun.retrieveData('@email', 'Home');
+
+          const [token, username,email] = await Promise.all([tokenPromise, usernamePromise,emailPromise]);
+          return { token, username ,email};
+        } catch (error) {
+          extFun.printError("Home", error); // Handle any errors here
+          return { token: null, username: null ,email: null};
+        }
+      };
+
+      useEffect(()=>{
+        const retrieveData = async () => {
+            const { username,email } = await asyncRetrieve();
+            extFun.printSucess(username);
+            setUsername(username.value)
+            setEmail(email.value)
+          };
+          retrieveData();
+      })
+
 
     return (
         <SafeAreaView
@@ -68,28 +93,31 @@ const AdminDashboard = ({ }) => {
                         color: COLORS.Font,
 
 
-                    }}>Prince Verma</Text>
+                    }}>{username}</Text>
                 <Text style={{
                     fontSize: 12,
                     color: COLORS.Font,
-                }}>example@mail.com</Text>
+                }}>{email}</Text>
             </View>
             {/* ===========Menus=================== */}
             <View
                 style={{
                     top: '20%',
                 }}>
+                    {/* Manage User */}
                 <Animated.View
                     entering={BounceInLeft}>
                     <TouchableOpacity
+                    onPress={()=>navigation.navigate('Users')}
                         style={styles.button}>
                         <Image source={IMAGES.manageUser}
                             style={styles.buttonIcon} />
                         <Text style={styles.buttonText}>Manage User</Text>
-                        <Image source={IMAGES.manageUser}
+                        <Image source={IMAGES.rightarrow}
                             style={{ ...styles.buttonIcon, left: CONSTANTS.DIMENSIONS.WIDTH * 3.8 }} />
                     </TouchableOpacity>
                 </Animated.View>
+                {/* Manage Categories */}
                 <Animated.View
                     entering={BounceInLeft}
                     exiting={BounceInRight}>
@@ -102,6 +130,7 @@ const AdminDashboard = ({ }) => {
                             style={{ ...styles.buttonIcon, left: CONSTANTS.DIMENSIONS.WIDTH * 3.8 }} />
                     </TouchableOpacity>
                 </Animated.View>
+                {/* >Manage Videos */}
                 <Animated.View
                     entering={BounceInLeft}>
                     <TouchableOpacity
@@ -109,17 +138,6 @@ const AdminDashboard = ({ }) => {
                         <Image source={IMAGES.manageVideos}
                             style={styles.buttonIcon} />
                         <Text style={styles.buttonText}>Manage Videos</Text>
-                        <Image source={IMAGES.rightarrow}
-                            style={{ ...styles.buttonIcon, left: CONSTANTS.DIMENSIONS.WIDTH * 3.8 }} />
-                    </TouchableOpacity>
-                </Animated.View>
-                <Animated.View
-                    entering={BounceInLeft}>
-                    <TouchableOpacity
-                        style={styles.button}>
-                        <Image source={IMAGES.logoutAdmin}
-                            style={{ ...styles.buttonIcon }} />
-                        <Text style={styles.buttonText}>Logout</Text>
                         <Image source={IMAGES.rightarrow}
                             style={{ ...styles.buttonIcon, left: CONSTANTS.DIMENSIONS.WIDTH * 3.8 }} />
                     </TouchableOpacity>

@@ -77,7 +77,6 @@ const MyModal: React.FC<Props> = ({
     const data = Object.fromEntries(
       Object.entries(rawData).filter(([key, value]) => value !== '' && value !== null && value !== undefined)
     );
-    console.log("modal", data)
     // Call the onModalClose function with the extracted data
     onModalClose(data);
     setModalVisible(false);
@@ -152,13 +151,18 @@ const MyModal: React.FC<Props> = ({
           style={styles.input}
           placeholder={'Secret Id'}
           value={secretKey}
-          onChangeText={(text) => setSecretKey(text)} />
+          onChangeText={(text) =>{ 
+          let key=text.replace(/[^a-zA-Z\-]/g, '')
+          setSecretKey(key)}}
+           />
         <TextInput
           secureTextEntry={true}
           style={styles.input}
           placeholder={'Secret Password'}
           value={secretValue}
-          onChangeText={(text) => setSecretValue(text)} />
+          onChangeText={(text) => {
+          let pass=text.replace(/[^a-zA-Z\#\@]/g, '')
+            setSecretValue(pass)}} />
         <View style={{
           flexDirection: 'row',
           justifyContent: 'space-around',

@@ -32,7 +32,7 @@ const HomeScreen = () => {
 
   // }, []);
 
-const yourAsyncFunction = async () => {
+const asyncRetrieve = async () => {
   try {
     const tokenPromise = retrieveData('@token', 'Home');
     const usernamePromise = retrieveData('@username', 'Home');
@@ -49,8 +49,8 @@ const yourAsyncFunction = async () => {
 
 
 useEffect(()=>{
-  yourAsyncFunction()
-},[])
+  asyncRetrieve()
+},[username])
 
   return (
 
@@ -151,7 +151,7 @@ useEffect(()=>{
           <TouchableOpacity
             // onPress={() => SignInUser({ email, password })}
             // onPress={()=>firebaseDB.FirebaseDBPush({email,password})}
-            onPress={()=>yourAsyncFunction()}
+            onPress={()=>asyncRetrieve()}
 
             style={{
               ...styles.button,

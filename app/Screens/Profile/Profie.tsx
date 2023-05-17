@@ -7,17 +7,18 @@ import Animated, { BounceInLeft, BounceInRight } from 'react-native-reanimated';
 import { useNetInfo } from '@react-native-community/netinfo';
 import AnimatedView from '../../Components/AnimatedView';
 import { printError, printSucess, retrieveData } from '../../Assets/Utils/ExtenFunc';
+import AsyncStorage from '@react-native-community/async-storage';
 
 
-const Profile = () => {
+const Profile = ({ navigation }) => {
     const netInfo = useNetInfo();
     const net = netInfo.isConnected;
-    const [values,setValues]= useState<object>({})
+    const [values, setValues] = useState<object>({})
 
     const gettingData = async () => {
         try {
             const username = await retrieveData('@username', 'Profile')
-            const contact = await retrieveData('@username', 'Profile')
+            const contact = await retrieveData('@contact', 'Profile')
             const userType = await retrieveData('@userType', 'Profile')
             const email = await retrieveData('@email', 'Profile')
             setValues({
@@ -32,7 +33,10 @@ const Profile = () => {
         }
 
     };
-
+    const logout = async () => {
+        await AsyncStorage.clear();
+        navigation.replace('SignUpRegisterDrawer')
+    }
 
     useEffect(() => {
         gettingData()
@@ -104,7 +108,7 @@ const Profile = () => {
                 <Text style={{
                     fontSize: 12,
                     color: COLORS.Font,
-                }}>{String((values as {email : string} ).email)}</Text>
+                }}>{String((values as { email: string }).email)}</Text>
             </View>
             {/* =============Contact & User Type============= */}
             <View
@@ -120,14 +124,14 @@ const Profile = () => {
                     <Text
                         style={styles.cardtext}
                         numberOfLines={2}
-                    >User Type{`\n`}{String((values as {userType: string}).userType )}</Text>
+                    >User Type{`\n`}{String((values as { userType: string }).userType)}</Text>
                 </ImageBackground>
                 <ImageBackground
                     source={IMAGES.gradientbg}
                     style={styles.card}>
                     <Text
                         style={styles.cardtext}
-                    >Contact No. {String( (values as {contact: string}).contact)}</Text>
+                    >Contact No. {String((values as { contact: string }).contact)}</Text>
                 </ImageBackground>
             </View>
             <View>
@@ -157,6 +161,7 @@ const Profile = () => {
                 <Animated.View
                     entering={BounceInLeft}>
                     <TouchableOpacity
+                        onPress={()=>logout()}
                         style={styles.button}>
                         <Image source={IMAGES.logout}
                             style={styles.buttonIcon} />

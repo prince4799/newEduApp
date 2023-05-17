@@ -29,41 +29,48 @@ const Splash = ({ navigation }) => {
       (val) => {
         if (val.status === 'false' && route.name === 'Splash') {
           navigation.replace('SignUpRegisterDrawer')
+        } else {
+          extFun.retrieveData('@userType', MODULE_NAME).then((screen) => {
+            if (route.name === 'Splash' && screen == 'Public')
+              navigation.replace('BottomTabUser')
+            else 
+              navigation.replace('BottomTabAdmin')
+          })
         }
-        else if ( route.name === 'Splash')
-          navigation.replace('BottomTab')
+
+
       });
   };
 
-  useEffect(()=>{
-    // navigate();
-    navigation.replace('SignUpRegisterDrawer')
+  useEffect(() => {
+    navigate();
+    // navigation.replace('SignUpRegisterDrawer')
 
-  },[])
+  }, [])
 
-  
-  const netStatusCheck=()=>{
+
+  const netStatusCheck = () => {
     NetInfo.addEventListener((state) => {
       setIsConnected(state.isConnected.toString());
       CONSTANTS.NET_STATUS = state.isConnected.toString()
-    console.log("isconnected", isConnected, CONSTANTS.NET_STATUS);
+      console.log("isconnected", isConnected, CONSTANTS.NET_STATUS);
     });
   }
   useEffect(() => {
     netStatusCheck()
   }, [isConnected]);
 
+
+
+  /* useEffect(() => {
+     setIsConnected(CONSTANTS.NET_STATUS)
+     console.log("isconnected", isConnected, CONSTANTS.NET_STATUS, '\n', route);
+     if (isConnected && route.name === 'Splash' && count <= 1) {
+       count = count + 1
+     }
+   }, [isConnected, CONSTANTS.NET_STATUS]);
  
-
- /* useEffect(() => {
-    setIsConnected(CONSTANTS.NET_STATUS)
-    console.log("isconnected", isConnected, CONSTANTS.NET_STATUS, '\n', route);
-    if (isConnected && route.name === 'Splash' && count <= 1) {
-      count = count + 1
-    }
-  }, [isConnected, CONSTANTS.NET_STATUS]);
-
-*/
+ */
 
 
   return (
