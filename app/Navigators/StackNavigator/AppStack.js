@@ -6,6 +6,9 @@ import BottomTab from '../BottomNavigation/BottomTab';
 import BottomTabAdmin from '../BottomNavigation/BottomTabAdmin';
 import AdminManageUsers from '../../Screens/Admin/UI/AdminManageUsers';
 import AnimatedHeader from '../../Components/AnimatedHeader';
+import { strings } from '../../Constants/Strings';
+import { Text } from 'react-native';
+import Header from '../../Components/Header';
 
 
 
@@ -15,46 +18,47 @@ const Stack = createStackNavigator();
 export default function AppStack() {
   return (
     <Stack.Navigator
-      initialRouteName="Splash"
+      initialRouteName={strings.Splash}
     >
       <Stack.Screen
-      options={{
-        headerShown:false
-      }}
-      name="Splash" component={Splash} />
+        options={{
+          headerShown: false
+        }}
+        name={strings.Splash} component={Splash} />
       <Stack.Screen
-       options={{
-        headerShown:false
-      }}
-      name="SignUpRegisterDrawer" component={SignUpRegisterDrawer} />
+        options={{
+          headerShown: false
+        }}
+        name={strings.SignUpRegisterDrawer} component={SignUpRegisterDrawer} />
       <Stack.Screen
-       options={{
-        headerShown:false
-      }}
-       name="BottomTabUser" component={BottomTab}/>
+        options={{
+          headerShown: false
+        }}
+        name={strings.BottomTabUser} component={BottomTab} />
       <Stack.Screen
-       options={{
-        headerShown:false
-      }}
-      name='BottomTabAdmin' component={BottomTabAdmin}/>
+        options={{
+          headerShown: false
+        }}
+        name={strings.BottomTabAdmin} component={BottomTabAdmin} />
       {/* users details view  */}
-      <Stack.Screen 
-      // options={{
-      //   header: (props) => <AnimatedHeader {...props} />,
-      // }}
-         options={{
-          
+      <Stack.Screen
+        name={strings.Users}
+        component={AdminManageUsers}
+        options={({ navigation }) => ({
+
           headerStyle: {
             backgroundColor: '#ebf0f0',
-            height:40,
+            height: 40,
           },
           headerTintColor: '#000',
           headerTitleStyle: {
             fontWeight: '600',
           },
-          headerTitle: 'Home Screen',
-        }}
-      name={'Users'} component={AdminManageUsers} /> 
+          headerLeft: () => (
+            <Header navigation={navigation}/>
+          ),
+        })}
+      />
     </Stack.Navigator>
   );
 }

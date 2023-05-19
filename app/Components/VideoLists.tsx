@@ -20,6 +20,7 @@ import { COLORS } from '../Constants/Colors';
 import { SafeAreaView, SafeAreaInsetsContext } from 'react-native-safe-area-context';
 import { VideoDetailsView } from './DetailsView';
 import MyModal from './MyModal';
+import { printError, printSucess, retrieveData } from '../Assets/Utils/ExtenFunc';
 
 
 export const VideoLists: React.FC<any> = ({
@@ -69,7 +70,7 @@ export const VideoLists: React.FC<any> = ({
     )
 };
 
-const myData = [1, 2, 5, 6, 7, 8, 9, 0, 3]
+const myData = [1,2,3,4]
 
 
 interface Props {
@@ -90,82 +91,98 @@ export const VideoPlayLists: React.FC<any | Props> = ({
     SecretKey = '1',
     SecretPassword = '1'
 }) => {
+    let secretValPromise = ''
+    let secretKeyPromise = ''
+    const [showListHeader, setShowListHeader] = useState(false);
+    useEffect(() => {
+        if (secretKeyPromise !== undefined && secretValPromise !== undefined) {
+            setShowListHeader(true);
+        } else {
+            setShowListHeader(false);
+        }
+    }, [secretKeyPromise, secretValPromise]);
+
+
     const [showModal, setShowModal] = useState(false);
     const onModalClose = (data: boolean) => {
         setShowModal(false);
     };
 
+    const asyncRetrieve = async () => {
+        try {
+            let key = await retrieveData('@secretKey', 'home')
+            secretKeyPromise = key.value
+            printSucess(key)
+            let val = await retrieveData('@secretVal', 'Home')
+            secretValPromise = val.value
+        } catch (err) {
+            printError('error in Video List', err)
+        }
+    }
+    useEffect(() => {
+        asyncRetrieve()
+    }, [secretKeyPromise, secretValPromise])
+
     return (
         <SafeAreaView style={{ flex: 1 }}>
-            <ImageBackground
-                source={IMAGES.gradientbg}
-            // style={styles.flatlistContainer}
-            >
-
-                <Text style={{
+            {/* <Text style={{
                     height: '10%',
                     textAlign: 'center',
                     fontSize: 18,
                     verticalAlign: 'middle',
-                }}>{'Name of Category'.toUpperCase()}</Text>
+                }}>{'Name of Category'.toUpperCase()}</Text> */}
 
-                <View style={{ height: '90%', width: '100%' }}>
-                    <FlatList
-                        bounces
-                        data={myData}
-                        // style={{flexDirection;}}
-                        renderItem={({ item }) =>
-                            <VideoDetailsView
-                            // secretKeyID='1'
-                            // secretPassword='2'
-                            />
-                        } />
-                </View>
-                {/* Add Button */}
-                {
-                    SecretKey != undefined && SecretPassword != undefined ?
+            <View style={{ width: '100%' }}>
+                <FlatList
+                ListEmptyComponent={<Text>There are no data to show</Text>}
+                    ListHeaderComponent={showListHeader ?
                         < TouchableOpacity
                             onPress={() => {
                                 setShowModal(true)
                             }}
-                            style={{
-                                position: 'absolute',
-                                height: CONSTANTS.DIMENSIONS.HEIGHT / 1.5,
-                                width: CONSTANTS.DIMENSIONS.HEIGHT / 1.5,
-                                backgroundColor: "#2196f3",
-                                zIndex: 5,
-                                bottom: CONSTANTS.DIMENSIONS.HEIGHT / 50,
-                                right: CONSTANTS.DIMENSIONS.WIDTH / 10,
-                                margin: 15,
-                                borderRadius: CONSTANTS.DIMENSIONS.HEIGHT / 2,
-                                justifyContent: 'center',
-                                alignItems: 'center',
-                                elevation: 8
-                            }}>
-                            <Image
-                                source={IMAGES.plus}
-                                style={{
-                                    height: '60%',
-                                    width: '60%',
-                                    tintColor: '#fff',
-                                    alignSelf: 'center',
-                                }}
-                            />
-                        </TouchableOpacity>
-                        : null
-                }
-                {showModal ?
-                    <MyModal
-                        showModal={showModal}
-                        modalText={'Add New Video'}
-                        category={'Category'}
-                        link={'Link of the video'}
-                        thumbnail={'Link of thumbnail'}
-                        title={'Enter title'}
-                        onModalClose={onModalClose}
-                    />
-                    : null}
-            </ImageBackground>
+                           >
+                           <Text
+                           style={{
+                            height: CONSTANTS.DIMENSIONS.HEIGHT / 1.5,
+                            width:CONSTANTS.DIMENSIONS.WIDTH*9,
+                            backgroundColor: COLORS.Button,
+                            margin: 15,
+                            borderRadius: CONSTANTS.DIMENSIONS.HEIGHT / 2,
+                            alignSelf: 'center',
+                            textAlignVertical:'center',
+                            textAlign:'center',
+                            elevation: 5,
+                            color:COLORS.ButtonText,
+                            fontWeight:'bold',
+                            fontSize:16,
+                        }}
+                           >UPLOAD VIDEO</Text>
+                        </TouchableOpacity> : null
+                    }
+                    bounces
+                    data={myData}
+                    // style={{flexDirection;}}
+                    renderItem={({ item }) =>
+                        <VideoDetailsView
+                            secretKeyID={secretKeyPromise}
+                            secretPassword={secretValPromise}
+                        />
+                    } />
+            </View>
+            {/* Add Button */}
+
+            {showModal ?
+                <MyModal
+                    showModal={showModal}
+                    modalText={'Add New Video'}
+                    category={'Category'}
+                    link={'Link of the video'}
+                    thumbnail={'Link of thumbnail'}
+                    title={'Enter title'}
+                    onModalClose={onModalClose}
+                />
+                : null}
+
         </SafeAreaView >
     )
 }
@@ -253,3 +270,40 @@ const styles = StyleSheet.create({
 
     }
 });
+
+
+/*
+{
+    showListHeader ?
+        < TouchableOpacity
+            onPress={() => {
+                setShowModal(true)
+            }}
+            style={{
+                position: 'absolute',
+                height: CONSTANTS.DIMENSIONS.HEIGHT / 1.5,
+                width: CONSTANTS.DIMENSIONS.HEIGHT / 1.5,
+                backgroundColor: "#2196f3",
+                zIndex: 5,
+                bottom: CONSTANTS.DIMENSIONS.HEIGHT / 50,
+                right: CONSTANTS.DIMENSIONS.WIDTH / 10,
+                margin: 15,
+                borderRadius: CONSTANTS.DIMENSIONS.HEIGHT / 2,
+                justifyContent: 'center',
+                alignItems: 'center',
+                elevation: 8
+            }}>
+            <Image
+                source={IMAGES.plus}
+                style={{
+                    height: '60%',
+                    width: '60%',
+                    tintColor: '#fff',
+                    alignSelf: 'center',
+                }}
+            />
+        </TouchableOpacity>
+        : null
+}
+
+*/

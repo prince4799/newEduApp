@@ -12,6 +12,7 @@ import AnimatedView from '../../../Components/AnimatedView';
 import { COLORS } from '../../../Constants/Colors';
 import { IMAGES } from '../../../Assets/Images/Images';
 import Animated, { BounceInLeft, BounceInRight } from 'react-native-reanimated';
+import { strings } from '../../../Constants/Strings';
 
 // import { useNetInfo } from '@react-native-community/netinfo';
 
@@ -93,7 +94,8 @@ const AdminDashboard = ({ navigation}) => {
                         color: COLORS.Font,
 
 
-                    }}>{username}</Text>
+                    // }}>{username}</Text>
+                    }}>username</Text>
                 <Text style={{
                     fontSize: 12,
                     color: COLORS.Font,
@@ -122,6 +124,7 @@ const AdminDashboard = ({ navigation}) => {
                     entering={BounceInLeft}
                     exiting={BounceInRight}>
                     <TouchableOpacity
+                    onPress={()=>navigation.navigate(strings.Contents)}
                         style={styles.button}>
                         <Image source={IMAGES.manageCategories}
                             style={styles.buttonIcon} />
@@ -134,6 +137,7 @@ const AdminDashboard = ({ navigation}) => {
                 <Animated.View
                     entering={BounceInLeft}>
                     <TouchableOpacity
+                    onPress={()=>navigation.navigate(strings.VideoList)}
                         style={styles.button}>
                         <Image source={IMAGES.manageVideos}
                             style={styles.buttonIcon} />

@@ -1,8 +1,17 @@
-export const strings={
-    Home:"Home",
+export const strings = {
+    Home: "Home",
     Courses: "Courses",
-    Profile:"Profile",
-    Users:"Users",
-    Contents:"Contents",
-    Categories:"Categories"    
+    Profile: "Profile",
+    Users: "Users",
+    Contents: "Contents",
+    Categories: "Categories",
+    VideoList: "VideoList",
+    Login: "Login",
+    SignUp: "SignUp",
+    Physical: "Physical",
+    Education: "Education",
+    Splash: "Splash",
+    SignUpRegisterDrawer: "SignUpRegisterDrawer",
+    BottomTabUser: "BottomTabUser",
+    BottomTabAdmin: "BottomTabAdmin",
 }

@@ -9,6 +9,7 @@ import Home from '../../Screens/Home/Home'
 import Splash from '../../Screens/Splash/Splash'
 import { COLORS } from '../../Constants/Colors';
 import LoginWrapper from '../../Screens/Login/Login';
+import { strings } from '../../Constants/Strings';
 
 const Tab = createMaterialTopTabNavigator();
 var tabIndex = 0;
@@ -63,11 +64,11 @@ export default function SignUpRegisterDrawer() {
       >
         <Tab.Screen
           headerShown={false}
-          name="Login" component={LoginWrapper} />
+          name={strings.Login} component={LoginWrapper} />
        
         <Tab.Screen
           headerShown={false}
-          name="SignUp" component={SignupWrapper} />
+          name={strings.SignUp} component={SignupWrapper} />
       </Tab.Navigator>
   );
 }

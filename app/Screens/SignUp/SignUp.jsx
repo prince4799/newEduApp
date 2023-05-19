@@ -76,7 +76,7 @@ const SignUp = (props) => {
       if (state.user) {
         alert(state.user.message)
         storingData(state)
-        userType== 'Public'? props.navigation.navigate('BottomTabUser'): props.navigation.navigate('BottomTabAdmin') 
+        userType == 'Public' ? props.navigation.navigate('BottomTabUser') : props.navigation.navigate('BottomTabAdmin')
       }
     }
   }, [state])
@@ -89,6 +89,10 @@ const SignUp = (props) => {
       const $contact = await storeData('@contact', '' + phone, "Login")
       const $userType = await storeData('@userType', '' + userType, "Login")
       const $isLoggedIn = await storeData('@isLoggedIn', '' + data.user.status)
+      if (Object.keys(secret).length > 0 && secret && secret.secretKey && secret.secretValue) {
+        const $secretKey = await storeData('@secretKey', '' + secret.secretKey, "Login")
+        const $secretVal = await storeData('@secretVal', '' + secret.secretValue, "Login")
+      }
     } catch (error) {
       printError(error); // Handle any errors here
     }

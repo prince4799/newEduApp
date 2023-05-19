@@ -5,6 +5,7 @@ import { createMaterialTopTabNavigator } from '@react-navigation/material-top-ta
 import UPSC from '../../Screens/CourseCategories/Education/UPSC'
 import Yoga from '../../Screens/CourseCategories/Physical/Yoga';
 import { COLORS } from '../../Constants/Colors';
+import { strings } from '../../Constants/Strings';
 
 const Tab = createMaterialTopTabNavigator();
 
@@ -54,17 +55,14 @@ export default function CoursesCategories() {
             
           },
         }}
-
-
-
       >
         <Tab.Screen
           headerShown={false}
-          name="Physical" component={Yoga} />
+          name={strings.Physical} component={Yoga} />
        
         <Tab.Screen
           headerShown={false}
-          name="Education" component={UPSC} />
+          name={strings.Education} component={UPSC} />
       </Tab.Navigator>
   );
 }

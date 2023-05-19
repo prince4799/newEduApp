@@ -72,28 +72,31 @@ export const removeData = async (key: string): Promise<string> => {
 
 interface Params {
   url: string;
-  body?: Record<string, any>;
-  method: 'GET' | 'POST' | 'PUT' | 'PATCH' | 'DELETE';
+  body?: Record<string, any> | null;
+    method: 'GET' | 'POST' | 'PUT' | 'PATCH' | 'DELETE';
   headers?: Record<string, string>;
   secret?: string;
 }
 
 export const apiCaling = async (params: Params): Promise<any> => {
   const { url, body, method, headers = {}, secret } = params;
-printInfo(params)
+// printLog('\u001b[35m',">>>>>>>>>>>>>>>>>>>>>>>",params)
   if (secret && !url.includes('login'||'signup')) {
-    headers['Authorization'] = `Bearer ${secret}`;
+    headers['Authorization'] = `${secret}`;
   }
 
   const options: RequestInit = {
     method: method,
-    body: body ? JSON.stringify(body) : undefined,
     headers: headers,
   };
+  if (body !== null && body !== undefined) {
+    options.body = JSON.stringify(body);
+  }
 
   try {
     console.log("options", options, CONSTANTS.BASE_URL + url)
     const response = await fetch(CONSTANTS.BASE_URL + url, options);
+printLog('\u001b[35m',">>>>>>>>>>>>>>>>>>>>>>>",options,CONSTANTS.BASE_URL + url)
     const json = await response.json();
     console.log("extenfunc", json)
     return json;

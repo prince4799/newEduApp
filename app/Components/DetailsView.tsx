@@ -27,6 +27,7 @@ import Animated, {
     Value,
 } from "react-native-reanimated";
 import { COLORS } from '../Constants/Colors';
+import { printLog } from '../Assets/Utils/ExtenFunc';
 // import { SharedValue } from "react-native-reanimated";
 const { UIManager } = NativeModules;
 
@@ -58,6 +59,8 @@ const DetailsView: React.FC<Props> = ({ style, item, index, onChildData }) => {
                 justifyContent: 'center',
                 alignItems: 'center',
                 padding: 10,
+                borderWidth:0.5,
+                borderColor:COLORS.Blue
             }]}>
             <View
                 style={{
@@ -71,18 +74,19 @@ const DetailsView: React.FC<Props> = ({ style, item, index, onChildData }) => {
                     // elevation: 1
                 }}
             >
+
                 {/* ==========Avatar======== */}
                 <View
                     style={{
                         width: showDetails ? 55 : 40,
                         height: showDetails ? 55 : 40,
                         justifyContent: "center",
-                        // backgroundColor: "#989879",
+                        backgroundColor: "#ebe6e6",
                         position: showDetails ? 'relative' : 'absolute',
                         borderRadius: 100,
-                        borderColor: "#0333A1",
+                        borderColor: COLORS.Blue,
                         alignSelf: showDetails ? "center" : 'auto',
-                        borderWidth: 2,
+                        borderWidth: 0.5,
                         zIndex: 5,
                         // backgroundColor: 'red',
                         margin: 5,
@@ -108,14 +112,7 @@ const DetailsView: React.FC<Props> = ({ style, item, index, onChildData }) => {
                     >{item.username}
                     </Text>
                 </View>
-                {/* ==============email============ */}
-                <View style={{ ...styles.textContainer, alignItems: 'center', marginStart: showDetails ? 20 : 60 }}>
-                    <Text>Email:</Text>
-                    <Text
-                        style={styles.cardtext}
-                    >{item.email}
-                    </Text>
-                </View>
+
                 {/* ===========Contact============= */}
                 <View style={{ ...styles.textContainer, alignItems: 'center', marginStart: showDetails ? 20 : 60 }}>
                     <Text>Contact:</Text>
@@ -124,16 +121,32 @@ const DetailsView: React.FC<Props> = ({ style, item, index, onChildData }) => {
                     >{item.contact}
                     </Text>
                 </View>
+                {/* ===========Contact============= */}
+                <View style={{ ...styles.textContainer, alignItems: 'center', marginStart: showDetails ? 20 : 60 }}>
+                    <Text>User Type:</Text>
+                    <Text
+                        style={styles.cardtext}
+                    >{item.userType}
+                    </Text>
+                </View>
                 {
                     showDetails ?
                         <View>
+                            {/* ==============email============ */}
                             <View style={{ ...styles.textContainer, alignItems: 'center', marginStart: showDetails ? 20 : 60 }}>
-                                <Text>Contact:</Text>
+                                <Text>Email:</Text>
                                 <Text
                                     style={styles.cardtext}
-                                >{item.contact}
+                                >{item.email}
                                 </Text>
                             </View>
+                           {item.paid? <View style={{ ...styles.textContainer, alignItems: 'center', marginStart: showDetails ? 20 : 60 }}>
+                                <Text>Plan: </Text>
+                                <Text
+                                    style={styles.cardtext}
+                                >{item.paid}
+                                </Text>
+                            </View>: null}
                             <View style={{
                                 flexDirection: 'row',
                                 justifyContent: 'space-around',
@@ -175,7 +188,7 @@ const DetailsView: React.FC<Props> = ({ style, item, index, onChildData }) => {
                 }
                 {/* ============Drop Arrow============ */}
                 <TouchableOpacity
-                    onPress={() => { setShowDetails(!showDetails); LayoutAnimation.easeInEaseOut(); }}
+                    onPress={() => { setShowDetails(!showDetails ); LayoutAnimation.easeInEaseOut(); }}
                     style={{
                         height: 40,
                         width: 40,
@@ -257,7 +270,7 @@ export const VideoDetailsView: React.FC<Props> = ({
     secretPassword
 }) => {
     const [showDetails, setShowDetails] = useState(false);
-
+    printLog('\u001b[35m',secretKeyID,secretPassword)
     return (
 
 
@@ -266,6 +279,8 @@ export const VideoDetailsView: React.FC<Props> = ({
                 ...styles2.videoList,
                 flexDirection: showDetails ? 'column' : 'row',
                 height: showDetails ? DIMENSIONS.HEIGHT * 4 : DIMENSIONS.HEIGHT * 1.5,
+                borderWidth:0.5,
+                borderColor:COLORS.Blue,
             }}>
             {/* Thumbnail */}
             <View style={{
@@ -347,7 +362,9 @@ export const VideoDetailsView: React.FC<Props> = ({
                 }}>
                 <Image
                     style={[{
-                        height: 20, width: 20, transform: [
+                        height: 20, width: 20,
+                        tintColor:COLORS.Blue,
+                        transform: [
                             { rotateZ: showDetails ? '180deg' : '0deg' }
                         ]
                     }]}
@@ -371,7 +388,7 @@ const styles2 = StyleSheet.create({
         marginTop: 10,
         alignSelf: 'center',
         borderRadius: 5,
-        elevation: 5,
+        elevation: 3,
     },
     text: {
         padding: 5,

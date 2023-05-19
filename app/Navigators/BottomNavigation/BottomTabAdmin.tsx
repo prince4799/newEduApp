@@ -1,6 +1,6 @@
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { useState } from 'react';
-import { ImageBackground, StyleSheet, Text, View } from "react-native"
+import { ImageBackground, StyleSheet, Text, View, TouchableOpacity } from "react-native"
 import Animated, { ZoomIn, ZoomOut } from 'react-native-reanimated';
 import { IMAGES } from '../../Assets/Images/Images';
 import { COLORS } from '../../Constants/Colors';
@@ -8,8 +8,13 @@ import Profile from '../../Screens/Profile/Profie';
 import { strings } from '../../Constants/Strings';
 import AdminDashboard from '../../Screens/Admin/UI/AdminDashboard';
 import AdminManageContent from '../../Screens/Admin/UI/AdminManageContent';
+import { VideoLists, VideoPlayLists } from '../../Components/VideoLists';
+import { createStackNavigator } from '@react-navigation/stack';
+import Header from '../../Components/Header';
 
 const Tab = createBottomTabNavigator();
+const Stack = createStackNavigator();
+
 
 function TabBar({ ...props }): JSX.Element {
     const [buttonIndex, setButtonIndex] = useState(1);
@@ -97,24 +102,86 @@ function BottomTabAdmin() {
         <Tab.Navigator
             tabBar={(props: any) => <TabBar {...props} />}
             screenOptions={{
-                headerShown: false,
+
             }}
         >
             <Tab.Screen
-             options={{
-                headerShown:false
-              }}
-            name={strings.Home} component={AdminDashboard} />
+                options={{
+                    headerShown: false
+                }}
+                name={strings.Home} component={AdminDashboard} />
+            {/* <Tab.Screen
+                options={{
+                    headerShown: false
+                }}
+                name={strings.Contents} component={AdminManageContent} /> */}
             <Tab.Screen
-             options={{
-                headerShown:false
-              }}
-            name={strings.Contents} component={AdminManageContent} />
+                options={{
+                    headerShown: false
+                }}
+                name={strings.Profile} component={Profile} />
             <Tab.Screen
-             options={{
-                headerShown:false
-              }}
-            name={strings.Profile} component={Profile} />
+                name={strings.VideoList}
+                options={{
+                    headerShown: false
+                }}
+            >
+                {() => (
+                    <Stack.Navigator>
+                        <Stack.Screen
+                            name={strings.VideoList}
+                            component={VideoPlayLists}
+                            options={({ navigation }) => ({
+
+                                headerStyle: {
+                                    backgroundColor: '#ebf0f0',
+                                    height: 40,
+                                },
+                                headerTintColor: '#000',
+                                headerTitleStyle: {
+                                    fontWeight: '600',
+                                },
+                                // headerTitle: 'Home Screen',
+
+                                headerLeft: () => (
+                                    <Header navigation={navigation} />
+                                ),
+                            })}
+                        />
+                    </Stack.Navigator>
+                )}
+            </Tab.Screen>
+            <Tab.Screen
+                name={strings.Contents}
+                options={{
+                    headerShown: false
+                }}
+            >
+                {() => (
+                    <Stack.Navigator>
+                        <Stack.Screen
+                            name={strings.Contents}
+                            component={AdminManageContent}
+                            options={({ navigation }) => ({
+
+                                headerStyle: {
+                                    backgroundColor: '#ebf0f0',
+                                    height: 40,
+                                },
+                                headerTintColor: '#000',
+                                headerTitleStyle: {
+                                    fontWeight: '600',
+                                },
+                                headerTitle: 'Categories',
+
+                                headerLeft: () => (
+                                    <Header navigation={navigation} />
+                                ),
+                            })}
+                        />
+                    </Stack.Navigator>
+                )}
+            </Tab.Screen>
         </Tab.Navigator>
     );
 }

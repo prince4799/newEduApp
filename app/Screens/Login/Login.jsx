@@ -97,8 +97,8 @@ const Login = ({ navigation }) => {
 
   const storingData = async () => {
     try {
-      let {contact,token,email,username,screen,}=state.user.data
-      const $token = await storeData('@token','' +token,"Login")
+      let {contact,email,username,screen,}=state.user.data
+      const $token = await storeData('@token','' +state.user.token,"Login")
       const $username = await storeData('@username','' +username,"Login")
       const $email = await storeData('@email','' +email,"Login")
       const $contact= await storeData('@contact',''+contact,"Login")
