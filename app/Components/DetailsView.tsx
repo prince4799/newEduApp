@@ -42,7 +42,7 @@ interface Props {
     onChildData: Function
 }
 
-const DetailsView: React.FC<Props> = ({ style, item, index, onChildData }) => {
+const UserDetailsView: React.FC<Props> = ({ style, item, index, onChildData }) => {
     const progressRef = React.useRef(DIMENSIONS.HEIGHT * 3);
     // const progress: Animated.SharedValue<number> = useSharedValue(DIMENSIONS.HEIGHT * 3);
     const [showDetails, setShowDetails] = useState(false);
@@ -258,19 +258,18 @@ const styles = StyleSheet.create({
     }
 })
 
-export default DetailsView;
+export default UserDetailsView;
 
 interface Props {
     secretKeyID?: string,
     secretPassword?: string,
-}
+    }
 
 export const VideoDetailsView: React.FC<Props> = ({
     secretKeyID,
     secretPassword
 }) => {
     const [showDetails, setShowDetails] = useState(false);
-    printLog('\u001b[35m',secretKeyID,secretPassword)
     return (
 
 
@@ -326,13 +325,6 @@ export const VideoDetailsView: React.FC<Props> = ({
                                     marginRight: 4.5,
                                 }}>UPDATE</Text>
                             <Text
-                                // onPress={() => {
-                                //     setTimeout(() => {
-                                //         onChildData(index)
-                                //         setShowDetails(!showDetails)
-                                //     }, 2000)
-                                // }
-                                // }
                                 style={{
                                     backgroundColor: '#f76060',
                                     width: '45%',

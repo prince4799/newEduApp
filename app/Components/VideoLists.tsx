@@ -94,16 +94,18 @@ export const VideoPlayLists: React.FC<any | Props> = ({
     let secretValPromise = ''
     let secretKeyPromise = ''
     const [showListHeader, setShowListHeader] = useState(false);
-    useEffect(() => {
-        if (secretKeyPromise !== undefined && secretValPromise !== undefined) {
-            setShowListHeader(true);
-        } else {
-            setShowListHeader(false);
-        }
-    }, [secretKeyPromise, secretValPromise]);
-
-
     const [showModal, setShowModal] = useState(false);
+    const [expandedIndex, setExpandedIndex] = useState(-1);
+
+    const handleCardPress = (index) => {
+      if (expandedIndex === index) {
+        // Collapse the card if it is already expanded
+        setExpandedIndex(-1);
+      } else {
+        // Expand the clicked card and collapse the previously expanded card
+        setExpandedIndex(index);
+      }
+    };
     const onModalClose = (data: boolean) => {
         setShowModal(false);
     };
@@ -119,6 +121,13 @@ export const VideoPlayLists: React.FC<any | Props> = ({
             printError('error in Video List', err)
         }
     }
+    useEffect(() => {
+        if (secretKeyPromise !== undefined && secretValPromise !== undefined) {
+            setShowListHeader(true);
+        } else {
+            setShowListHeader(false);
+        }
+    }, [secretKeyPromise, secretValPromise]);
     useEffect(() => {
         asyncRetrieve()
     }, [secretKeyPromise, secretValPromise])

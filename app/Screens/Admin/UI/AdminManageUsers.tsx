@@ -15,7 +15,7 @@ import { IMAGES } from '../../../Assets/Images/Images';
 import Animated, { BounceInLeft, BounceInRight, log } from 'react-native-reanimated';
 import { FlatList, RefreshControl, TextInput } from 'react-native-gesture-handler';
 import { Deferred } from '@firebase/util';
-import DetailsView from '../../../Components/DetailsView';
+import UserDetailsView from '../../../Components/DetailsView';
 import Home from '../../Home/Home';
 
 // import { useNetInfo } from '@react-native-community/netinfo';
@@ -158,7 +158,7 @@ const AdminManageUsers = ({ }) => {
                 style={{ height: 300, }}
                 renderItem={({ item, index }) =>
                     <SafeAreaView style={{}}>
-                        <DetailsView
+                        <UserDetailsView
                             item={item}
                             onChildData={() => handleChildData(index)}
                             index={index}
