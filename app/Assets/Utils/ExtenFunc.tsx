@@ -25,7 +25,7 @@ export async function signupAPICalling(endpoint: string, data: { username: strin
     }),
   });
   const jsonResponse = await response.json();
-  console.log('=======', JSON.stringify(jsonResponse));
+  // console.log('=======', JSON.stringify(jsonResponse));
   return jsonResponse;
 }
 
@@ -43,7 +43,7 @@ export const storeData = async (key: string, value: string, module: string): Pro
 export const retrieveData = async (key: string, module: string): Promise<object> => {
   try {
     const value = await AsyncStorage.getItem(key);
-    console.log('Retrieved value:', value); // Log the value here
+    // console.log('Retrieved value:', value); // Log the value here
     if (value === null) {
       return {
         "status": 'false',
@@ -73,16 +73,17 @@ export const removeData = async (key: string): Promise<string> => {
 interface Params {
   url: string;
   body?: Record<string, any> | null;
-    method: 'GET' | 'POST' | 'PUT' | 'PATCH' | 'DELETE';
+  method: string|'GET' | 'POST' | 'PUT' | 'PATCH' | 'DELETE';
   headers?: Record<string, string>;
   secret?: string;
 }
 
 export const apiCaling = async (params: Params): Promise<any> => {
   const { url, body, method, headers = {}, secret } = params;
-// printLog('\u001b[35m',">>>>>>>>>>>>>>>>>>>>>>>",params)
+
+
   if (secret && !url.includes('login'||'signup')) {
-    headers['Authorization'] = `${secret}`;
+    headers['Authorization'] = `${CONSTANTS.stored.TOKEN}`;
   }
 
   const options: RequestInit = {
@@ -92,13 +93,13 @@ export const apiCaling = async (params: Params): Promise<any> => {
   if (body !== null && body !== undefined) {
     options.body = JSON.stringify(body);
   }
+// printInfo("options",JSON.stringify(body))
+printLog("options",options)
 
   try {
-    console.log("options", options, CONSTANTS.BASE_URL + url)
     const response = await fetch(CONSTANTS.BASE_URL + url, options);
-printLog('\u001b[35m',">>>>>>>>>>>>>>>>>>>>>>>",options,CONSTANTS.BASE_URL + url)
     const json = await response.json();
-    console.log("extenfunc", json)
+    // console.log("extenfunc", json)
     return json;
   } catch (error) {
     console.error(`Error calling API: ${error}`);
@@ -124,7 +125,7 @@ interface logInterface {
 }
 
 export const printError: logInterface = (message?: any, ...optionalParams: any[]) => {
-  if (debug === true)
+  if (debug)
     console.log('\x1b[31m', message,...optionalParams);
 };
 //green color
@@ -145,7 +146,7 @@ export const printLog :logInterface =(message?: any, ...optionalParams: any[])=>
 
 
 // Prevent from Copying text
-export   const handleSelectionChange = (event:any, setState:any,state:any) => {
+export const handleSelectionChange = (event:any, setState:any,state:any) => {
   // printError(event)
   const { selection } = event.nativeEvent;
   if (selection.start !== selection.end) {
@@ -153,3 +154,37 @@ export   const handleSelectionChange = (event:any, setState:any,state:any) => {
     setState(state.substring(0, selection.start) + state.substring(selection.end));
   }
 };
+
+// base64 to Image
+import RNFS from 'react-native-fs';
+export const base64ToImage = async (image :any) => {
+  const base64Data = image;
+  const tempFilePath = `${RNFS.DocumentDirectoryPath}/temp.jpg`;
+  try {
+    await RNFS.writeFile(tempFilePath, base64Data, 'base64');
+  } catch (error) {
+    console.log('Error writing file:', error);
+  }
+
+  return tempFilePath; // Return the temporary file path
+};
+
+
+  // const base64ToImage = async (image :any) => {
+  //   const base64Data = image;
+  //   const tempFilePath = `${RNFS.DocumentDirectoryPath}/temp.jpg`;
+  
+  //   try {
+  //     await RNFS.writeFile(tempFilePath, base64Data, 'base64');
+  //     resourceThumbnail ? setImageSource({ uri: `file://${tempFilePath}` }) : setImageSource('');
+  //   } catch (error) {
+  //     console.log('Error writing file:', error);
+  //   }
+  
+  //   try {
+  //     await RNFS.unlink(tempFilePath);
+  //     console.log('Temporary file deleted');
+  //   } catch (error) {
+  //     console.log('Error deleting temporary file:', error);
+  //   }
+  // };

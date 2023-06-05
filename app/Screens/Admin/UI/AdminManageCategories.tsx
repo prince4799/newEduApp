@@ -137,28 +137,28 @@ interface Props {
     SecretPassword?: string,
 }
 
-const AdminManageContent: React.FC<any | Props> = ({ }) => {
+const AdminManageCategories: React.FC<any | Props> = ({ }) => {
 
     const [list, setList] = useState<any>([videoDataArray])
     const [searchText, setSearchText] = useState(false)
     const [childData, setChildData] = useState<Number>();
     const [showModal, setShowModal] = useState<boolean>(false)
 
-    const onModalClose = (data:boolean) => {
+    const onModalClose = (data: boolean) => {
         setShowModal(false);
-      };
+    };
 
-      let secretValPromise = ''
-      let secretKeyPromise = ''
-      const [showListHeader, setShowListHeader] = useState(false);
-      useEffect(() => {
-          if (secretKeyPromise !== undefined && secretValPromise !== undefined) {
-              setShowListHeader(true);
-          } else {
-              setShowListHeader(false);
-          }
-      }, [secretKeyPromise, secretValPromise]);
-      const asyncRetrieve = async () => {
+    let secretValPromise = ''
+    let secretKeyPromise = ''
+    const [showListHeader, setShowListHeader] = useState(false);
+    useEffect(() => {
+        if (secretKeyPromise !== undefined && secretValPromise !== undefined) {
+            setShowListHeader(true);
+        } else {
+            setShowListHeader(false);
+        }
+    }, [secretKeyPromise, secretValPromise]);
+    const asyncRetrieve = async () => {
         try {
             let key = await retrieveData('@secretKey', 'home')
             secretKeyPromise = key.value
@@ -225,7 +225,7 @@ const AdminManageContent: React.FC<any | Props> = ({ }) => {
                 height: '100%',
             }}>
             {/* search tab and Title */}
-            <View style={{  backgroundColor: '#edeff2', }}>
+            <View style={{ backgroundColor: '#edeff2', }}>
                 <View
                     style={{
                         height: 45,
@@ -239,17 +239,19 @@ const AdminManageContent: React.FC<any | Props> = ({ }) => {
                         borderRadius: 5,
                         justifyContent: 'center',
                         backgroundColor: '#fff',
-                        
+
                     }}
                 >
                     <Image
                         resizeMode='contain'
-                        
-                        style={{ height: 25, 
-                            width: '10%', 
+
+                        style={{
+                            height: 25,
+                            width: '10%',
                             alignSelf: 'center',
-                            tintColor:COLORS.Blue, 
-                            marginStart: 15 }}
+                            tintColor: COLORS.Blue,
+                            marginStart: 15
+                        }}
                         source={IMAGES.search} />
                     <TextInput
                         onChange={({ nativeEvent }) => filterlist(nativeEvent.text)}
@@ -264,70 +266,70 @@ const AdminManageContent: React.FC<any | Props> = ({ }) => {
                 </View>
             </View>
             {/* Category cards */}
-                <FlatList
-                    data={searchText ? list : categoryDataArray}
-                    ListEmptyComponent={<Text>No data to show</Text>}
-                    ListHeaderComponent={showListHeader ?
-                        < TouchableOpacity
-                            onPress={() => {
-                                setShowModal(true)
-                            }}
-                           >
-                           <Text
-                           style={{
-                            height: CONSTANTS.DIMENSIONS.HEIGHT / 1.5,
-                            width:CONSTANTS.DIMENSIONS.WIDTH*9,
-                            backgroundColor: COLORS.Button,
-                            margin: 15,
-                            borderRadius: CONSTANTS.DIMENSIONS.HEIGHT / 2,
-                            alignSelf: 'center',
-                            textAlignVertical:'center',
-                            textAlign:'center',
-                            elevation: 5,
-                            color:COLORS.ButtonText,
-                            fontWeight:'bold',
-                            fontSize:16,
-                        }}
-                           >UPLOAD VIDEO</Text>
-                        </TouchableOpacity> : null
-                    }
-                    numColumns={2}
-                    style={{ backgroundColor:'#fff' }}
-                    renderItem={({ item, index }) =>
-                        <TouchableOpacity
-                            activeOpacity={0.7}
-                            style={{
-                                height: 150,
-                                width: 150,
-                                backgroundColor: getRandomColor(),
-                                margin: 15,
-                                justifyContent: 'center',
-                                alignSelf: 'center',
-                                elevation: 8,
-                            }}>
-                            <Lottie style={{
-                                top: 0,
-                                alignSelf: 'flex-start',
-                                height: '80%',
-                            }}
-                                source={getRandomAnimation()} autoPlay loop />
-                            <Text style={{
-                                textAlign: 'center',
-                                height: '10%',
-                            }}>
-                                {item.category.toUpperCase()}
-                            </Text>
-                        </TouchableOpacity >
-                    } />
+            <FlatList
+                data={searchText ? list : categoryDataArray}
+                ListEmptyComponent={<Text>No data to show</Text>}
 
-            {showModal ? 
-            <MyModal
-                showModal={showModal}
-                modalText={'Add New Category'}
-                category={'Category Name'}
-                onModalClose={onModalClose}
-                /> 
+                numColumns={2}
+                style={{ backgroundColor: '#fff' }}
+                renderItem={({ item, index }) =>
+                    <TouchableOpacity
+                        activeOpacity={0.7}
+                        style={{
+                            height: 150,
+                            width: 150,
+                            backgroundColor: getRandomColor(),
+                            margin: 15,
+                            justifyContent: 'center',
+                            alignSelf: 'center',
+                            elevation: 8,
+                        }}>
+                        <Lottie style={{
+                            top: 0,
+                            alignSelf: 'flex-start',
+                            height: '80%',
+                        }}
+                            source={getRandomAnimation()} autoPlay loop />
+                        <Text style={{
+                            textAlign: 'center',
+                            height: '10%',
+                        }}>
+                            {item.category.toUpperCase()}
+                        </Text>
+                    </TouchableOpacity >
+                } />
+
+            {showModal ?
+                <MyModal
+                    showModal={showModal}
+                    modalText={'Add New Category'}
+                    category={'Category Name'}
+                    onModalClose={onModalClose}
+                />
                 : null}
+            
+                <Text
+                 onPress={() => {
+                    setShowModal(true)
+                }}
+                    style={{
+                        position: 'absolute',
+                        bottom: 0,
+                        right:0,
+                        height: CONSTANTS.DIMENSIONS.HEIGHT / 1.5,
+                        width: CONSTANTS.DIMENSIONS.HEIGHT / 1.5,
+                        backgroundColor: COLORS.Button,
+                        margin: 15,
+                        borderRadius: CONSTANTS.DIMENSIONS.HEIGHT / 2,
+                        alignSelf: 'center',
+                        textAlignVertical: 'center',
+                        textAlign: 'center',
+                        elevation: 5,
+                        color: COLORS.ButtonText,
+                        fontWeight: 'bold',
+                        fontSize: 16,
+                    }}
+                >+</Text>
         </SafeAreaView>
     )
 };
@@ -337,7 +339,7 @@ const styles = StyleSheet.create({
         flex: 1,
         alignItems: 'center',
         justifyContent: 'center',
-        backgroundColor:COLORS.Background
+        backgroundColor: COLORS.Background
     },
 
     buttonIcon: {
@@ -372,7 +374,7 @@ const styles = StyleSheet.create({
     }
 })
 
-export default AdminManageContent;
+export default AdminManageCategories;
 
 
 {/* <AnimatedLottieView

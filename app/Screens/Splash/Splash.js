@@ -15,6 +15,25 @@ const Splash = ({ navigation }) => {
   const { height, width, scale, fontScale } = useWindowDimensions();
   const [isConnected, setIsConnected] = useState(false);
 
+  (async function () {
+
+    const $token = await extFun.retrieveData('@token', 'splash')
+    const $username = await extFun.retrieveData('@username', 'splash')
+    const $email = await extFun.retrieveData('@email', 'splash')
+    const $contact = await extFun.retrieveData('@contact', 'splash')
+    const $userType = await extFun.retrieveData('@userType', 'splash')
+    const $secretKey = await extFun.retrieveData('@secretKey', 'splash')
+    const $secretVal = await extFun.retrieveData('@secretVal', 'splash')
+    CONSTANTS.stored.TOKEN = $token.value
+    CONSTANTS.stored.USER_NAME = $username.value
+    CONSTANTS.stored.EMAIL = $email.value
+    CONSTANTS.stored.CONTACT = $contact.value
+    CONSTANTS.stored.USER_TYPE = $userType.value
+    CONSTANTS.stored.SECRET_KEY = $secretKey.value
+    CONSTANTS.stored.SECRET_VALUE = $secretVal.value
+    // extFun.printLog('\u001b[36m', '........', CONSTANTS.stored)
+  })()
+
   useEffect(() => {
     CONSTANTS.APP_VERSION = version;
     CONSTANTS.DIMENSIONS.HEIGHT = height / 10;
@@ -33,7 +52,7 @@ const Splash = ({ navigation }) => {
           extFun.retrieveData('@userType', MODULE_NAME).then((screen) => {
             if (route.name === 'Splash' && screen == 'Public')
               navigation.replace('BottomTabUser')
-            else 
+            else
               navigation.replace('BottomTabAdmin')
           })
         }
@@ -44,8 +63,6 @@ const Splash = ({ navigation }) => {
 
   useEffect(() => {
     navigate();
-    // navigation.replace('SignUpRegisterDrawer')
-
   }, [])
 
 
@@ -53,11 +70,12 @@ const Splash = ({ navigation }) => {
     NetInfo.addEventListener((state) => {
       setIsConnected(state.isConnected.toString());
       CONSTANTS.NET_STATUS = state.isConnected.toString()
-      console.log("isconnected", isConnected, CONSTANTS.NET_STATUS);
+      // console.log("isconnected", isConnected, CONSTANTS.NET_STATUS);
     });
   }
   useEffect(() => {
     netStatusCheck()
+    return()=>netStatusCheck()
   }, [isConnected]);
 
 

@@ -47,8 +47,8 @@ const Login = ({ navigation }) => {
   const net = useNetInfo().isConnected;
   const { state, dispatch, loginUser } = useLogin();
   const { height, width, scale, fontScale } = useWindowDimensions()
-  const portrait = (height / 10) * 5;
-  const landscape = (height / 10) * 8
+  const portrait = (height / 10) * 6
+  const landscape = height 
   const [id, setId] = useState('')
   const [password, setPassword] = useState('')
   const [checkValid, setCheckValid] = useState(false)
@@ -145,22 +145,32 @@ const Login = ({ navigation }) => {
 
   return (
     <SafeAreaView style={styles.container}>
-      <MyModal
-        modalText={'Login '}
-        showModal={showModal}
-        onModalClose={onModalClose}
-      />
+      {state.loading == true ? <View
+        style={{
+          position: 'absolute',
+          top: '45%',
+          left: '45%',
+          height: '5%',
+          width: '5%',
+          backgroundColor: '#fff'
+        }} /> : null}
       <ImageBackground style={{ height: height, width: width, justifyContent: 'center', alignItems: 'center', }} resizeMode='cover' source={require("../../Assets/Images/gradient_bg.png")} >
         <ImageBackground style={{ ...styles.form(height, width), }} source={require("../../Assets/Images/half_bg.png")} >
           <View style={{ ...styles.form(height, width), }}>
-            <ScrollView style={{ height: (height / 10) * 8, }}>
-              <View style={{ alignSelf: 'center' }}>
+            <ScrollView style={{}}  >
+              {/* LOGO  */}
+               <View style={{ alignSelf: 'center'}}>
                 <Text style={{ fontWeight: 'bold', fontSize: 24, top: 10, color: COLORS.Font }}>LOGIN</Text>
-                <View style={{ height: '20%', width: '25%', backgroundColor: '#fff', top: 0, margin: 10 }} />
+                <View style={{ height: '10%', width: '25%', backgroundColor: '#fff', top: 0, margin: 10 }} />
                 <Text>APP LOGO</Text>
               </View>
-              <KeyboardAvoidingView style={{ height: height > width ? portrait : landscape, width: '90%', alignSelf: 'center', marginBottom: 80, }} behavior='padding' >
-                <View style={{ ...styles.inputContainer }} >
+              <KeyboardAvoidingView style={{ 
+                height: height > width ? portrait : landscape,
+                 width: '90%',
+                  alignSelf: 'center', 
+                  marginBottom: 80,
+                  }} behavior='padding' >
+                <View style={{ ...styles.inputContainer ,alignSelf: "stretch",}} >
                   <Image style={styles.inputImg} source={require('../../Assets/Images/mail.png')} />
                   <TextInput style={styles.inputs}
                     value={id}
@@ -168,7 +178,7 @@ const Login = ({ navigation }) => {
                     onChangeText={(text) => setId(text)}
                     placeholder='Mail/Username' />
                 </View>
-                <View style={styles.inputContainer}>
+                <View style={{...styles.inputContainer,alignSelf: "stretch",}}>
                   <Image style={styles.inputImg} source={require('../../Assets/Images/padlock.png')} />
                   <TextInput style={styles.inputs}
                     value={password}
@@ -201,7 +211,6 @@ const Login = ({ navigation }) => {
                     }
                   />
                 </View> : null}
-
                 <View style={{ bottom: 0, top: '30%' }}>
                   <TouchableOpacity
                     onPress={() => loginValidation({ id, password, userType })}
@@ -213,42 +222,30 @@ const Login = ({ navigation }) => {
                     <Text style={styles.buttonText}>LOGIN</Text>
                   </TouchableOpacity>
                   <Text onPress={() => navigation.navigate('SignUp')} style={[styles.link, { marginVertical: 10, }]}>Create  an account</Text>
-                  {/* <TouchableOpacity
-                      style={{
-                        ...styles.button,
-                        width: (width / 10) * 6,
-                        alignItems: 'center',
-                      }}>
-                      <Text style={styles.buttonText}>SignIn with google</Text>
-                      <Image
-                        style={{
-                          ...styles.inputImg,
-                          height: 30,
-                          width: 30,
-                          tintColor: null
-                        }}
-                        source={require('../../Assets/Images/google.png')} />
-                    </TouchableOpacity>*/}
                 </View>
               </KeyboardAvoidingView>
             </ScrollView>
           </View>
         </ImageBackground>
       </ImageBackground>
+      <MyModal
+        modalText={'Login '}
+        showModal={showModal}
+        onModalClose={onModalClose}
+      />
     </SafeAreaView>
   );
 };
 
 const styles = StyleSheet.create({
   container: {
-    // backgroundColor: "#B2C600",
+    backgroundColor: COLORS.Background,
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-
   },
   form: (deviceHeight, deviceWidth) => ({
-    height: (deviceHeight / 10) * 8,
+    height: (deviceHeight / 10) * 8, //deviceHeight > width ? portrait : landscape
     width: (deviceWidth / 10) * 8,
     backgroundColor: COLORS['T-Background'],
 

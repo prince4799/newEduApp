@@ -13,8 +13,8 @@ import Home from "./app/Screens/Home/Home"
 import BottomTab from './app/Navigators/BottomNavigation/BottomTab';
 // import AdminDashboard from './app/Screens/UI/Admin/AdminDashboard';
 // import AdminManageUsers from './app/Screens/Admin/AdminManageUsers';
-// import AdminManageContent from './app/Screens/Admin/UI/AdminManageContent';
-import AdminManageContent from './app/Screens/Admin/UI/AdminManageContent';
+// import AdminManageCategories from './app/Screens/Admin/UI/AdminManageCategories';
+import AdminManageCategories from './app/Screens/Admin/UI/AdminManageCategories';
 import { VideoPlayLists } from './app/Components/VideoLists';
 import { Player } from './app/Components/VideoPlayer';
 import AdminDashboard from './app/Screens/Admin/UI/AdminDashboard';
@@ -29,9 +29,8 @@ function App(): JSX.Element {
   };
   useEffect(() => {
     const removeNetDisplaySubscription:any = Dimensions.addEventListener('change', updateDefaultDisplaySize);
-    return () => {
-      removeNetDisplaySubscription();
-    };
+    return () => 
+      removeNetDisplaySubscription
   });
   
 
@@ -39,7 +38,7 @@ function App(): JSX.Element {
   <StatusBar hidden={true}/>
   {/* <AdminDashboard/> */}
   {/* <AdminManageUsers/> */}
-  {/* <AdminManageContent/> */}
+  {/* <AdminManageCategories/> */}
   {/* <VideoPlayLists/> */}
   {/* <Player/> */}
     <NavigationContainer>

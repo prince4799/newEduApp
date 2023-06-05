@@ -1,6 +1,7 @@
 import React, { useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react';
 import NetInfo from '@react-native-community/netinfo';
 import AsyncStorage from '@react-native-community/async-storage';
+
 import {
     View,
     Text,
@@ -15,12 +16,13 @@ import {
 import Animated, { FadeInUp, log, SlideInLeft, SlideInRight, ZoomIn } from 'react-native-reanimated';
 import * as CONSTANTS from '../Constants/Constants'
 import { IMAGES } from "../Assets/Images/Images"
-import { FlatList, ScrollView, TextInput } from 'react-native-gesture-handler';
+import { FlatList, RefreshControl, ScrollView, TextInput } from 'react-native-gesture-handler';
 import { COLORS } from '../Constants/Colors';
 import { SafeAreaView, SafeAreaInsetsContext } from 'react-native-safe-area-context';
 import { VideoDetailsView } from './DetailsView';
 import MyModal from './MyModal';
-import { printError, printSucess, retrieveData } from '../Assets/Utils/ExtenFunc';
+import { alert, apiCaling, printError, printLog, printSucess, retrieveData, storeData } from '../Assets/Utils/ExtenFunc';
+import { eventsName } from '../Constants/Strings';
 
 
 export const VideoLists: React.FC<any> = ({
@@ -70,7 +72,6 @@ export const VideoLists: React.FC<any> = ({
     )
 };
 
-const myData = [1,2,3,4]
 
 
 interface Props {
@@ -93,22 +94,150 @@ export const VideoPlayLists: React.FC<any | Props> = ({
 }) => {
     let secretValPromise = ''
     let secretKeyPromise = ''
-    const [showListHeader, setShowListHeader] = useState(false);
-    const [showModal, setShowModal] = useState(false);
-    const [expandedIndex, setExpandedIndex] = useState(-1);
+    const [showListHeader, setShowListHeader] = useState<boolean>(false);
+    const [showModal, setShowModal] = useState<boolean>(false);
+    const [list, setList] = useState([])
+    const [loading, setLoading] = useState<boolean>(false)
 
-    const handleCardPress = (index) => {
-      if (expandedIndex === index) {
-        // Collapse the card if it is already expanded
-        setExpandedIndex(-1);
-      } else {
-        // Expand the clicked card and collapse the previously expanded card
-        setExpandedIndex(index);
-      }
-    };
-    const onModalClose = (data: boolean) => {
+
+    interface ModalClose {
+        data?: any
+    }
+
+    async function uploadContent(data: any) {
+        printError("data",data)
+        const formData = new FormData();
+        formData.append('videolink', data.resourceLink);
+        formData.append('title', data.resourceTitle);
+        formData.append('category', data.categoryName);
+        formData.append('thumbnail', {
+            uri: data.resourceThumbnail.path,
+            name: data.resourceThumbnail.modificationDate + 'resourceThumbnail.jpg',
+            type: data.resourceThumbnail.mime, // Replace with the appropriate file type
+        });
+
+        try {
+            setLoading(true)
+
+            const response = await fetch(CONSTANTS.BASE_URL + 'contents/upload', {
+                method: 'POST',
+                body: formData,
+                headers: {
+                    [data.secretKey]: data.secretValue,
+                    Authorization: CONSTANTS.stored.TOKEN,
+                },
+            });
+            printLog("response=======>",response)
+            if (response) {
+                setLoading(false)
+            }
+            if(response.status>400){
+                alert("Upload failed")
+            }
+
+            if (response.ok) {
+                const responseData = await response.json();
+            printLog("response=======>",responseData)
+
+                listLoad()
+            } else {
+                // Error occurred during upload
+                console.log('Upload failed:', response.status);
+            }
+        } catch (error) {
+            setLoading(false)
+            console.log('Error:', error);
+        }
+    }
+    const onModalClose = (data: ModalClose) => {
+        printLog('\u001b[32m', "onModalClose...", data)
+
         setShowModal(false);
+        if (data) {
+            if (data.resourceLink || data.resourceTitle || data.resourceThumbnail || data.categoryName)
+                uploadContent(data)
+        }
     };
+
+
+
+    async function listLoad() {
+        setLoading(true)
+
+        let params = {
+            url: 'contents/load',
+            method: "GET",
+            secret: CONSTANTS.stored.TOKEN
+        }
+        try {
+            let res = await apiCaling(params)
+            // console.log('\u001b[36m', '........', res.details.contents[0])
+            // if (res.status) {
+            //     alert(res.message)
+            // }
+            if (res.message.includes('successfully')) {
+                let revList = res.details.contents.reverse()
+                setList(revList)
+                setLoading(false)
+                alert(res.message)
+            }
+        } catch (err) {
+            printError("error in loading videos")
+            alert("error in loading videos")
+            setLoading(false)
+
+        }
+    }
+
+    const changeList = async (type: string, name: string, index: number) => {
+        let key = CONSTANTS.stored.SECRET_KEY;
+        let val = CONSTANTS.stored.SECRET_VALUE;
+        let deleteParams = {
+            url: 'contents/delete',
+            method: "DELETE",
+            secret: CONSTANTS.stored.TOKEN,
+            body: {
+                "title": name
+            },
+            headers: {
+                'Content-Type': 'application/json',
+                [key]: val
+            },
+        }
+        let updateParams = {
+            url: '',
+            method: "PUT",
+            secret: CONSTANTS.stored.TOKEN,
+            body: {
+                "title": "first video",
+                "thumbnail": "ne thumbnail;",
+                "category": "meditation",
+                "newtitle": "video"
+            }
+        }
+
+
+        try {
+            setLoading(true)
+
+            let res = await apiCaling(type == eventsName.Delete ? deleteParams : updateParams)
+            printSucess("res", res)
+            alert(res.message)
+            if (res.status == true) {
+                setLoading(false)
+            }
+            if (res.message.includes('successfully')) {
+                setList(prevList => prevList.filter((_, i) => i !== index));
+            }
+        } catch (err) {
+            printError("error in deleting videos", err)
+            alert(err.message)
+            setLoading(false)
+        }
+
+    }
+
+
 
     const asyncRetrieve = async () => {
         try {
@@ -117,16 +246,20 @@ export const VideoPlayLists: React.FC<any | Props> = ({
             printSucess(key)
             let val = await retrieveData('@secretVal', 'Home')
             secretValPromise = val.value
+            let token = await retrieveData('@token', 'VideoLists')
+            token = token.value
         } catch (err) {
             printError('error in Video List', err)
         }
     }
+
     useEffect(() => {
         if (secretKeyPromise !== undefined && secretValPromise !== undefined) {
             setShowListHeader(true);
         } else {
             setShowListHeader(false);
         }
+        !list.length ? listLoad() : null
     }, [secretKeyPromise, secretValPromise]);
     useEffect(() => {
         asyncRetrieve()
@@ -134,63 +267,65 @@ export const VideoPlayLists: React.FC<any | Props> = ({
 
     return (
         <SafeAreaView style={{ flex: 1 }}>
-            {/* <Text style={{
-                    height: '10%',
-                    textAlign: 'center',
-                    fontSize: 18,
-                    verticalAlign: 'middle',
-                }}>{'Name of Category'.toUpperCase()}</Text> */}
-
-            <View style={{ width: '100%' }}>
+            <View style={{ width: '100%', flex: 1 }}>
                 <FlatList
-                ListEmptyComponent={<Text>There are no data to show</Text>}
+                    ListEmptyComponent={<Text>There are no data to show</Text>}
                     ListHeaderComponent={showListHeader ?
                         < TouchableOpacity
                             onPress={() => {
+                                // printLog('>>>>>>>>>>>>>..', showModal)
                                 setShowModal(true)
                             }}
-                           >
-                           <Text
-                           style={{
-                            height: CONSTANTS.DIMENSIONS.HEIGHT / 1.5,
-                            width:CONSTANTS.DIMENSIONS.WIDTH*9,
-                            backgroundColor: COLORS.Button,
-                            margin: 15,
-                            borderRadius: CONSTANTS.DIMENSIONS.HEIGHT / 2,
-                            alignSelf: 'center',
-                            textAlignVertical:'center',
-                            textAlign:'center',
-                            elevation: 5,
-                            color:COLORS.ButtonText,
-                            fontWeight:'bold',
-                            fontSize:16,
-                        }}
-                           >UPLOAD VIDEO</Text>
+                        >
+                            <Text
+                                style={{
+                                    height: CONSTANTS.DIMENSIONS.HEIGHT / 1.5,
+                                    width: CONSTANTS.DIMENSIONS.WIDTH * 9,
+                                    backgroundColor: COLORS.Button,
+                                    margin: 15,
+                                    borderRadius: CONSTANTS.DIMENSIONS.HEIGHT / 2,
+                                    alignSelf: 'center',
+                                    textAlignVertical: 'center',
+                                    textAlign: 'center',
+                                    elevation: 5,
+                                    color: COLORS.ButtonText,
+                                    fontWeight: 'bold',
+                                    fontSize: 16,
+                                }}
+                            >UPLOAD VIDEO</Text>
                         </TouchableOpacity> : null
                     }
-                    bounces
-                    data={myData}
+                    data={list}
                     // style={{flexDirection;}}
-                    renderItem={({ item }) =>
+                    renderItem={({ item, index }) =>
                         <VideoDetailsView
                             secretKeyID={secretKeyPromise}
                             secretPassword={secretValPromise}
+                            data={item}
+                            navigation={navigation}
+                            changeList={changeList}
+                            index={index}
+                        />
+                    }
+                    refreshControl={
+                        <RefreshControl
+                            refreshing={loading}
+                            onRefresh={() => listLoad()}
+                            colors={[COLORS.Blue]} // Customize the loading indicator colors
                         />
                     } />
             </View>
             {/* Add Button */}
-
-            {showModal ?
-                <MyModal
-                    showModal={showModal}
-                    modalText={'Add New Video'}
-                    category={'Category'}
-                    link={'Link of the video'}
-                    thumbnail={'Link of thumbnail'}
-                    title={'Enter title'}
-                    onModalClose={onModalClose}
-                />
-                : null}
+            <MyModal
+                showModal={showModal}
+                modalText={'Add New Video'}
+                category={'Enter Category'}
+                link={'Enter Link of the video'}
+                thumbnail={'Enter Link of thumbnail'}
+                title={'Enter Title'}
+                // newTitle={'Enter New Title'}
+                onModalClose={onModalClose}
+            />
 
         </SafeAreaView >
     )

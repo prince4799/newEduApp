@@ -108,9 +108,7 @@
 import React, { useEffect, useState } from 'react';
 import { WebView } from 'react-native-webview';
 import Orientation from 'react-native-orientation-locker';
-export const Player = () => {
-
-
+export const VideoPlayer = (url: string) => {
 
   const injectedJavaScript = `
   console.log("WebView URL:");
@@ -152,17 +150,17 @@ export const Player = () => {
   }
 `;
 
-useEffect(() => {
-  Orientation.addOrientationListener(handleOrientationChange);
+  useEffect(() => {
+    Orientation.addOrientationListener(handleOrientationChange);
 
-  return () => {
-    Orientation.removeOrientationListener(handleOrientationChange);
+    return () => {
+      Orientation.removeOrientationListener(handleOrientationChange);
+    };
+  }, []);
+
+  const handleOrientationChange = (orientation: any) => {
+    // Do something based on the orientation
   };
-}, []);
-
-const handleOrientationChange = (orientation: any) => {
-  // Do something based on the orientation
-};
 
 
 
@@ -179,10 +177,13 @@ const handleOrientationChange = (orientation: any) => {
 
 
   return (
-    
+
     <WebView
       source={{ uri: 'https://drive.google.com/file/d/1ZQxJK-7wZLIDm-SE8o1gtiQqcZBMsaRK/view?usp=share_link' }}
-      style={{ width: '100%', height: '100%' }}
+      style={{
+        width: '100%',
+        height: '100%',
+      }}
       javaScriptEnabled={true}
       allowsFullscreenVideo={true}
       injectedJavaScript={injectedJavaScript}

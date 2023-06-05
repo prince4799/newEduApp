@@ -17,7 +17,7 @@ import {
     NativeModules,
 } from 'react-native';
 import { IMAGES } from '../Assets/Images/Images';
-import { DIMENSIONS } from '../Constants/Constants';
+import { DIMENSIONS, stored } from '../Constants/Constants';
 import Animated, {
     useAnimatedStyle,
     withSpring,
@@ -27,7 +27,7 @@ import Animated, {
     Value,
 } from "react-native-reanimated";
 import { COLORS } from '../Constants/Colors';
-import { printLog } from '../Assets/Utils/ExtenFunc';
+import { alert, apiCaling, printError, printLog } from '../Assets/Utils/ExtenFunc';
 // import { SharedValue } from "react-native-reanimated";
 const { UIManager } = NativeModules;
 
@@ -59,8 +59,8 @@ const UserDetailsView: React.FC<Props> = ({ style, item, index, onChildData }) =
                 justifyContent: 'center',
                 alignItems: 'center',
                 padding: 10,
-                borderWidth:0.5,
-                borderColor:COLORS.Blue
+                borderWidth: 0.5,
+                borderColor: COLORS.Blue
             }]}>
             <View
                 style={{
@@ -140,13 +140,13 @@ const UserDetailsView: React.FC<Props> = ({ style, item, index, onChildData }) =
                                 >{item.email}
                                 </Text>
                             </View>
-                           {item.paid? <View style={{ ...styles.textContainer, alignItems: 'center', marginStart: showDetails ? 20 : 60 }}>
+                            {item.paid ? <View style={{ ...styles.textContainer, alignItems: 'center', marginStart: showDetails ? 20 : 60 }}>
                                 <Text>Plan: </Text>
                                 <Text
                                     style={styles.cardtext}
                                 >{item.paid}
                                 </Text>
-                            </View>: null}
+                            </View> : null}
                             <View style={{
                                 flexDirection: 'row',
                                 justifyContent: 'space-around',
@@ -188,7 +188,7 @@ const UserDetailsView: React.FC<Props> = ({ style, item, index, onChildData }) =
                 }
                 {/* ============Drop Arrow============ */}
                 <TouchableOpacity
-                    onPress={() => { setShowDetails(!showDetails ); LayoutAnimation.easeInEaseOut(); }}
+                    onPress={() => { setShowDetails(!showDetails); LayoutAnimation.easeInEaseOut(); }}
                     style={{
                         height: 40,
                         width: 40,
@@ -260,50 +260,74 @@ const styles = StyleSheet.create({
 
 export default UserDetailsView;
 
+
+import { NavigationProp } from '@react-navigation/native';
+
+
 interface Props {
     secretKeyID?: string,
     secretPassword?: string,
-    }
+    data?: any,
+    navigation?: NavigationProp<any>,
+    changeList:any,
+    index:Number,
+}
+
+import base64js from 'base64-js';
+import { eventsName, strings } from '../Constants/Strings';
+
 
 export const VideoDetailsView: React.FC<Props> = ({
     secretKeyID,
-    secretPassword
+    secretPassword,
+    data,
+    navigation,
+    changeList,
+    index
 }) => {
     const [showDetails, setShowDetails] = useState(false);
+    const imagebase64 = data.thumbnail.data
+    const uint8Array = new Uint8Array(imagebase64);
+    const base64String = base64js.fromByteArray(uint8Array);
+
     return (
-
-
         <View
             style={{
                 ...styles2.videoList,
                 flexDirection: showDetails ? 'column' : 'row',
                 height: showDetails ? DIMENSIONS.HEIGHT * 4 : DIMENSIONS.HEIGHT * 1.5,
-                borderWidth:0.5,
-                borderColor:COLORS.Blue,
+                borderWidth: 0.5,
+                borderColor: COLORS.Blue,
             }}>
-            {/* Thumbnail */}
-            <View style={{
+            {/* Thumbnail thumbnail.data */}
+            <TouchableOpacity
+            onPress={()=>{
+                console.log("data.thumbnail.",data.videolink);
+                navigation?.navigate(strings.Videoplayer)
+            }}
+            style={{
                 justifyContent: 'center',
                 width: showDetails ? undefined : '30%',
-                borderRadius: 5,
-                height: showDetails ? '40%' : undefined
+                height: showDetails ? '40%' : undefined,
             }}>
                 <Image
                     resizeMode='contain'
                     style={{
-                        height: '100%',
-                        width: '100%',
-                        alignSelf: 'center'
-
+                        height: '95%',
+                        width: '95%',
+                        alignSelf: 'center',
                     }}
-                    source={IMAGES.aboutus} />
-            </View>
+                    source={{ uri: `data:image/jpeg;base64,${base64String}` }}
+                    // source={IMAGES.aboutus}
+                />
+            </TouchableOpacity>
             {/* Details */}
             <View
                 style={{ width: '70%', justifyContent: 'space-around' }}>
-                <Text style={{ ...styles2.text, fontSize: 20 }}>Title</Text>
-                <Text style={{ ...styles2.text, fontSize: 12 }}>Category</Text>
+                <Text style={{ ...styles2.text, fontSize: 20 }}>{data.title}</Text>
+                <Text style={{ ...styles2.text, fontSize: 12 }}>{data.category}</Text>
             </View>
+            {/* BUTTONS */}
             {
                 secretKeyID != undefined && secretPassword != undefined && showDetails ?
                     <View>
@@ -324,17 +348,28 @@ export const VideoDetailsView: React.FC<Props> = ({
                                     fontWeight: '700',
                                     marginRight: 4.5,
                                 }}>UPDATE</Text>
-                            <Text
+                            <TouchableOpacity
+                            style={{
+                                width: '45%',
+                                height: showDetails ? 30 : 0,
+                                marginLeft: 4.5,
+                            }}
+                            onPress={()=>changeList(eventsName.Delete,data.title,index)}
+                            >
+                               <Text
+                            // onPress={changeList('delete')}
                                 style={{
                                     backgroundColor: '#f76060',
-                                    width: '45%',
+                                    width: '100%',
                                     height: showDetails ? 30 : 0,
                                     fontWeight: '700',
                                     textAlign: 'center',
                                     marginLeft: 4.5,
                                     textAlignVertical: 'center'
                                 }}>DELETE</Text>
-
+  
+                            </TouchableOpacity>
+                           
                         </View>
 
                     </View> : null
@@ -355,7 +390,7 @@ export const VideoDetailsView: React.FC<Props> = ({
                 <Image
                     style={[{
                         height: 20, width: 20,
-                        tintColor:COLORS.Blue,
+                        tintColor: COLORS.Blue,
                         transform: [
                             { rotateZ: showDetails ? '180deg' : '0deg' }
                         ]

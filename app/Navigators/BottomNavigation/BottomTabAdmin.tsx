@@ -1,16 +1,19 @@
-import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-import { useState } from 'react';
-import { ImageBackground, StyleSheet, Text, View, TouchableOpacity } from "react-native"
+import { useEffect, useLayoutEffect, useState } from 'react';
+import { ImageBackground, StyleSheet, Text, View, TouchableOpacity, BackHandler, BackHandlerStatic, BackPressEventName, RippleBackgroundPropType, Alert } from "react-native"
 import Animated, { ZoomIn, ZoomOut } from 'react-native-reanimated';
+import { createStackNavigator } from '@react-navigation/stack';
+import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
+import { useNavigation, useFocusEffect } from '@react-navigation/native';
+
 import { IMAGES } from '../../Assets/Images/Images';
 import { COLORS } from '../../Constants/Colors';
 import Profile from '../../Screens/Profile/Profie';
 import { strings } from '../../Constants/Strings';
 import AdminDashboard from '../../Screens/Admin/UI/AdminDashboard';
-import AdminManageContent from '../../Screens/Admin/UI/AdminManageContent';
+import AdminManageCategories from '../../Screens/Admin/UI/AdminManageCategories';
 import { VideoLists, VideoPlayLists } from '../../Components/VideoLists';
-import { createStackNavigator } from '@react-navigation/stack';
 import Header from '../../Components/Header';
+import { printLog } from '../../Assets/Utils/ExtenFunc';
 
 const Tab = createBottomTabNavigator();
 const Stack = createStackNavigator();
@@ -18,10 +21,44 @@ const Stack = createStackNavigator();
 
 function TabBar({ ...props }): JSX.Element {
     const [buttonIndex, setButtonIndex] = useState(1);
+
+    useEffect(() => {
+        const handleBackPress = () => {
+            const previousScreen = props.navigation.dangerouslyGetState().routes[props.navigation.dangerouslyGetState().index - 1]?.name;
+            printLog("previousScreen....",props.navigation.dangerouslyGetState())
+            if(previousScreen==undefined){
+                setButtonIndex(1)
+                BackHandler.exitApp()
+                return true;
+            }
+          if (props.navigation.canGoBack() && previousScreen!=undefined) {
+            setButtonIndex(getButtonIndex(previousScreen));
+            props.navigation.navigate(previousScreen);
+            return true;
+          }
+          return false;
+        };
+      
+        const backHandler = BackHandler.addEventListener('hardwareBackPress', handleBackPress);
+        return () => backHandler.remove();
+      }, [props.navigation]);
+      
+      function getButtonIndex(screenName : string) {
+        if (screenName === 'Home'||screenName ==undefined) {
+          return 1;
+        } else if (screenName === 'Courses') {
+          return 2;
+        } else if (screenName === 'Profile') {
+          return 3;
+        }
+        return 1; // Default to Home screen if the screen name is unknown
+      }
+
     function changeButton(index: number, screen: string): void {
         setButtonIndex(index)
         props.navigation.navigate(screen)
     }
+
 
     return (
         <ImageBackground
@@ -97,6 +134,8 @@ function TabBar({ ...props }): JSX.Element {
     )
 }
 
+
+
 function BottomTabAdmin() {
     return (
         <Tab.Navigator
@@ -114,74 +153,13 @@ function BottomTabAdmin() {
                 options={{
                     headerShown: false
                 }}
-                name={strings.Contents} component={AdminManageContent} /> */}
+                name={strings.Courses} component={AdminManageCategories} /> */}
             <Tab.Screen
                 options={{
                     headerShown: false
                 }}
                 name={strings.Profile} component={Profile} />
-            <Tab.Screen
-                name={strings.VideoList}
-                options={{
-                    headerShown: false
-                }}
-            >
-                {() => (
-                    <Stack.Navigator>
-                        <Stack.Screen
-                            name={strings.VideoList}
-                            component={VideoPlayLists}
-                            options={({ navigation }) => ({
 
-                                headerStyle: {
-                                    backgroundColor: '#ebf0f0',
-                                    height: 40,
-                                },
-                                headerTintColor: '#000',
-                                headerTitleStyle: {
-                                    fontWeight: '600',
-                                },
-                                // headerTitle: 'Home Screen',
-
-                                headerLeft: () => (
-                                    <Header navigation={navigation} />
-                                ),
-                            })}
-                        />
-                    </Stack.Navigator>
-                )}
-            </Tab.Screen>
-            <Tab.Screen
-                name={strings.Contents}
-                options={{
-                    headerShown: false
-                }}
-            >
-                {() => (
-                    <Stack.Navigator>
-                        <Stack.Screen
-                            name={strings.Contents}
-                            component={AdminManageContent}
-                            options={({ navigation }) => ({
-
-                                headerStyle: {
-                                    backgroundColor: '#ebf0f0',
-                                    height: 40,
-                                },
-                                headerTintColor: '#000',
-                                headerTitleStyle: {
-                                    fontWeight: '600',
-                                },
-                                headerTitle: 'Categories',
-
-                                headerLeft: () => (
-                                    <Header navigation={navigation} />
-                                ),
-                            })}
-                        />
-                    </Stack.Navigator>
-                )}
-            </Tab.Screen>
         </Tab.Navigator>
     );
 }

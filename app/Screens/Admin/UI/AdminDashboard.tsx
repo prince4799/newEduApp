@@ -19,6 +19,8 @@ import { strings } from '../../../Constants/Strings';
 
 const AdminDashboard = ({ navigation}) => {
 
+
+
     const [username, setUsername]=useState('')
     const [email, setEmail]=useState('')
 
@@ -27,7 +29,6 @@ const AdminDashboard = ({ navigation}) => {
           const tokenPromise = extFun.retrieveData('@token', 'Home');
           const usernamePromise = extFun.retrieveData('@username', 'Home');
           const emailPromise = extFun.retrieveData('@email', 'Home');
-
           const [token, username,email] = await Promise.all([tokenPromise, usernamePromise,emailPromise]);
           return { token, username ,email};
         } catch (error) {
@@ -35,6 +36,25 @@ const AdminDashboard = ({ navigation}) => {
           return { token: null, username: null ,email: null};
         }
       };
+
+      (async function () {
+
+        const $token = await extFun.retrieveData('@token', 'splash')
+        const $username = await extFun.retrieveData('@username', 'splash')
+        const $email = await extFun.retrieveData('@email', 'splash')
+        const $contact = await extFun.retrieveData('@contact', 'splash')
+        const $userType = await extFun.retrieveData('@userType', 'splash')
+        const $secretKey = await extFun.retrieveData('@secretKey', 'splash')
+        const $secretVal = await extFun.retrieveData('@secretVal', 'splash')
+        CONSTANTS.stored.TOKEN = $token.value
+        CONSTANTS.stored.USER_NAME = $username.value
+        CONSTANTS.stored.EMAIL = $email.value
+        CONSTANTS.stored.CONTACT = $contact.value
+        CONSTANTS.stored.USER_TYPE = $userType.value
+        CONSTANTS.stored.SECRET_KEY = $secretKey.value
+        CONSTANTS.stored.SECRET_VALUE = $secretVal.value
+        // extFun.printLog('\u001b[36m', '........', CONSTANTS.stored)
+      })()
 
       useEffect(()=>{
         const retrieveData = async () => {
@@ -124,7 +144,7 @@ const AdminDashboard = ({ navigation}) => {
                     entering={BounceInLeft}
                     exiting={BounceInRight}>
                     <TouchableOpacity
-                    onPress={()=>navigation.navigate(strings.Contents)}
+                    onPress={()=>navigation.navigate(strings.Categories)}
                         style={styles.button}>
                         <Image source={IMAGES.manageCategories}
                             style={styles.buttonIcon} />

@@ -52,10 +52,8 @@ const SignUp = (props) => {
   var [radio, setRadio] = useState < boolean > (false)
   const prevCountRef = useRef();
   const onModalClose = (data) => {
-    // Handle the data received from the MyModal component here
-    // console.log(data);
-    printSucess(data)
-    setSecret(data)
+    // printSucess(data)
+    // setSecret(data)
     setShowModal(false);
   };
   useEffect(() => {

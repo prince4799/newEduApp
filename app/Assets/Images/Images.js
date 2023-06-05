@@ -32,5 +32,8 @@ export const IMAGES = {
     },
     plus: require('./plus.png'),
     ball: require('./bouncing-ball.json'),
-    hello:require('./helloWorld.json')
+    hello:require('./helloWorld.json'),
+    camera:require('./camera.png'),
+    storage:require('./storage.png'),
+    thumbnail: require('./thumbnail.png')
 }
