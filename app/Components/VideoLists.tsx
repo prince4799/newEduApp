@@ -12,6 +12,8 @@ import {
     TouchableOpacity,
     LayoutAnimation,
     NativeModules,
+    Modal,
+    ActivityIndicator,
 } from 'react-native';
 import Animated, { FadeInUp, log, SlideInLeft, SlideInRight, ZoomIn } from 'react-native-reanimated';
 import * as CONSTANTS from '../Constants/Constants'
@@ -23,6 +25,8 @@ import { VideoDetailsView } from './DetailsView';
 import MyModal from './MyModal';
 import { alert, apiCaling, printError, printLog, printSucess, retrieveData, storeData } from '../Assets/Utils/ExtenFunc';
 import { eventsName } from '../Constants/Strings';
+import { uploadCategories } from '../Screens/Categories/CategoriesFunc';
+// import { uploadCategories } from '../Screens/Categories/Categories';
 
 
 export const VideoLists: React.FC<any> = ({
@@ -98,6 +102,7 @@ export const VideoPlayLists: React.FC<any | Props> = ({
     const [showModal, setShowModal] = useState<boolean>(false);
     const [list, setList] = useState([])
     const [loading, setLoading] = useState<boolean>(false)
+    const [uploading, setUploading] = useState<boolean>(false)
 
 
     interface ModalClose {
@@ -105,7 +110,7 @@ export const VideoPlayLists: React.FC<any | Props> = ({
     }
 
     async function uploadContent(data: any) {
-        printError("data",data)
+        printError("data", data)
         const formData = new FormData();
         formData.append('videolink', data.resourceLink);
         formData.append('title', data.resourceTitle);
@@ -115,10 +120,8 @@ export const VideoPlayLists: React.FC<any | Props> = ({
             name: data.resourceThumbnail.modificationDate + 'resourceThumbnail.jpg',
             type: data.resourceThumbnail.mime, // Replace with the appropriate file type
         });
-
         try {
-            setLoading(true)
-
+            setUploading(true)
             const response = await fetch(CONSTANTS.BASE_URL + 'contents/upload', {
                 method: 'POST',
                 body: formData,
@@ -127,39 +130,41 @@ export const VideoPlayLists: React.FC<any | Props> = ({
                     Authorization: CONSTANTS.stored.TOKEN,
                 },
             });
-            printLog("response=======>",response)
+            printLog("response=======>", response)
             if (response) {
-                setLoading(false)
+                setUploading(false)
             }
-            if(response.status>400){
-                alert("Upload failed")
+            if (response.status >= 400) {
+                printError(await response.json())
+                alert("Upload failed as title or link may be already exists.")
             }
 
             if (response.ok) {
                 const responseData = await response.json();
-            printLog("response=======>",responseData)
-
+                alert(responseData.message)
+                printLog("response=======>", responseData)
                 listLoad()
             } else {
                 // Error occurred during upload
                 console.log('Upload failed:', response.status);
             }
         } catch (error) {
-            setLoading(false)
+            setUploading(false)
             console.log('Error:', error);
         }
+        // setUploading(false)
     }
+
     const onModalClose = (data: ModalClose) => {
         printLog('\u001b[32m', "onModalClose...", data)
-
         setShowModal(false);
         if (data) {
-            if (data.resourceLink || data.resourceTitle || data.resourceThumbnail || data.categoryName)
+            if (data.resourceLink || data.resourceTitle || data.resourceThumbnail || data.categoryName) {
                 uploadContent(data)
+                uploadCategories(data.categoryName, data.secretKey, data.secretValue,)
+            }
         }
     };
-
-
 
     async function listLoad() {
         setLoading(true)
@@ -237,8 +242,6 @@ export const VideoPlayLists: React.FC<any | Props> = ({
 
     }
 
-
-
     const asyncRetrieve = async () => {
         try {
             let key = await retrieveData('@secretKey', 'home')
@@ -261,6 +264,7 @@ export const VideoPlayLists: React.FC<any | Props> = ({
         }
         !list.length ? listLoad() : null
     }, [secretKeyPromise, secretValPromise]);
+
     useEffect(() => {
         asyncRetrieve()
     }, [secretKeyPromise, secretValPromise])
@@ -268,9 +272,37 @@ export const VideoPlayLists: React.FC<any | Props> = ({
     return (
         <SafeAreaView style={{ flex: 1 }}>
             <View style={{ width: '100%', flex: 1 }}>
-                <FlatList
-                    ListEmptyComponent={<Text>There are no data to show</Text>}
-                    ListHeaderComponent={showListHeader ?
+                <Modal
+                    animationType="slide"
+                    transparent={true}
+                    visible={uploading}
+                    style={{
+                        backgroundColor: '#000',
+                    }}>
+                    <View
+                        style={{
+                            backgroundColor: '#fff',
+                            height: 50,
+                            width: '40%',
+                            position: 'absolute',
+                            alignSelf: 'center',
+                            top: '40%',
+                            elevation: 3,
+                            borderWidth: 0.5,
+                            borderColor: COLORS.Border,
+                            flexDirection: 'row',
+                            justifyContent: 'space-around'
+                        }}>
+                        <Text style={{
+                            textAlign: 'center',
+                            textAlignVertical: 'center'
+                        }}>Validating...</Text>
+                        <ActivityIndicator
+                            size={'small'}
+                            color={COLORS.Blue} />
+                    </View>
+                </Modal>
+                {showListHeader ?
                         < TouchableOpacity
                             onPress={() => {
                                 // printLog('>>>>>>>>>>>>>..', showModal)
@@ -295,17 +327,22 @@ export const VideoPlayLists: React.FC<any | Props> = ({
                             >UPLOAD VIDEO</Text>
                         </TouchableOpacity> : null
                     }
+                <FlatList
+                    style={{ padding: 5, }}
+                    ListEmptyComponent={<Text style={{alignSelf:'center'}}>There are no data to show</Text>}
                     data={list}
-                    // style={{flexDirection;}}
+                    keyExtractor={(item, index) => index.toString()}
                     renderItem={({ item, index }) =>
-                        <VideoDetailsView
-                            secretKeyID={secretKeyPromise}
-                            secretPassword={secretValPromise}
-                            data={item}
-                            navigation={navigation}
-                            changeList={changeList}
-                            index={index}
-                        />
+                        <View style={{ paddingBottom: 10 }}>
+                            <VideoDetailsView
+                                secretKeyID={secretKeyPromise}
+                                secretPassword={secretValPromise}
+                                data={item}
+                                navigation={navigation}
+                                changeList={changeList}
+                                index={index}
+                            />
+                        </View>
                     }
                     refreshControl={
                         <RefreshControl

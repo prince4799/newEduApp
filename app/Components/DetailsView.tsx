@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState,useMemo } from 'react';
 import { ViewProps } from 'react-native';
 import {
     View,
@@ -264,7 +264,7 @@ export default UserDetailsView;
 import { NavigationProp } from '@react-navigation/native';
 
 
-interface Props {
+interface VideoDetailsViewProps {
     secretKeyID?: string,
     secretPassword?: string,
     data?: any,
@@ -277,7 +277,7 @@ import base64js from 'base64-js';
 import { eventsName, strings } from '../Constants/Strings';
 
 
-export const VideoDetailsView: React.FC<Props> = ({
+export const VideoDetailsView: React.FC<VideoDetailsViewProps> = ({
     secretKeyID,
     secretPassword,
     data,
@@ -333,38 +333,48 @@ export const VideoDetailsView: React.FC<Props> = ({
                     <View>
                         <View style={{
                             flexDirection: 'row',
-                            justifyContent: 'space-around',
+                            justifyContent: 'space-between',
                             alignItems: 'center',
                             padding: 15,
                         }}>
-                            <Text
-
-                                style={{
-                                    backgroundColor: '#78eb78',
-                                    width: '45%',
-                                    height: showDetails ? 30 : 0,
-                                    textAlignVertical: 'center',
-                                    textAlign: 'center',
-                                    fontWeight: '700',
-                                    marginRight: 4.5,
-                                }}>UPDATE</Text>
                             <TouchableOpacity
                             style={{
                                 width: '45%',
                                 height: showDetails ? 30 : 0,
-                                marginLeft: 4.5,
+                                elevation:3,
+                                borderRadius:3,
+                                backgroundColor: '#78eb78',
+                            }}
+                            >
+                             <Text
+                                style={{
+                                    
+                                    width: '100%',
+                                    height: showDetails ? 30 : 0,
+                                    fontWeight: '700',
+                                    textAlign: 'center',
+                                    textAlignVertical: 'center'
+                                }}>UPDATE</Text>   
+                            </TouchableOpacity>
+                            
+                            <TouchableOpacity
+                            style={{
+                                width: '45%',
+                                height: showDetails ? 30 : 0,
+                                elevation:3,
+                                borderRadius:3,
+                                backgroundColor: '#f76060',
                             }}
                             onPress={()=>changeList(eventsName.Delete,data.title,index)}
                             >
                                <Text
                             // onPress={changeList('delete')}
                                 style={{
-                                    backgroundColor: '#f76060',
+                                    
                                     width: '100%',
                                     height: showDetails ? 30 : 0,
                                     fontWeight: '700',
                                     textAlign: 'center',
-                                    marginLeft: 4.5,
                                     textAlignVertical: 'center'
                                 }}>DELETE</Text>
   
@@ -415,7 +425,8 @@ const styles2 = StyleSheet.create({
         marginTop: 10,
         alignSelf: 'center',
         borderRadius: 5,
-        elevation: 3,
+        elevation: 8,
+        padding:2,
     },
     text: {
         padding: 5,

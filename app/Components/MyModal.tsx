@@ -1,22 +1,21 @@
 import React, { useEffect, useReducer, useRef, useState } from 'react';
-import { Image, KeyboardAvoidingView, ScrollView, TouchableHighlight, TouchableOpacity } from 'react-native';
 import {
+  Image,
+  ScrollView,
+  TouchableOpacity,
   Alert,
-  Modal,
   StyleSheet,
   Text,
-  Pressable,
   View,
   PermissionsAndroid,
 } from 'react-native';
 import { TextInput } from 'react-native-gesture-handler';
-import Animated, { SlideInDown, SlideInUp, ZoomIn, ZoomOut } from 'react-native-reanimated';
+import Animated, { ZoomIn, ZoomOut } from 'react-native-reanimated';
 import { apiCaling, printError, printLog, printSucess } from '../Assets/Utils/ExtenFunc';
-import { DIMENSIONS } from '../Constants/Constants';
-import RNFS from 'react-native-fs';
-import ImagePicker, { openCamera, openPicker } from 'react-native-image-crop-picker';
+import { openCamera, openPicker } from 'react-native-image-crop-picker';
 import { IMAGES } from '../Assets/Images/Images';
 import { COLORS } from '../Constants/Colors';
+import { Modal } from 'react-native';
 
 let options = {
   title: 'Select Image',
@@ -49,37 +48,53 @@ const MyModal: React.FC<Props> = ({
   newTitle,
   onModalClose,
 }) => {
-  const [modalVisible, setModalVisible] = useState<boolean>(showModal);
-  const [categoryName, setCategoryName] = useState<string | undefined>('');
-  const [resourceLink, setResourceLink] = useState<string | undefined>('');
-  const [resourceTitle, setResourceTitle] = useState<string | undefined>('');
-  const [resourceThumbnail, setResourceThumbnail] = useState<undefined | string | null | any>('');
-  const [resourceNewTitle, setResourceNewTitle] = useState<string | undefined>('')
-  const [secretKey, setSecretKey] = useState<string>('')
-  const [secretValue, setSecretValue] = useState<string>('')
   const [thumbnailModal, setThumbnailModal] = useState<boolean>(false)
+  const [visible, setVisible] = useState<boolean>(showModal)
   const inputRef = useRef(null);
-  const [imageSource, setImageSource] = useState<any>(IMAGES.thumbnail);
 
+  interface State {
+    categoryName: string;
+    resourceLink: string;
+    resourceTitle: string;
+    resourceThumbnail: object;
+    resourceNewTitle: string;
+    secretKey: string;
+    secretValue: string;
+    thumbnailModal: boolean;
+    imageSource: any;
+  }
 
+  const initialState: State = {
+    categoryName: '',
+    resourceLink: '',
+    resourceTitle: '',
+    resourceThumbnail: {},
+    resourceNewTitle: '',
+    secretKey: '',
+    secretValue: '',
+    thumbnailModal: false,
+    imageSource: IMAGES.thumbnail,
+  };
+
+  const [state, setState] = useState<State>(initialState);
 
   const modalVisibility = () => {
-    setModalVisible(false)
-    setCategoryName('')
-    setResourceLink('')
-    setResourceTitle('')
-    setResourceThumbnail('')
-    setResourceNewTitle('')
-    setSecretKey('')
-    setSecretValue('')
+    setVisible(false)
+    setState({ ...state, categoryName: '' })
+    setState({ ...state, resourceLink: '' })
+    setState({ ...state, resourceTitle: '' })
+    setState({ ...state, resourceThumbnail: {} })
+    setState({ ...state, resourceNewTitle: '' })
+    setState({ ...state, secretKey: '' })
+    setState({ ...state, secretValue: '' })
+    setState({ ...state, imageSource: IMAGES.thumbnail })
     onModalClose(null);
-    setImageSource(IMAGES.thumbnail)
   }
 
   useEffect(() => {
-    setModalVisible(showModal);
-    setSecretKey('')
-    setSecretValue('')
+    setVisible(showModal)
+    setState({ ...state, secretKey: '' })
+    setState({ ...state, secretValue: '' })
 
   }, [showModal]);
 
@@ -106,14 +121,13 @@ const MyModal: React.FC<Props> = ({
             mediaType: 'photo',
             includeExtra: false,
             compressImage: true,              // Enable image compression
-            compressImageQuality: 0.3,
+            compressImageQuality:0.3,
+            compressImageMaxHeight:200,
+            compressImageMaxWidth:200,
           });
-          printLog("image",image)
-          setResourceThumbnail(image)
+          setState({ ...state, resourceThumbnail: image, imageSource: { uri: `${image.path}` } })
           setThumbnailModal(false)
-          setImageSource({ uri: `${image.path}` });
         } catch (error) {
-          // Handle the error
           setThumbnailModal(false)
           console.log(error);
         }
@@ -147,11 +161,13 @@ const MyModal: React.FC<Props> = ({
             maxHeight: 700,
             mediaType: 'photo',
             includeExtra: false,
+            compressImage: true,              // Enable image compression
+            compressImageQuality:0.3,
+            compressImageMaxHeight:200,
+            compressImageMaxWidth:200,
           });
-          printLog("image",image)
-          setResourceThumbnail(image)
+          setState({ ...state, resourceThumbnail: image, imageSource: { uri: `${image.path}` } })
           setThumbnailModal(false)
-          setImageSource({ uri: `${image.path}` });
         } catch (error) {
           setThumbnailModal(false)
           console.log(error);
@@ -167,60 +183,53 @@ const MyModal: React.FC<Props> = ({
 
 
   const onSubmit = () => {
-    // Extract the required data from the component's state
-    const rawData = {
-      categoryName,
-      resourceLink,
-      resourceTitle,
-      resourceThumbnail,
-      resourceNewTitle,
-      secretKey,
-      secretValue,
-    };
+    const rawData = { ...state }
+    printLog("rawData", rawData)
     const data = Object.fromEntries(
       Object.entries(rawData).filter(([key, value]) => value !== '' && value !== null && value !== undefined)
     );
-    // Call the onModalClose function with the extracted data
     onModalClose(data);
     printError(data)
-    setModalVisible(false);
+    setVisible(false)
   };
+  
+
   return (
 
     <Modal
       animationType="slide"
       transparent={true}
-      visible={modalVisible}
-      style={{ backgroundColor: '#000' }}
-      onRequestClose={() => {
-        Alert.alert('Modal has been closed.');
-        setModalVisible(false);
-      }}
-    >
+      visible={visible}
+      style={{ backgroundColor: '#000' }}>
+
       <ScrollView style={styles.modalView}>
         <View style={{ alignItems: 'center' }}>
+
+          {/* cross Button  */}
           <TouchableOpacity
             style={{
               ...styles.button,
               backgroundColor: '#f76060',
-              height: 20,
-              width: 20,
+              height: 30,
+              width: 30,
               alignSelf: 'flex-end',
               justifyContent: 'center',
-              alignItems:'center'
+              alignItems: 'center'
             }}
             onPress={() => modalVisibility()}
           ><Text style={{ fontWeight: 'bold', color: '#000' }}>X</Text></TouchableOpacity>
+
+          {/* modalText */}
           <Text style={{ marginVertical: 20, fontSize: 20 }}>{modalText} </Text>
 
-
+          {/* link */}
           {link !== undefined && (
             <View
               style={{
                 width: '100%',
                 borderWidth: 0,
               }}>
-              {resourceLink && <Animated.Text
+              {state.resourceLink && <Animated.Text
                 entering={ZoomIn}
                 exiting={ZoomOut}
                 style={{
@@ -234,14 +243,15 @@ const MyModal: React.FC<Props> = ({
               <TextInput
                 style={styles.input}
                 placeholder={link}
-                value={resourceLink}
-                onChangeText={setResourceLink}
+                value={state.resourceLink}
+                onChangeText={(text) => setState({ ...state, resourceLink: text })}
                 autoFocus={true}
                 ref={inputRef}
               />
             </View>
           )}
 
+          {/* title */}
           {title !== undefined && (
 
             <View
@@ -250,7 +260,7 @@ const MyModal: React.FC<Props> = ({
                 borderWidth: 0,
               }}
             >
-              {resourceTitle && <Animated.Text
+              {state.resourceTitle && <Animated.Text
                 entering={ZoomIn}
                 exiting={ZoomOut}
                 style={{
@@ -264,13 +274,15 @@ const MyModal: React.FC<Props> = ({
               <TextInput
                 style={styles.input}
                 placeholder={title}
-                value={resourceTitle}
-                onChangeText={setResourceTitle}
+                value={state.resourceTitle}
+                onChangeText={(text) => setState({ ...state, resourceTitle: text })}
               />
             </View>
 
 
           )}
+
+          {/* category */}
           {category !== undefined && (
             <View
               style={{
@@ -278,7 +290,7 @@ const MyModal: React.FC<Props> = ({
                 borderWidth: 0,
               }}
             >
-              {categoryName && <Animated.Text
+              {state.categoryName && <Animated.Text
                 entering={ZoomIn}
                 exiting={ZoomOut}
                 style={{
@@ -292,12 +304,14 @@ const MyModal: React.FC<Props> = ({
               <TextInput
                 style={styles.input}
                 placeholder={category}
-                value={categoryName}
-                onChangeText={setCategoryName}
+                value={state.categoryName}
+                onChangeText={(text) => setState({ ...state, categoryName: text })}
               />
             </View>
 
           )}
+
+          {/* newTitle */}
           {newTitle !== undefined && (
             <View
               style={{
@@ -305,7 +319,7 @@ const MyModal: React.FC<Props> = ({
                 borderWidth: 0,
               }}
             >
-              {resourceNewTitle && <Animated.Text
+              {state.resourceNewTitle && <Animated.Text
                 entering={ZoomIn}
                 exiting={ZoomOut}
                 style={{
@@ -319,19 +333,21 @@ const MyModal: React.FC<Props> = ({
               <TextInput
                 style={styles.input}
                 placeholder={newTitle}
-                value={resourceNewTitle}
-                onChangeText={setResourceNewTitle}
+                value={state.resourceNewTitle}
+                onChangeText={(text) => setState({ ...state, resourceNewTitle: text })}
               />
             </View>
 
           )}
+
+          {/* secretKey */}
           <View
             style={{
               width: '100%',
               borderWidth: 0,
             }}
           >
-            {secretKey && <Animated.Text
+            {state.secretKey && <Animated.Text
               entering={ZoomIn}
               exiting={ZoomOut}
               style={{
@@ -345,21 +361,22 @@ const MyModal: React.FC<Props> = ({
             <TextInput
               style={styles.input}
               placeholder={'Secret Id'}
-              value={secretKey}
+              value={state.secretKey}
               onChangeText={(text) => {
                 let key = text.replace(/[^a-zA-Z\-]/g, '')
-                setSecretKey(key)
+                setState({ ...state, secretKey: key })
               }}
             />
           </View>
 
+          {/* secretValue */}
           <View
             style={{
               width: '100%',
               borderWidth: 0,
             }}
           >
-            {secretValue && <Animated.Text
+            {state.secretValue && <Animated.Text
               entering={ZoomIn}
               exiting={ZoomOut}
               style={{
@@ -374,12 +391,14 @@ const MyModal: React.FC<Props> = ({
               secureTextEntry={true}
               style={styles.input}
               placeholder={'Secret Password'}
-              value={secretValue}
+              value={state.secretValue}
               onChangeText={(text) => {
                 let pass = text.replace(/[^a-zA-Z\#\@]/g, '')
-                setSecretValue(pass)
+                setState({ ...state, secretValue: pass })
               }} />
           </View>
+
+          {/* thumbnail */}
           <View style={{
             flexDirection: 'row', alignItems: 'center',
             justifyContent: 'space-between',
@@ -410,7 +429,7 @@ const MyModal: React.FC<Props> = ({
 
                 }}
                   resizeMode='cover'
-                  source={imageSource} />
+                  source={state.imageSource} />
 
                 <Modal
                   visible={thumbnailModal}
@@ -440,6 +459,8 @@ const MyModal: React.FC<Props> = ({
               left: -30
             }}>Select Thumbnail</Text>}
           </View>
+
+          {/* submit */}
           <View style={{
             flexDirection: 'row',
             justifyContent: 'space-around',
@@ -450,7 +471,7 @@ const MyModal: React.FC<Props> = ({
             margin: 20,
           }}>
             {/* <Text onPress={() => modalVisibility()} style={{ ...styles.button, backgroundColor: '#f76060', }}>CANCEL</Text> */}
-            <Text onPress={onSubmit} style={[styles.button,{backgroundColor: '#78eb78', }]}>SUBMIT</Text>
+            <Text onPress={onSubmit} style={[styles.button, { backgroundColor: '#78eb78', }]}>SUBMIT</Text>
           </View>
         </View>
       </ScrollView>
@@ -483,7 +504,7 @@ const styles = StyleSheet.create({
     alignSelf: 'center',
     textAlign: 'center',
     textAlignVertical: 'center',
-    fontWeight:'bold',
+    fontWeight: 'bold',
   },
   input: {
     borderColor: '#86b588',

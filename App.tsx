@@ -13,8 +13,6 @@ import Home from "./app/Screens/Home/Home"
 import BottomTab from './app/Navigators/BottomNavigation/BottomTab';
 // import AdminDashboard from './app/Screens/UI/Admin/AdminDashboard';
 // import AdminManageUsers from './app/Screens/Admin/AdminManageUsers';
-// import AdminManageCategories from './app/Screens/Admin/UI/AdminManageCategories';
-import AdminManageCategories from './app/Screens/Admin/UI/AdminManageCategories';
 import { VideoPlayLists } from './app/Components/VideoLists';
 import { Player } from './app/Components/VideoPlayer';
 import AdminDashboard from './app/Screens/Admin/UI/AdminDashboard';
@@ -36,11 +34,6 @@ function App(): JSX.Element {
 
   return (<>
   <StatusBar hidden={true}/>
-  {/* <AdminDashboard/> */}
-  {/* <AdminManageUsers/> */}
-  {/* <AdminManageCategories/> */}
-  {/* <VideoPlayLists/> */}
-  {/* <Player/> */}
     <NavigationContainer>
       <AppStack.default />
     </NavigationContainer>

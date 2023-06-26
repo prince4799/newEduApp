@@ -10,7 +10,6 @@ import { COLORS } from '../../Constants/Colors';
 import Profile from '../../Screens/Profile/Profie';
 import { strings } from '../../Constants/Strings';
 import AdminDashboard from '../../Screens/Admin/UI/AdminDashboard';
-import AdminManageCategories from '../../Screens/Admin/UI/AdminManageCategories';
 import { VideoLists, VideoPlayLists } from '../../Components/VideoLists';
 import Header from '../../Components/Header';
 import { printLog } from '../../Assets/Utils/ExtenFunc';
@@ -153,7 +152,7 @@ function BottomTabAdmin() {
                 options={{
                     headerShown: false
                 }}
-                name={strings.Courses} component={AdminManageCategories} /> */}
+                name={strings.Courses} component={} /> */}
             <Tab.Screen
                 options={{
                     headerShown: false

@@ -93,8 +93,7 @@ export const apiCaling = async (params: Params): Promise<any> => {
   if (body !== null && body !== undefined) {
     options.body = JSON.stringify(body);
   }
-// printInfo("options",JSON.stringify(body))
-printLog("options",options)
+// printLog("options...",options)
 
   try {
     const response = await fetch(CONSTANTS.BASE_URL + url, options);
