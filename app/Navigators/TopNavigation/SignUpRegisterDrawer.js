@@ -1,7 +1,7 @@
 
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 
-import { DarkTheme, NavigationContainer } from '@react-navigation/native';
+import { DarkTheme, NavigationContainer, useNavigation } from '@react-navigation/native';
 import { createMaterialTopTabNavigator } from '@react-navigation/material-top-tabs';
 import SignupWrapper from '../../Screens/SignUp/SignUp';
 
@@ -16,10 +16,17 @@ var tabIndex = 0;
 var route = "SignUp"
 
 export default function SignUpRegisterDrawer() {
+  const navigation = useNavigation();
+
+  const handleTabChange = ({ index }) => {
+    console.log('Current tab index:', index);
+  };
+  
 
   return (
 
       <Tab.Navigator
+      onStateChange={handleTabChange}
         screenOptions={{
           activeTintColor: COLORS.Font,
           style: {
@@ -30,7 +37,7 @@ export default function SignUpRegisterDrawer() {
           },
           tabBarLabelStyle: {
             fontSize: 12,
-             color: COLORS.Font,
+             color: COLORS.White,
              zIndex:4,
              height:25,
              textAlign:'center',
@@ -39,7 +46,7 @@ export default function SignUpRegisterDrawer() {
              bottom:5,
           },
           tabBarIndicatorContainerStyle: {
-            backgroundColor: "#fff",
+            backgroundColor: COLORS.LightBlue,
             inactiveTintColor: COLORS.Border,
           },
           tabBarIndicatorStyle: {
@@ -53,7 +60,7 @@ export default function SignUpRegisterDrawer() {
             alignSelf: 'center',
           },
           tabBarStyle: {
-            backgroundColor: COLORS.Font,
+            backgroundColor: "#000",
             width: '100%',
             elevation: 4,
             alignSelf: 'center',

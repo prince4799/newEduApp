@@ -53,6 +53,8 @@ export default function AppStack() {
       <Stack.Screen
         options={{
           headerShown: false,
+          ...horizontalAnimation,
+          ...revHorizontalAnimation,
         }}
         name={strings.BottomTabUser}
         component={BottomTab}
@@ -78,7 +80,7 @@ export default function AppStack() {
         component={VideoPlayLists}
         options={({ navigation }) => ({
           headerStyle: styles.header,
-          headerTintColor: '#000',
+          headerTintColor: COLORS.ButtonText,
           headerTitleStyle: {
             fontWeight: '600',
           },
@@ -94,7 +96,7 @@ export default function AppStack() {
         component={AdminManageUsers}
         options={({ navigation }) => ({
           headerStyle: styles.header,
-          headerTintColor: '#000',
+          headerTintColor: COLORS.ButtonText,
           headerTitleStyle: {
             fontWeight: '600',
           },
@@ -108,7 +110,7 @@ export default function AppStack() {
         component={Categories}
         options={({ navigation }) => ({
           headerStyle: styles.header,
-          headerTintColor: '#000',
+          headerTintColor: COLORS.ButtonText,
           headerTitleStyle: {
             fontWeight: '600',
           },

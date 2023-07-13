@@ -25,20 +25,18 @@ const HomeScreen = () => {
   const netInfo = useNetInfo();
   const net = netInfo.isConnected;
   const [username,setUsername]=useState<string>('')  
+
   // useEffect(() => {
   //   console.log("useEffect hook is triggered");
   //   let token=retrieveData('@token','Home');
   //   console.log("token", token);
-
   // }, []);
 
 const asyncRetrieve = async () => {
   try {
     const tokenPromise = retrieveData('@token', 'Home');
     const usernamePromise = retrieveData('@username', 'Home');
-
     const [token, username] = await Promise.all([tokenPromise, usernamePromise]);
-
     setUsername((username as { value: string }).value);
     printSucess("token", token);
     printSucess("username", username); // Handle the result here
@@ -47,7 +45,6 @@ const asyncRetrieve = async () => {
   }
 };
 
-
 useEffect(()=>{
   asyncRetrieve()
 },[username])
@@ -55,7 +52,7 @@ useEffect(()=>{
   return (
 
     // <AnimatedView
-    //       netStatus={false}s
+    //       netStatus={false}
     //     />
 
 

@@ -13,31 +13,33 @@ import { COLORS } from '../../../Constants/Colors';
 import { IMAGES } from '../../../Assets/Images/Images';
 import Animated, { BounceInLeft, BounceInRight } from 'react-native-reanimated';
 import { strings } from '../../../Constants/Strings';
+import Lottie from 'lottie-react-native';
+
 
 // import { useNetInfo } from '@react-native-community/netinfo';
 
 
-const AdminDashboard = ({ navigation}) => {
+const AdminDashboard = ({ navigation }) => {
 
 
 
-    const [username, setUsername]=useState('')
-    const [email, setEmail]=useState('')
+    const [username, setUsername] = useState('')
+    const [email, setEmail] = useState('')
 
     const asyncRetrieve = async () => {
         try {
-          const tokenPromise = extFun.retrieveData('@token', 'Home');
-          const usernamePromise = extFun.retrieveData('@username', 'Home');
-          const emailPromise = extFun.retrieveData('@email', 'Home');
-          const [token, username,email] = await Promise.all([tokenPromise, usernamePromise,emailPromise]);
-          return { token, username ,email};
+            const tokenPromise = extFun.retrieveData('@token', 'Home');
+            const usernamePromise = extFun.retrieveData('@username', 'Home');
+            const emailPromise = extFun.retrieveData('@email', 'Home');
+            const [token, username, email] = await Promise.all([tokenPromise, usernamePromise, emailPromise]);
+            return { token, username, email };
         } catch (error) {
-          extFun.printError("Home", error); // Handle any errors here
-          return { token: null, username: null ,email: null};
+            extFun.printError("Home", error); // Handle any errors here
+            return { token: null, username: null, email: null };
         }
-      };
+    };
 
-      (async function () {
+    (async function () {
 
         const $token = await extFun.retrieveData('@token', 'splash')
         const $username = await extFun.retrieveData('@username', 'splash')
@@ -54,22 +56,38 @@ const AdminDashboard = ({ navigation}) => {
         CONSTANTS.stored.SECRET_KEY = $secretKey.value
         CONSTANTS.stored.SECRET_VALUE = $secretVal.value
         // extFun.printLog('\u001b[36m', '........', CONSTANTS.stored)
-      })()
+    })()
 
-      useEffect(()=>{
+    useEffect(() => {
         const retrieveData = async () => {
-            const { username,email } = await asyncRetrieve();
+            const { username, email } = await asyncRetrieve();
             extFun.printSucess(username);
             setUsername(username.value)
             setEmail(email.value)
-          };
-          retrieveData();
-      })
+        };
+        retrieveData();
+    })
 
 
     return (
         <SafeAreaView
-            style={{ flex: 1, backgroundColor: '#fff' }}>
+            style={{ flex: 1, backgroundColor: COLORS.Background }}>
+
+            {/* <Lottie
+                style={{
+                    alignSelf: 'center',
+                    height: '80%',
+                    width: '100%',
+                    position: 'absolute',
+                    zIndex: 9,
+                    transform: [{ scaleX: 1 }, { scaleY: 1.5 }],
+                    top:-50,
+                }}
+                source={IMAGES.animationArray['wave']}
+                autoPlay
+                loop
+            /> */}
+
             {/* ============Edit Button============= */}
             <Image
                 source={IMAGES.halfbg}
@@ -78,8 +96,6 @@ const AdminDashboard = ({ navigation}) => {
                     width: CONSTANTS.DIMENSIONS.WIDTH * 10,
                     position: 'absolute'
                 }} />
-            <Image source={IMAGES.editing}
-                style={{ ...styles.buttonIcon, left: '45%', top: 10, tintColor: '#fff' }} />
             <View
                 style={{
                     height: CONSTANTS.DIMENSIONS.HEIGHT + 10,
@@ -89,15 +105,17 @@ const AdminDashboard = ({ navigation}) => {
                     alignSelf: 'center',
                     marginTop: CONSTANTS.DIMENSIONS.HEIGHT / 3,
                     elevation: 10,
-                    justifyContent: 'center'
+                    justifyContent: 'center',
+                    zIndex: 9,
+
                 }}>
                 <View
                     style={{
                         height: CONSTANTS.DIMENSIONS.HEIGHT,
                         width: CONSTANTS.DIMENSIONS.HEIGHT,
                         alignSelf: 'center',
-                        backgroundColor: '#fff',
-                        elevation: 8,
+                        backgroundColor: COLORS.White,
+                        elevation: 2,
                         borderRadius: CONSTANTS.DIMENSIONS.HEIGHT / 2,
                     }} />
             </View>
@@ -111,32 +129,33 @@ const AdminDashboard = ({ navigation}) => {
                     style={{
                         fontSize: 24,
                         fontWeight: '700',
-                        color: COLORS.Font,
+                        color: COLORS.White,
 
 
-                    // }}>{username}</Text>
-                    }}>username</Text>
+                    }}>{username}</Text>
+                {/* }}>username</Text> */}
                 <Text style={{
                     fontSize: 12,
-                    color: COLORS.Font,
+                    color: COLORS.White,
                 }}>{email}</Text>
             </View>
             {/* ===========Menus=================== */}
             <View
                 style={{
-                    top: '20%',
+                    top: '40%',
+                    // backgroundColor: 'red',
                 }}>
-                    {/* Manage User */}
+                {/* Manage User */}
                 <Animated.View
                     entering={BounceInLeft}>
                     <TouchableOpacity
-                    onPress={()=>navigation.navigate('Users')}
+                        onPress={() => navigation.navigate('Users')}
                         style={styles.button}>
                         <Image source={IMAGES.manageUser}
                             style={styles.buttonIcon} />
                         <Text style={styles.buttonText}>Manage User</Text>
                         <Image source={IMAGES.rightarrow}
-                            style={{ ...styles.buttonIcon, left: CONSTANTS.DIMENSIONS.WIDTH * 3.8 }} />
+                            style={{ ...styles.buttonIcon, left: CONSTANTS.DIMENSIONS.WIDTH * 3.5 }} />
                     </TouchableOpacity>
                 </Animated.View>
                 {/* Manage Categories */}
@@ -144,26 +163,26 @@ const AdminDashboard = ({ navigation}) => {
                     entering={BounceInLeft}
                     exiting={BounceInRight}>
                     <TouchableOpacity
-                    onPress={()=>navigation.navigate(strings.Categories)}
+                        onPress={() => navigation.navigate(strings.Categories)}
                         style={styles.button}>
                         <Image source={IMAGES.manageCategories}
                             style={styles.buttonIcon} />
                         <Text style={styles.buttonText}>Manage Categories</Text>
                         <Image source={IMAGES.rightarrow}
-                            style={{ ...styles.buttonIcon, left: CONSTANTS.DIMENSIONS.WIDTH * 3.8 }} />
+                            style={{ ...styles.buttonIcon, left: CONSTANTS.DIMENSIONS.WIDTH * 3.5 }} />
                     </TouchableOpacity>
                 </Animated.View>
                 {/* >Manage Videos */}
                 <Animated.View
                     entering={BounceInLeft}>
                     <TouchableOpacity
-                    onPress={()=>navigation.navigate(strings.VideoList)}
+                        onPress={() => navigation.navigate(strings.VideoList)}
                         style={styles.button}>
                         <Image source={IMAGES.manageVideos}
                             style={styles.buttonIcon} />
                         <Text style={styles.buttonText}>Manage Videos</Text>
                         <Image source={IMAGES.rightarrow}
-                            style={{ ...styles.buttonIcon, left: CONSTANTS.DIMENSIONS.WIDTH * 3.8 }} />
+                            style={{ ...styles.buttonIcon, left: CONSTANTS.DIMENSIONS.WIDTH * 3.5 }} />
                     </TouchableOpacity>
                 </Animated.View>
 
@@ -184,7 +203,7 @@ const styles = StyleSheet.create({
     button: {
         height: CONSTANTS.DIMENSIONS.HEIGHT / 1.3,
         width: CONSTANTS.DIMENSIONS.WIDTH * 9.5,
-        backgroundColor: '#fff',
+        backgroundColor: COLORS.White,
         alignSelf: 'center',
         flexDirection: 'row',
         borderRadius: 10,
@@ -196,6 +215,7 @@ const styles = StyleSheet.create({
         height: CONSTANTS.DIMENSIONS.HEIGHT / 3,
         width: CONSTANTS.DIMENSIONS.HEIGHT / 3,
         alignSelf: 'center',
+        tintColor: COLORS.Blue,
         // left: 5,
 
     },
@@ -205,6 +225,8 @@ const styles = StyleSheet.create({
         alignSelf: 'center',
         left: 15,
         fontWeight: '700',
+        color: COLORS.DarkBlue,
+
     },
     card: {
         height: CONSTANTS.DIMENSIONS.HEIGHT * 1.5,
@@ -220,7 +242,7 @@ const styles = StyleSheet.create({
     cardtext: {
         fontSize: 18,
         textAlign: 'center',
-        color: '#fff'
+        color: COLORS.White
     }
 })
 

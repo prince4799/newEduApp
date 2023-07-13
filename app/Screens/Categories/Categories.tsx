@@ -9,6 +9,8 @@ import {
   Modal,
   FlatList,
   ActivityIndicator,
+  NativeSyntheticEvent,
+  NativeScrollEvent,
 } from 'react-native';
 import * as CONSTANTS from '../../Constants/Constants'
 import { IMAGES } from '../../Assets/Images/Images';
@@ -17,12 +19,13 @@ import { ScrollView, TextInput } from 'react-native-gesture-handler';
 import Lottie from 'lottie-react-native';
 import AnimatedLottieView from 'lottie-react-native';
 import MyModal from '../../Components/MyModal';
-import { COLORS } from '../../Constants/Colors';
+import { COLORS, COLORS_ARR } from '../../Constants/Colors';
 import { alert, apiCaling, printError, printLog, printSucess, retrieveData } from '../../Assets/Utils/ExtenFunc';
 import { async } from '@firebase/util';
-import { deleteCategories, loadCategories, updateList, uploadCategories } from './CategoriesFunc';
+import { deleteCategories, getVideoByCategory, loadCategories, updateList, uploadCategories } from './CategoriesFunc';
 import { statusCodes } from '@react-native-google-signin/google-signin';
 import Animated, { FadeIn, SlideInLeft, SlideInRight, ZoomIn, ZoomOut } from 'react-native-reanimated';
+import { strings } from '../../Constants/Strings';
 
 
 interface Props {
@@ -30,7 +33,7 @@ interface Props {
   SecretPassword?: string,
 }
 
-const Categories: React.FC<any | Props> = ({ }) => {
+const Categories: React.FC<any | Props> = ({ navigation}) => {
 
   interface StateProps {
     list: Array<any>,
@@ -50,7 +53,6 @@ const Categories: React.FC<any | Props> = ({ }) => {
   }
   const [state, setState] = useState<StateProps>(initialState)
   const [showModal, setShowModal] = useState<boolean>(false)
-  const [show, setShow] = useState<boolean>(false)
 
   // const [highlight, setHighlight] = useState<number>(-1)
   const flatListRef = useRef<FlatList>(null);
@@ -66,6 +68,7 @@ const Categories: React.FC<any | Props> = ({ }) => {
   let secretValPromise = ''
   let secretKeyPromise = ''
   const [showListHeader, setShowListHeader] = useState(false);
+  const listRef=useRef(null)
   const asyncRetrieve = async () => {
     try {
       let key = await retrieveData('@secretKey', 'home')
@@ -130,7 +133,7 @@ const Categories: React.FC<any | Props> = ({ }) => {
           return false;
         });
 
-        if (index !== -1 && index>0) {
+        if (index !== -1 && index > 0) {
           // setHighlight(index);
           if (flatListRef.current) {
             flatListRef.current.scrollToIndex({ index: index / 2 });
@@ -142,7 +145,7 @@ const Categories: React.FC<any | Props> = ({ }) => {
       printError('Error in loading', err);
     }
   };
- 
+
 
   useEffect(() => {
     loadCategoriesData();
@@ -176,7 +179,7 @@ const Categories: React.FC<any | Props> = ({ }) => {
   // const COLORS = ['#c62828', '#6a1b9a', '#0d47a1', '#1b5e20', '#e65100', '#37474f', '#00695c', '#bf360c', '#3e2723', '#4a148c'];
   const COLORSARRAY = ['#ffcdd2', '#e1bee7', '#bbdefb', '#ffccbc', '#cfd8dc', '#b2dfdb', '#ffab91', '#d7ccc8', '#ce93d8'];
 
-  const getRandomColor = () => COLORSARRAY[Math.floor(Math.random() * COLORSARRAY.length)];
+  const getRandomColor = () => COLORS_ARR[Math.floor(Math.random() * COLORS_ARR.length)];
 
   const getRandomAnimation = (): string => {
     const keysArray = Object.keys(IMAGES.animationArray);
@@ -189,6 +192,13 @@ const Categories: React.FC<any | Props> = ({ }) => {
   //   return (index) === highlight ? 1 : 0;
   // };
 
+  const handleScroll = (event: NativeSyntheticEvent<NativeScrollEvent>) => {
+    const currentOffset = event.nativeEvent.contentOffset.y;
+    const scrollDistance = currentOffset - 0;
+        printLog("scrollDistance",scrollDistance)
+    // printLog("scrollOffset",scrollOffset)
+  };
+
   const CardItem = ({ item, index, setState }: { item: any; index: number; setState: React.Dispatch<React.SetStateAction<any>> }) => {
     const [cardState, setCardState] = useState({
       showUpdate: false,
@@ -197,7 +207,7 @@ const Categories: React.FC<any | Props> = ({ }) => {
       updatingCategory: false
     })
 
-    
+
     // const borderWidth = getCardBorderWidth(index, highlight);
 
     const handleLongPress = () => {
@@ -260,6 +270,12 @@ const Categories: React.FC<any | Props> = ({ }) => {
         key={index}
         disabled={cardState.show}
         activeOpacity={0.7}
+        onPress={async() => {
+          
+          const vidByCat =await getVideoByCategory(item, CONSTANTS.stored.SECRET_KEY, CONSTANTS.stored.SECRET_VALUE)
+          // console.log("vidByCat",vidByCat.details.contents);
+          vidByCat.details.contents?navigation.navigate(strings.VideoList,{ObjectData:vidByCat, title:'prince' }):alert(vidByCat.message)
+        }}
         onLongPress={CONSTANTS.stored.USER_TYPE === "Admin" ? handleLongPress : void (null)}
         style={{
           height: 150,
@@ -269,18 +285,23 @@ const Categories: React.FC<any | Props> = ({ }) => {
           margin: 15,
           justifyContent: 'center',
           alignSelf: 'center',
+          alignItems:'center',
           elevation: 8,
-          // borderWidth:borderWidth,
-          // borderWidth:1,
-          // borderColor: 'red',
         }}
       >
         <Lottie
           style={{
             top: 0,
-            alignSelf: 'flex-start',
+            alignSelf: 'center',
             height: '80%',
+            transform: [{ scaleX: 1.3 }, { scaleY: 1 }]
           }}
+          colorFilters={[
+            {
+              keypath: '*',
+              color: COLORS.White // Replace this with the color you want
+            }
+          ]}
           source={getRandomAnimation()}
           autoPlay
           loop
@@ -289,6 +310,9 @@ const Categories: React.FC<any | Props> = ({ }) => {
           style={{
             textAlign: 'center',
             height: '10%',
+            color:COLORS.White,
+            fontWeight:'700'
+            
           }}
         >
           {item.toUpperCase()}
@@ -301,7 +325,7 @@ const Categories: React.FC<any | Props> = ({ }) => {
               // height: 180,
               width: 140,
               position: 'absolute',
-              backgroundColor: '#fff',
+              backgroundColor: COLORS.White,
               justifyContent: 'space-around',
               alignSelf: 'center',
               zIndex: index + 10,
@@ -358,12 +382,12 @@ const Categories: React.FC<any | Props> = ({ }) => {
                     alert('Field can\'t empty.')
                   }
                 }}
-                style={{ ...styles.updata_delete, backgroundColor: COLORS.Green, height: 30, width: '50%' }}>
+                style={{ ...styles.updata_delete, backgroundColor: COLORS.LightBlue, height: 30, width: '50%' }}>
                 ✔
               </Animated.Text>}
               <Animated.Text
                 disabled={cardState.updatingCategory}
-                onPress={handleContextMenuClose} style={{ ...styles.updata_delete, backgroundColor: COLORS.Red, height: 30, width: cardState.showUpdate ? '50%' : '100%' }}>
+                onPress={handleContextMenuClose} style={{ ...styles.updata_delete, backgroundColor: COLORS.DarkBlue, height: 30, width: cardState.showUpdate ? '50%' : '100%' }}>
                 {cardState.showUpdate ? '✕' : 'CANCEL'}
               </Animated.Text>
             </View>
@@ -381,7 +405,7 @@ const Categories: React.FC<any | Props> = ({ }) => {
     <SafeAreaView
       style={{
         flex: 1,
-        backgroundColor: '#fff',
+        backgroundColor: COLORS.White,
         height: '100%',
       }}>
       {/* search tab and Title */}
@@ -407,7 +431,7 @@ const Categories: React.FC<any | Props> = ({ }) => {
             flexDirection: 'row',
             borderRadius: 5,
             justifyContent: 'center',
-            backgroundColor: '#fff',
+            backgroundColor: COLORS.White,
 
           }}
         >
@@ -441,8 +465,9 @@ const Categories: React.FC<any | Props> = ({ }) => {
         ListEmptyComponent={<Text style={{ textAlign: 'center', }}>No category to show</Text>}
         ListFooterComponent={<Text style={{ textAlign: 'center', }}>End of list</Text>}
         numColumns={2}
-        style={{ backgroundColor: '#fff' }}
+        style={{ backgroundColor: COLORS.White }}
         renderItem={renderItem}
+        onScroll={handleScroll}
         refreshControl={
           <RefreshControl
             refreshing={state.loading}
@@ -491,7 +516,7 @@ const styles = StyleSheet.create({
     // height: 80,
     width: 140,
     position: 'absolute',
-    backgroundColor: '#fff',
+    backgroundColor: COLORS.White,
     justifyContent: 'space-around',
     alignSelf: 'center',
     zIndex: 10,
@@ -530,7 +555,7 @@ const styles = StyleSheet.create({
   cardtext: {
     fontSize: 18,
     textAlign: 'center',
-    color: '#fff'
+    color: COLORS.White
   },
   footer: {
     textAlign: 'center',
@@ -548,7 +573,7 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     margin: 8,
     borderRadius: 10,
-    color: '#fff',
+    color: COLORS.White,
     fontWeight: 'bold',
 
   }

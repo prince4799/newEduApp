@@ -1,4 +1,4 @@
-import React, { useEffect, useState,useMemo } from 'react';
+import React, { useEffect, useState, useMemo } from 'react';
 import { ViewProps } from 'react-native';
 import {
     View,
@@ -40,13 +40,27 @@ interface Props {
     item?: Object | any
     index: Number
     onChildData: Function
+    expanded: Boolean
+    onToggleDetails: Function
 }
 
-const UserDetailsView: React.FC<Props> = ({ style, item, index, onChildData }) => {
+const UserDetailsView: React.FC<Props> = ({ style, item, index, onChildData, expanded, onToggleDetails }) => {
     const progressRef = React.useRef(DIMENSIONS.HEIGHT * 3);
-    // const progress: Animated.SharedValue<number> = useSharedValue(DIMENSIONS.HEIGHT * 3);
     const [showDetails, setShowDetails] = useState(false);
-    const [deleteAnim, setDeleteAnim] = useState(false);
+    printLog("index from item list", index)
+    const handleToggleDetails = () => {
+        if (showDetails) {
+            setShowDetails(false);
+            onToggleDetails(null); // Pass null to indicate that no card is expanded
+        } else {
+            setShowDetails(true);
+            onToggleDetails(index); // Pass the index of the card being expanded
+        }
+    };
+
+    useEffect(() => {
+        setShowDetails(!!expanded);
+    }, [expanded]);
 
     return (
         <View style={[style,
@@ -60,7 +74,8 @@ const UserDetailsView: React.FC<Props> = ({ style, item, index, onChildData }) =
                 alignItems: 'center',
                 padding: 10,
                 borderWidth: 0.5,
-                borderColor: COLORS.Blue
+                borderColor: COLORS.Blue,
+                backgroundColor: COLORS.White,
             }]}>
             <View
                 style={{
@@ -81,7 +96,7 @@ const UserDetailsView: React.FC<Props> = ({ style, item, index, onChildData }) =
                         width: showDetails ? 55 : 40,
                         height: showDetails ? 55 : 40,
                         justifyContent: "center",
-                        backgroundColor: "#ebe6e6",
+                        backgroundColor: COLORS.Background,
                         position: showDetails ? 'relative' : 'absolute',
                         borderRadius: 100,
                         borderColor: COLORS.Blue,
@@ -105,7 +120,7 @@ const UserDetailsView: React.FC<Props> = ({ style, item, index, onChildData }) =
                 </View>
                 {/* ==========Name========== */}
                 <View style={{ ...styles.textContainer, alignItems: 'center', marginStart: showDetails ? 20 : 60 }}>
-                    <Text>Name:</Text>
+                    <Text style={{ ...styles.heading, }}>Name:</Text>
                     <Text
                         style={styles.cardtext}
 
@@ -115,7 +130,7 @@ const UserDetailsView: React.FC<Props> = ({ style, item, index, onChildData }) =
 
                 {/* ===========Contact============= */}
                 <View style={{ ...styles.textContainer, alignItems: 'center', marginStart: showDetails ? 20 : 60 }}>
-                    <Text>Contact:</Text>
+                    <Text style={{ ...styles.heading }}>Contact:</Text>
                     <Text
                         style={styles.cardtext}
                     >{item.contact}
@@ -123,7 +138,7 @@ const UserDetailsView: React.FC<Props> = ({ style, item, index, onChildData }) =
                 </View>
                 {/* ===========Contact============= */}
                 <View style={{ ...styles.textContainer, alignItems: 'center', marginStart: showDetails ? 20 : 60 }}>
-                    <Text>User Type:</Text>
+                    <Text style={{ ...styles.heading }}>User Type:</Text>
                     <Text
                         style={styles.cardtext}
                     >{item.userType}
@@ -134,14 +149,14 @@ const UserDetailsView: React.FC<Props> = ({ style, item, index, onChildData }) =
                         <View>
                             {/* ==============email============ */}
                             <View style={{ ...styles.textContainer, alignItems: 'center', marginStart: showDetails ? 20 : 60 }}>
-                                <Text>Email:</Text>
+                                <Text style={{ ...styles.heading }}>Email:</Text>
                                 <Text
                                     style={styles.cardtext}
                                 >{item.email}
                                 </Text>
                             </View>
                             {item.paid ? <View style={{ ...styles.textContainer, alignItems: 'center', marginStart: showDetails ? 20 : 60 }}>
-                                <Text>Plan: </Text>
+                                <Text style={{ ...styles.heading }}>Plan: </Text>
                                 <Text
                                     style={styles.cardtext}
                                 >{item.paid}
@@ -156,7 +171,7 @@ const UserDetailsView: React.FC<Props> = ({ style, item, index, onChildData }) =
                                 <Text
 
                                     style={{
-                                        backgroundColor: '#78eb78',
+                                        backgroundColor: COLORS.Blue,
                                         width: '45%',
                                         height: showDetails ? 30 : 0,
                                         textAlignVertical: 'center',
@@ -173,7 +188,7 @@ const UserDetailsView: React.FC<Props> = ({ style, item, index, onChildData }) =
                                     }
                                     }
                                     style={{
-                                        backgroundColor: '#f76060',
+                                        backgroundColor: COLORS.DarkBlue,
                                         width: '45%',
                                         height: showDetails ? 30 : 0,
                                         fontWeight: '700',
@@ -188,14 +203,15 @@ const UserDetailsView: React.FC<Props> = ({ style, item, index, onChildData }) =
                 }
                 {/* ============Drop Arrow============ */}
                 <TouchableOpacity
-                    onPress={() => { setShowDetails(!showDetails); LayoutAnimation.easeInEaseOut(); }}
+                    onPress={() => { setShowDetails(!showDetails); LayoutAnimation.spring(); handleToggleDetails() }}
                     style={{
                         height: 40,
                         width: 40,
                         position: 'absolute',
                         alignSelf: 'flex-end',
                         justifyContent: 'center',
-                        alignItems: 'center'
+                        alignItems: 'center',
+                        top: 0,
                     }}>
                     <Image
                         style={[{
@@ -241,19 +257,23 @@ const styles = StyleSheet.create({
 
     },
     cardtext: {
-        textAlign: 'auto',
+        textAlign: 'left',
         fontFamily: "OpenSans-Bold",
         width: 250,
-        color: "#000",
+        color: COLORS.DarkBlue,
         fontSize: 13,
         marginStart: 5,
-        alignSelf: "center",
+        // alignSelf: "center",
     },
     textContainer: {
         flexDirection: 'row',
         // justifyContent: 'space-between',
         // width: "85%",
         marginStart: 60,
+
+    },
+    heading: {
+        color: COLORS.Links,
 
     }
 })
@@ -269,8 +289,10 @@ interface VideoDetailsViewProps {
     secretPassword?: string,
     data?: any,
     navigation?: NavigationProp<any>,
-    changeList:any,
-    index:Number,
+    changeList: any,
+    index: Number,
+    expanded: Boolean
+    onToggleDetails: Function
 }
 
 import base64js from 'base64-js';
@@ -283,14 +305,29 @@ export const VideoDetailsView: React.FC<VideoDetailsViewProps> = ({
     data,
     navigation,
     changeList,
-    index
+    index,
+    expanded, 
+    onToggleDetails
 }) => {
     const [showDetails, setShowDetails] = useState(false);
-    const imagebase64 = data.thumbnail.data
+    let imagebase64 = data.thumbnail.data
     const uint8Array = new Uint8Array(imagebase64);
-    const base64String = base64js.fromByteArray(uint8Array);
+    const newUnit8Array = new Uint8Array(data.thumbnail)
+    const base64String = data.thumbnail.data ? base64js.fromByteArray(uint8Array) : data.thumbnail;
+    const newbase64String = base64js.fromByteArray(newUnit8Array);
+    const handleToggleDetails = () => {
+        if (showDetails) {
+            setShowDetails(false);
+            onToggleDetails(null); // Pass null to indicate that no card is expanded
+        } else {
+            setShowDetails(true);
+            onToggleDetails(index); // Pass the index of the card being expanded
+        }
+    };
 
-    return (
+    useEffect(() => {
+        setShowDetails(!!expanded);
+    }, [expanded]);    return (
         <View
             style={{
                 ...styles2.videoList,
@@ -301,15 +338,15 @@ export const VideoDetailsView: React.FC<VideoDetailsViewProps> = ({
             }}>
             {/* Thumbnail thumbnail.data */}
             <TouchableOpacity
-            onPress={()=>{
-                console.log("data.thumbnail.",data.videolink);
-                navigation?.navigate(strings.Videoplayer)
-            }}
-            style={{
-                justifyContent: 'center',
-                width: showDetails ? undefined : '30%',
-                height: showDetails ? '40%' : undefined,
-            }}>
+                onPress={() => {
+                    console.log("data.thumbnail.", data.videolink);
+                    navigation?.navigate(strings.Videoplayer)
+                }}
+                style={{
+                    justifyContent: 'center',
+                    width: showDetails ? undefined : '30%',
+                    height: showDetails ? '40%' : undefined,
+                }}>
                 <Image
                     resizeMode='contain'
                     style={{
@@ -318,7 +355,7 @@ export const VideoDetailsView: React.FC<VideoDetailsViewProps> = ({
                         alignSelf: 'center',
                     }}
                     source={{ uri: `data:image/jpeg;base64,${base64String}` }}
-                    // source={IMAGES.aboutus}
+                // source={IMAGES.aboutus}
                 />
             </TouchableOpacity>
             {/* Details */}
@@ -338,60 +375,63 @@ export const VideoDetailsView: React.FC<VideoDetailsViewProps> = ({
                             padding: 15,
                         }}>
                             <TouchableOpacity
-                            style={{
-                                width: '45%',
-                                height: showDetails ? 30 : 0,
-                                elevation:3,
-                                borderRadius:3,
-                                backgroundColor: '#78eb78',
-                            }}
-                            >
-                             <Text
                                 style={{
-                                    
-                                    width: '100%',
+                                    width: '45%',
                                     height: showDetails ? 30 : 0,
-                                    fontWeight: '700',
-                                    textAlign: 'center',
-                                    textAlignVertical: 'center'
-                                }}>UPDATE</Text>   
+                                    elevation: 3,
+                                    borderRadius: 3,
+                                    backgroundColor: COLORS.Blue,
+                                }}
+                            >
+                                <Text
+                                    style={{
+                                        // color:COLORS.DarkBlue,
+                                        width: '100%',
+                                        height: showDetails ? 30 : 0,
+                                        fontWeight: '700',
+                                        textAlign: 'center',
+                                        textAlignVertical: 'center'
+                                    }}>UPDATE</Text>
                             </TouchableOpacity>
-                            
+
                             <TouchableOpacity
-                            style={{
-                                width: '45%',
-                                height: showDetails ? 30 : 0,
-                                elevation:3,
-                                borderRadius:3,
-                                backgroundColor: '#f76060',
-                            }}
-                            onPress={()=>changeList(eventsName.Delete,data.title,index)}
-                            >
-                               <Text
-                            // onPress={changeList('delete')}
                                 style={{
-                                    
-                                    width: '100%',
+                                    width: '45%',
                                     height: showDetails ? 30 : 0,
-                                    fontWeight: '700',
-                                    textAlign: 'center',
-                                    textAlignVertical: 'center'
-                                }}>DELETE</Text>
-  
+                                    elevation: 3,
+                                    borderRadius: 3,
+                                    backgroundColor: COLORS.DarkBlue,
+                                }}
+                                onPress={async () => {
+                                    const res = await changeList(eventsName.Delete, data.title, index)
+                                    setShowDetails(!res);
+                                }}
+                            >
+                                <Text
+                                    // onPress={changeList('delete')}
+                                    style={{
+
+                                        width: '100%',
+                                        height: showDetails ? 30 : 0,
+                                        fontWeight: '700',
+                                        textAlign: 'center',
+                                        textAlignVertical: 'center'
+                                    }}>DELETE</Text>
+
                             </TouchableOpacity>
-                           
+
                         </View>
 
                     </View> : null
             }
             {/* expand button */}
             {secretKeyID != undefined && secretPassword != undefined ? <TouchableOpacity
-                onPress={() => { setShowDetails(!showDetails); LayoutAnimation.easeInEaseOut(); }}
+                onPress={() => { setShowDetails(!showDetails); LayoutAnimation.easeInEaseOut();handleToggleDetails() }}
                 style={{
                     height: 40,
                     width: 40,
                     position: 'absolute',
-                    alignSelf: 'flex-end',
+                    // alignSelf: 'flex-end',
                     justifyContent: 'center',
                     alignItems: 'center',
                     // backgroundColor:'red',
@@ -414,22 +454,23 @@ export const VideoDetailsView: React.FC<VideoDetailsViewProps> = ({
 const styles2 = StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor: '#fff',
+        backgroundColor: COLORS.White,
         alignItems: 'center',
     },
     videoList: {
         width: '95%',
         height: DIMENSIONS.HEIGHT * 1.5,
-        backgroundColor: '#fff',
+        backgroundColor: COLORS.White,
         marginHorizontal: 10,
         marginTop: 10,
         alignSelf: 'center',
         borderRadius: 5,
         elevation: 8,
-        padding:2,
+        padding: 2,
     },
     text: {
         padding: 5,
+        color:COLORS.DarkBlue,
     },
     button: {
         height: 35,
@@ -459,7 +500,7 @@ const styles2 = StyleSheet.create({
     flatlisttitle: {
         fontSize: 18,
         fontWeight: 'bold',
-        color: '#fff',
+        color: COLORS.White,
         alignSelf: 'flex-start',
         textAlignVertical: 'center',
         marginLeft: 10,
@@ -469,7 +510,7 @@ const styles2 = StyleSheet.create({
         elevation: 10,
         height: DIMENSIONS.HEIGHT * 2,
         width: DIMENSIONS.WIDTH * 4,
-        backgroundColor: '#fff',
+        backgroundColor: COLORS.White,
         borderBottomLeftRadius: DIMENSIONS.HEIGHT / 2,
         borderBottomRightRadius: DIMENSIONS.HEIGHT / 2,
         borderTopRightRadius: DIMENSIONS.HEIGHT / 2,

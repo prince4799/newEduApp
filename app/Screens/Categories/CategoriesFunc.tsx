@@ -100,6 +100,34 @@ export const updateList = async (newCategory: string, oldCategory: string, secre
     }
 }
 
+export const getVideoByCategory = async (category: string,secretKey: string, secretValue: string) => {
+    // category/updatelist
+    let params = {
+        url: 'contents/load/search/',
+        method: 'POST',
+        secret: stored.TOKEN,
+        body: {
+            "category": category,
+        },
+        headers: {
+            'Content-Type': 'application/json'
+        }
+    }
+    try {
+        let res = await apiCaling(params)
+        return res
+    } catch (err) {
+        alert("Error in loading categories videos.")
+        printError('error in updating categories', '\u001b[35m', err)
+        return err
+    }
+}
+
+
+
+
+
+
 /*
 {
     "message": "List updated successfully",

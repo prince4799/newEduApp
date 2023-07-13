@@ -151,8 +151,8 @@ const SignUp = (props) => {
           <View style={{ ...styles.form(height, width), }}>
             <ScrollView style={{}}>
               <View style={{ alignSelf: 'center' }}>
-                <Text style={{ fontWeight: 'bold', fontSize: 24, color: COLORS.Font }}>SIGNUP</Text>
-                <View style={{ height: '20%', width: '25%', top: 0, margin: 10 }} />
+                <Text style={{ fontWeight: 'bold', fontSize: 24, color: COLORS.DarkBlue,top: 10,textAlign:'center' }}>SIGNUP</Text>
+                <View style={{ height: '10%', width: '25%', backgroundColor: COLORS.White, top: 0, margin: 10  }} />
                 <Text>APP LOGO</Text>
               </View>
               <KeyboardAvoidingView style={{ height: height > width ? portrait : landscape, width: '90%', alignSelf: 'center', marginBottom: 50, }} behavior='padding' >
@@ -160,30 +160,33 @@ const SignUp = (props) => {
                 {/* UserName */}
                 <View style={{ ...styles.inputContainer, alignSelf: "stretch", }} >
                   <Image style={{ ...styles.inputImg, }} source={require('../../Assets/Images/user.png')} />
-                  <TextInput style={{ ...styles.inputs, color: COLORS.Font }}
+                  <TextInput style={{ ...styles.inputs, }}
                     value={username}
                     onSelectionChange={(event) => handleSelectionChange(event, setUsername, username)}
                     autoFocus={true}
                     onChangeText={(text) => setUsername(text)}
+                    placeholderTextColor={COLORS.White}
                     placeholder='Enter User Name' />
                 </View>
 
                 {/* Phone */}
                 <View style={{ ...styles.inputContainer, alignSelf: "stretch", }} >
                   <Image style={{ ...styles.inputImg, }} source={require('../../Assets/Images/phone.png')} />
-                  <TextInput style={{ ...styles.inputs, color: COLORS.Font }}
+                  <TextInput style={{ ...styles.inputs, }}
                     value={phone}
                     onChangeText={(text) => setPhone(text)}
+                    placeholderTextColor={COLORS.White}
                     placeholder='Enter Mobile No.' />
                 </View>
 
                 {/* mail */}
                 <View style={{ ...styles.inputContainer }} >
                   <Image style={styles.inputImg} source={require('../../Assets/Images/mail.png')} />
-                  <TextInput style={{ ...styles.inputs, color: COLORS.Font }}
+                  <TextInput style={{ ...styles.inputs, }}
                     keyboardType={'email-address'}
                     value={email}
                     onChangeText={(text) => setEmail(text)}
+                    placeholderTextColor={COLORS.White}
                     placeholder='Enter Your Mail' />
                 </View>
 
@@ -191,7 +194,7 @@ const SignUp = (props) => {
                 <View style={styles.inputContainer}>
                   <Image style={styles.inputImg} source={require('../../Assets/Images/padlock.png')} />
 
-                  <TextInput style={{ ...styles.inputs, color: COLORS.Font }}
+                  <TextInput style={{ ...styles.inputs, }}
                     value={password}
                     onChangeText={(text) => setPassword(text)}
                     secureTextEntry={secureText}
@@ -200,6 +203,7 @@ const SignUp = (props) => {
                         setRadio(true)
                       }
                     }}
+                    placeholderTextColor={COLORS.White}
                     placeholder='Enter Your Password' />
                   <TouchableOpacity onPress={() => setSecureText(!secureText)}>
                     <Image style={{ ...styles.inputImg, }} source={secureText ? IMAGES.eyeopen : IMAGES.eyeclosed} />
@@ -268,6 +272,8 @@ const styles = StyleSheet.create({
     height: '95%',
     padding: 5,
     alignSelf: 'center',
+    color: COLORS.DarkBlue,
+
   },
 
   inputContainer: {
@@ -275,13 +281,13 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     borderBottomWidth: StyleSheet.hairlineWidth,
-    borderColor: COLORS.Border,
+    borderColor: COLORS.DarkBlue,
   },
 
   inputImg: {
     height: 15,
     width: 15,
-    tintColor: COLORS.Border,
+    tintColor: COLORS.DarkBlue,
     marginHorizontal: 5,
 
   },

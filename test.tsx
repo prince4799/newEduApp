@@ -256,7 +256,7 @@
 //                 // height: 80,
 //                 width: 140,
 //                 position: 'absolute',
-//                 backgroundColor: '#fff',
+//                 backgroundColor: COLORS.White,
 //                 justifyContent: 'space-around',
 //                 alignSelf: 'center',
 //                 zIndex: index + 10,
@@ -293,7 +293,7 @@
 //     <SafeAreaView
 //       style={{
 //         flex: 1,
-//         backgroundColor: '#fff',
+//         backgroundColor: COLORS.White,
 //         height: '100%',
 //       }}>
 //       {/* search tab and Title */}
@@ -310,7 +310,7 @@
 //             flexDirection: 'row',
 //             borderRadius: 5,
 //             justifyContent: 'center',
-//             backgroundColor: '#fff',
+//             backgroundColor: COLORS.White,
 
 //           }}
 //         >
@@ -344,7 +344,7 @@
 //         ListEmptyComponent={<Text style={{ textAlign: 'center', }}>No category to show</Text>}
 //         ListFooterComponent={<Text style={{ textAlign: 'center', }}>End of list</Text>}
 //         numColumns={2}
-//         style={{ backgroundColor: '#fff' }}
+//         style={{ backgroundColor: COLORS.White }}
 //         renderItem={renderItem}
 //         refreshControl={
 //           <RefreshControl
@@ -394,7 +394,7 @@
 //     // height: 80,
 //     width: 140,
 //     position: 'absolute',
-//     backgroundColor: '#fff',
+//     backgroundColor: COLORS.White,
 //     justifyContent: 'space-around',
 //     alignSelf: 'center',
 //     zIndex: 10,
@@ -433,7 +433,7 @@
 //   cardtext: {
 //     fontSize: 18,
 //     textAlign: 'center',
-//     color: '#fff'
+//     color: COLORS.White
 //   },
 //   footer: {
 //     textAlign: 'center',
@@ -479,7 +479,7 @@
               style={{
                 height: 100,
                 width: 200,
-                backgroundColor: '#fff',
+                backgroundColor: COLORS.White,
                 borderColor: COLORS.Blue,
                 borderWidth: 0.5,
                 padding: 10,

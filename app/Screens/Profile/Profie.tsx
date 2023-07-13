@@ -44,15 +44,15 @@ const Profile = ({ navigation }) => {
 
     return (
         <SafeAreaView
-            style={{ flex: 1, backgroundColor: '#fff' }}>
+            style={{ flex: 1, backgroundColor: COLORS.Background }}>
             <AnimatedView netStatus={net} style={{ top: DIMENSIONS.HEIGHT * 4.7, position: 'absolute' }} />
             <Image
-                source={IMAGES.halfbg}
-                style={{
-                    height: DIMENSIONS.HEIGHT * 5,
-                    width: DIMENSIONS.WIDTH * 10,
-                    position: 'absolute'
-                }} />
+                 source={IMAGES.halfbg}
+                 style={{
+                     height: DIMENSIONS.HEIGHT * 5,
+                     width: DIMENSIONS.WIDTH * 10,
+                     position: 'absolute'
+                 }}  />
             <TouchableOpacity style={{
                 height: DIMENSIONS.HEIGHT / 2,
                 width: DIMENSIONS.HEIGHT / 2,
@@ -68,9 +68,9 @@ const Profile = ({ navigation }) => {
                     style={{
                         height: '50%',
                         width: '50%',
-                        tintColor: '#fff'
+                        tintColor: COLORS.White
                     }} />
-                <Text style={{ color: '#fff', }}>Edit </Text>
+                <Text style={{ color: COLORS.White, }}>Edit </Text>
             </TouchableOpacity>
             <View
                 style={{
@@ -88,8 +88,8 @@ const Profile = ({ navigation }) => {
                         height: DIMENSIONS.HEIGHT,
                         width: DIMENSIONS.HEIGHT,
                         alignSelf: 'center',
-                        backgroundColor: '#fff',
-                        elevation: 8,
+                        backgroundColor: COLORS.White,
+                        elevation: 2,
                         borderRadius: DIMENSIONS.HEIGHT / 2,
                     }} />
             </View>
@@ -103,11 +103,11 @@ const Profile = ({ navigation }) => {
                     style={{
                         fontSize: 24,
                         fontWeight: '700',
-                        color: COLORS.Font,
+                        color: COLORS.White,
                     }}> {String((values as { username: string }).username)}</Text>
                 <Text style={{
                     fontSize: 12,
-                    color: COLORS.Font,
+                    color: COLORS.White,
                 }}>{String((values as { email: string }).email)}</Text>
             </View>
             {/* =============Contact & User Type============= */}
@@ -115,26 +115,25 @@ const Profile = ({ navigation }) => {
                 style={{
                     flexDirection: 'row',
                     justifyContent: 'space-around',
-                    marginVertical: DIMENSIONS.HEIGHT / 1.3,
-                    opacity: 1,
+                    marginTop: DIMENSIONS.HEIGHT*2,
+                    // opacity: 1,
+                    // backgroundColor:'red'
                 }}>
-                <ImageBackground
-                    source={IMAGES.gradientbg}
-                    style={styles.card}>
+                <View                  
+                    style={{...styles.card,backgroundColor:COLORS.Blue}}>
                     <Text
                         style={styles.cardtext}
                         numberOfLines={2}
-                    >User Type{`\n`}{String((values as { userType: string }).userType)}</Text>
-                </ImageBackground>
-                <ImageBackground
-                    source={IMAGES.gradientbg}
-                    style={styles.card}>
+                    >User Type{`\n`}{String((values as { userType: string }).userType)=='Public'?'Student':String((values as { userType: string }).userType)}</Text>
+                </View>
+                <View                  
+                    style={{...styles.card,backgroundColor:COLORS.Blue}}>
                     <Text
                         style={styles.cardtext}
                     >Contact No. {String((values as { contact: string }).contact)}</Text>
-                </ImageBackground>
+                </View>
             </View>
-            <View>
+            <View style={{top:'2%'}}>
                 <Animated.View
                     entering={BounceInLeft}>
                     <TouchableOpacity
@@ -181,8 +180,8 @@ const Profile = ({ navigation }) => {
 const styles = StyleSheet.create({
     button: {
         height: DIMENSIONS.HEIGHT / 1.3,
-        width: DIMENSIONS.WIDTH * 9.9,
-        backgroundColor: '#fff',
+        width: DIMENSIONS.WIDTH * 9.5,
+        backgroundColor: COLORS.White,
         alignSelf: 'center',
         flexDirection: 'row',
         borderRadius: 10,
@@ -194,7 +193,7 @@ const styles = StyleSheet.create({
         width: DIMENSIONS.HEIGHT / 3,
         alignSelf: 'center',
         left: 5,
-
+        tintColor:COLORS.Blue,
     },
     buttonText: {
         fontSize: 16,
@@ -202,6 +201,7 @@ const styles = StyleSheet.create({
         alignSelf: 'center',
         left: 15,
         fontWeight: '700',
+        color:COLORS.DarkBlue,
     },
     card: {
         height: DIMENSIONS.HEIGHT * 1.5,
@@ -217,7 +217,8 @@ const styles = StyleSheet.create({
     cardtext: {
         fontSize: 18,
         textAlign: 'center',
-        color: '#fff'
+        color: COLORS.White,
+        fontWeight:'700'
     }
 })
 export default Profile;

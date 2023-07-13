@@ -2,6 +2,7 @@
 import * as React from 'react';
 import { Text, View } from 'react-native';
 import Animated, { RotateInDownLeft } from 'react-native-reanimated';
+import { COLORS } from '../Constants/Colors';
 
 function Header({ ...props }): JSX.Element {
   return (
@@ -12,7 +13,7 @@ function Header({ ...props }): JSX.Element {
           paddingLeft: 10,
           marginLeft: 10, textAlignVertical: 'center',
           transform: [{ scaleX: -1 }],
-          fontSize: 24, color: "#000"
+          fontSize: 24, color: COLORS.ButtonText
         }}>➦</Text>
   )
 }

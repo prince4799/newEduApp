@@ -17,6 +17,7 @@ import { FlatList, RefreshControl, TextInput } from 'react-native-gesture-handle
 import { Deferred } from '@firebase/util';
 import UserDetailsView from '../../../Components/DetailsView';
 import Home from '../../Home/Home';
+import Lottie from 'lottie-react-native';
 
 // import { useNetInfo } from '@react-native-community/netinfo';
 
@@ -27,15 +28,17 @@ const AdminManageUsers = ({ }) => {
     const [searchText, setSearchText] = useState(false)
     const [childData, setChildData] = useState<Number>();
     const [loading, setLoading] = useState(false)
+    const [expandedIndex, setExpandedIndex] = useState(null);
 
     const removeItem = (index: number) => {
         const newArray = [...dataArray]; // make a copy of the array
         newArray.splice(index, 1); // remove the item at the specified index
-        setList(newArray); // update the state with the new 
+        setList(newArray); // update the state with the 
         // dataArray=newArray
-    };
+    }; 
 
     const handleChildData = (index: number) => {
+        extFun.printInfo('index', index)
         setChildData(index);
         removeItem(index)
     };
@@ -116,9 +119,10 @@ const AdminManageUsers = ({ }) => {
         <SafeAreaView
             style={{
                 flex: 1,
-                backgroundColor: '#fff',
+                backgroundColor: COLORS.White,
                 height: '100%',
             }}>
+                   
             <View
                 style={{
                     height: CONSTANTS.DIMENSIONS.HEIGHT / 1.5,
@@ -131,7 +135,7 @@ const AdminManageUsers = ({ }) => {
                     flexDirection: 'row',
                     borderRadius: 5,
                     justifyContent: 'center',
-                    backgroundColor: '#fff'
+                    backgroundColor: COLORS.White,
                 }}
             >
                 <Image
@@ -149,40 +153,63 @@ const AdminManageUsers = ({ }) => {
                         margin: 10,
                     }} />
             </View>
+            <View
+            style={{
+                height:'100%'
+            }}>
+            {/* <Lottie
+                style={{
+                    alignSelf: 'center',
+                    height: '80%',
+                    width: '100%',
+                    position: 'absolute',
+                    zIndex: 0,
+                    transform: [{ scaleX: 1 }, { scaleY: 1.5 },{rotateZ: '90deg'}],
+                    top:0,
+                }}
+                source={IMAGES.animationArray['wave']}
+                autoPlay
+                loop
+            />  */}
             <FlatList
                 ListHeaderComponent={numberOfUser}
                 ListHeaderComponentStyle={styles.header}
                 ListFooterComponentStyle={styles.footer}
                 ListFooterComponent={loading ? null : <Text style={styles.footer}>End of list.</Text>}
                 data={searchText ? list : list}
-                style={{ height: 300, }}
+                style={{ height: 300, backgroundColor: 'transparent' }}
                 renderItem={({ item, index }) =>
                     <SafeAreaView style={{}}>
+                        
                         <UserDetailsView
                             item={item}
                             onChildData={() => handleChildData(index)}
                             index={index}
+                            expanded={index === expandedIndex}
+                            onToggleDetails={() => setExpandedIndex(index)}
                             style={{
                                 height: 300,
                                 marginBottom: 10,
                                 alignSelf: 'center',
                                 elevation: 5,
-                                backgroundColor: '#fff',
+                                backgroundColor: COLORS.LightBlue,
                                 borderRadius: 10,
                                 width: '95%'
                             }} />
-                        
+
                     </SafeAreaView>
                 }
                 refreshControl={
                     <RefreshControl
-                      refreshing={loading}
-                      onRefresh={()=> asyncRetrieve()}
-                      colors={[COLORS.Blue]} // Customize the loading indicator colors
+                        refreshing={loading}
+                        onRefresh={() => asyncRetrieve()}
+                        colors={[COLORS.Blue]} // Customize the loading indicator colors
                     />
-                  }
+                }
             />
-         
+
+            </View>
+           
         </SafeAreaView>
 
     )
@@ -222,14 +249,14 @@ const styles = StyleSheet.create({
     footer: {
         textAlign: 'center',
         alignSelf: 'center',
-        fontSize:12,
-        color:'grey'
+        fontSize: 12,
+        color: 'grey'
 
     },
     header: {
         alignSelf: 'center',
-        fontSize:12,
-        color:'grey'
+        fontSize: 12,
+        color: 'grey'
     }
 })
 

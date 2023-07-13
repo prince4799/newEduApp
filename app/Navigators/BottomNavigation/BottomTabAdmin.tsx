@@ -24,34 +24,34 @@ function TabBar({ ...props }): JSX.Element {
     useEffect(() => {
         const handleBackPress = () => {
             const previousScreen = props.navigation.dangerouslyGetState().routes[props.navigation.dangerouslyGetState().index - 1]?.name;
-            printLog("previousScreen....",props.navigation.dangerouslyGetState())
-            if(previousScreen==undefined){
+            printLog("previousScreen....", props.navigation.dangerouslyGetState())
+            if (previousScreen == undefined) {
                 setButtonIndex(1)
                 BackHandler.exitApp()
                 return true;
             }
-          if (props.navigation.canGoBack() && previousScreen!=undefined) {
-            setButtonIndex(getButtonIndex(previousScreen));
-            props.navigation.navigate(previousScreen);
-            return true;
-          }
-          return false;
+            if (props.navigation.canGoBack() && previousScreen != undefined) {
+                setButtonIndex(getButtonIndex(previousScreen));
+                props.navigation.navigate(previousScreen);
+                return true;
+            }
+            return false;
         };
-      
+
         const backHandler = BackHandler.addEventListener('hardwareBackPress', handleBackPress);
         return () => backHandler.remove();
-      }, [props.navigation]);
-      
-      function getButtonIndex(screenName : string) {
-        if (screenName === 'Home'||screenName ==undefined) {
-          return 1;
+    }, [props.navigation]);
+
+    function getButtonIndex(screenName: string) {
+        if (screenName === 'Home' || screenName == undefined) {
+            return 1;
         } else if (screenName === 'Courses') {
-          return 2;
+            return 2;
         } else if (screenName === 'Profile') {
-          return 3;
+            return 3;
         }
         return 1; // Default to Home screen if the screen name is unknown
-      }
+    }
 
     function changeButton(index: number, screen: string): void {
         setButtonIndex(index)
@@ -138,6 +138,20 @@ function TabBar({ ...props }): JSX.Element {
 function BottomTabAdmin() {
     return (
         <Tab.Navigator
+         options={{
+        cardStyleInterpolator: ({ current: { progress } }) => {
+          const rotateY = progress.interpolate({
+            inputRange: [0, 1],
+            outputRange: ['00deg', '90deg'],
+          });
+
+          return {
+            cardStyle: {
+              transform: [{ rotateY }],
+            },
+          };
+        },
+      }}
             tabBar={(props: any) => <TabBar {...props} />}
             screenOptions={{
 
@@ -145,7 +159,9 @@ function BottomTabAdmin() {
         >
             <Tab.Screen
                 options={{
-                    headerShown: false
+                    headerShown: false,
+                    ...horizontalAnimation,
+                    ...revHorizontalAnimation,
                 }}
                 name={strings.Home} component={AdminDashboard} />
             {/* <Tab.Screen
@@ -183,3 +199,40 @@ const styles = StyleSheet.create({
         justifyContent: 'center'
     }
 })
+const horizontalAnimation = {
+    cardStyleInterpolator: ({ current, layouts }) => {
+        return {
+            cardStyle: {
+                transform: [
+                    {
+                        rotateY: current.progress.interpolate({
+                            // inputRange: [0, 1],
+                            // outputRange: [layouts.screen.width, 0],
+                            inputRange: [0, 1],
+                            outputRange: ['00deg', '90deg'],
+                        }),
+                    },
+                ],
+            },
+        };
+    },
+};
+
+const revHorizontalAnimation = {
+    cardStyleInterpolator: ({ current, layouts }) => {
+        return {
+            cardStyle: {
+                transform: [
+                    {
+                        rotateY: current.progress.interpolate({
+                            // inputRange: [0, 1],
+                            // outputRange: [layouts.screen.width, 0],
+                            inputRange: [0, 1],
+                            outputRange: ['90deg', '0deg'],
+                        }),
+                    },
+                ],
+            },
+        };
+    },
+}

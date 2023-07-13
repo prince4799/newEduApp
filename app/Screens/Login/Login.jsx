@@ -152,16 +152,16 @@ const Login = ({ navigation }) => {
           left: '45%',
           height: '5%',
           width: '5%',
-          backgroundColor: '#fff'
+          backgroundColor: COLORS.White
         }} /> : null}
-      <ImageBackground style={{ height: height, width: width, justifyContent: 'center', alignItems: 'center', }} resizeMode='cover' source={require("../../Assets/Images/gradient_bg.png")} >
+      <ImageBackground style={{  ...styles.form(height, width),height: height, width: width, justifyContent: 'center', alignItems: 'center', }} resizeMode='cover' source={require("../../Assets/Images/gradient_bg.png")} >
         <ImageBackground style={{ ...styles.form(height, width), }} source={require("../../Assets/Images/half_bg.png")} >
           <View style={{ ...styles.form(height, width), }}>
             <ScrollView style={{}}  >
               {/* LOGO  */}
                <View style={{ alignSelf: 'center'}}>
-                <Text style={{ fontWeight: 'bold', fontSize: 24, top: 10, color: COLORS.Font }}>LOGIN</Text>
-                <View style={{ height: '10%', width: '25%', backgroundColor: '#fff', top: 0, margin: 10 }} />
+                <Text style={{ fontWeight: 'bold', fontSize: 24, top: 10, color: COLORS.DarkBlue ,textAlign:'center'}}>LOGIN</Text>
+                <View style={{ height: '10%', width: '25%', backgroundColor: COLORS.White, top: 0, margin: 10 }} />
                 <Text>APP LOGO</Text>
               </View>
               <KeyboardAvoidingView style={{ 
@@ -176,6 +176,7 @@ const Login = ({ navigation }) => {
                     value={id}
                     keyboardType={'email-address'}
                     onChangeText={(text) => setId(text)}
+                    placeholderTextColor={COLORS.White}
                     placeholder='Mail/Username' />
                 </View>
                 <View style={{...styles.inputContainer,alignSelf: "stretch",}}>
@@ -183,6 +184,7 @@ const Login = ({ navigation }) => {
                   <TextInput style={styles.inputs}
                     value={password}
                     secureTextEntry={secureText}
+                    placeholderTextColor={COLORS.White}
                     onChangeText={(text) => setPassword(text)}
                     placeholder='Password' />
                   <TouchableOpacity onPress={() => setSecureText(!secureText)}>
@@ -256,7 +258,7 @@ const styles = StyleSheet.create({
     height: '95%',
     padding: 5,
     alignSelf: 'center',
-    color: COLORS.Font
+    color: COLORS.DarkBlue
   },
 
   inputContainer: {
@@ -264,13 +266,13 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     borderBottomWidth: StyleSheet.hairlineWidth,
-    borderColor: COLORS.Border,
+    borderColor: COLORS.DarkBlue,
   },
 
   inputImg: {
     height: 15,
     width: 15,
-    tintColor: COLORS.Border,
+    tintColor: COLORS.DarkBlue,
     marginHorizontal: 5,
 
   },

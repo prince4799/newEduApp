@@ -31,7 +31,7 @@ const Splash = ({ navigation }) => {
     CONSTANTS.stored.USER_TYPE = $userType.value
     CONSTANTS.stored.SECRET_KEY = $secretKey.value
     CONSTANTS.stored.SECRET_VALUE = $secretVal.value
-    // extFun.printLog('\u001b[36m', '........', CONSTANTS.stored)
+    extFun.printLog('\u001b[36m', '........', CONSTANTS.stored)
   })()
 
   useEffect(() => {
@@ -39,21 +39,27 @@ const Splash = ({ navigation }) => {
     CONSTANTS.DIMENSIONS.HEIGHT = height / 10;
     CONSTANTS.DIMENSIONS.WIDTH = width / 10;
     if (CONSTANTS.DIMENSIONS.HEIGHT > 0) {
-      console.log("height and width ", CONSTANTS.DIMENSIONS.HEIGHT);
+      console.log("height and width ", CONSTANTS.DIMENSIONS.HEIGHT,);
     }
   }, [CONSTANTS.DIMENSIONS]);
 
   const navigate = () => {
+    extFun.printLog("navigate")
+
     extFun.retrieveData('@isLoggedIn', MODULE_NAME).then(
       (val) => {
         if (val.status === 'false' && route.name === 'Splash') {
           navigation.replace('SignUpRegisterDrawer')
         } else {
           extFun.retrieveData('@userType', MODULE_NAME).then((screen) => {
-            if (route.name === 'Splash' && screen == 'Public')
+            if (route.name === 'Splash' && screen.value == 'Public') {
               navigation.replace('BottomTabUser')
-            else
+              extFun.printLog("BottomTabUser", screen.value)
+            }
+            else {
               navigation.replace('BottomTabAdmin')
+              extFun.printLog("BottomTabAdmin", screen)
+            }
           })
         }
 
@@ -75,7 +81,7 @@ const Splash = ({ navigation }) => {
   }
   useEffect(() => {
     netStatusCheck()
-    return()=>netStatusCheck()
+    return () => netStatusCheck()
   }, [isConnected]);
 
 
@@ -87,8 +93,8 @@ const Splash = ({ navigation }) => {
        count = count + 1
      }
    }, [isConnected, CONSTANTS.NET_STATUS]);
- 
- */
+   
+  */
 
 
   return (

@@ -209,7 +209,7 @@ const MyModal: React.FC<Props> = ({
           <TouchableOpacity
             style={{
               ...styles.button,
-              backgroundColor: '#f76060',
+              backgroundColor: '#07154a',
               height: 30,
               width: 30,
               alignSelf: 'flex-end',
@@ -217,10 +217,10 @@ const MyModal: React.FC<Props> = ({
               alignItems: 'center'
             }}
             onPress={() => modalVisibility()}
-          ><Text style={{ fontWeight: 'bold', color: '#000' }}>X</Text></TouchableOpacity>
+          ><Text style={{ fontWeight: 'bold', color: COLORS.White }}>X</Text></TouchableOpacity>
 
           {/* modalText */}
-          <Text style={{ marginVertical: 20, fontSize: 20 }}>{modalText} </Text>
+          <Text style={{ marginVertical: 20, fontSize: 20, color:COLORS.DarkBlue }}>{modalText} </Text>
 
           {/* link */}
           {link !== undefined && (
@@ -232,17 +232,11 @@ const MyModal: React.FC<Props> = ({
               {state.resourceLink && <Animated.Text
                 entering={ZoomIn}
                 exiting={ZoomOut}
-                style={{
-                  fontSize: 10,
-                  zIndex: 8,
-                  backgroundColor: '#fff',
-                  position: 'absolute',
-                  left: 20,
-                  top: 2,
-                }}>{link.replace('Enter', '')}</Animated.Text>}
+                style={styles.animatedText}>{link.replace('Enter', '')}</Animated.Text>}
               <TextInput
                 style={styles.input}
                 placeholder={link}
+                placeholderTextColor={COLORS.LightBlue}
                 value={state.resourceLink}
                 onChangeText={(text) => setState({ ...state, resourceLink: text })}
                 autoFocus={true}
@@ -263,17 +257,11 @@ const MyModal: React.FC<Props> = ({
               {state.resourceTitle && <Animated.Text
                 entering={ZoomIn}
                 exiting={ZoomOut}
-                style={{
-                  fontSize: 10,
-                  zIndex: 8,
-                  backgroundColor: '#fff',
-                  position: 'absolute',
-                  left: 20,
-                  top: 2,
-                }}>{title.replace('Enter', '')}</Animated.Text>}
+                style={styles.animatedText}>{title.replace('Enter', '')}</Animated.Text>}
               <TextInput
                 style={styles.input}
                 placeholder={title}
+                placeholderTextColor={COLORS.LightBlue}
                 value={state.resourceTitle}
                 onChangeText={(text) => setState({ ...state, resourceTitle: text })}
               />
@@ -293,17 +281,11 @@ const MyModal: React.FC<Props> = ({
               {state.categoryName && <Animated.Text
                 entering={ZoomIn}
                 exiting={ZoomOut}
-                style={{
-                  fontSize: 10,
-                  zIndex: 8,
-                  backgroundColor: '#fff',
-                  position: 'absolute',
-                  left: 20,
-                  top: 2,
-                }}>{category.replace('Enter', '')}</Animated.Text>}
+                style={styles.animatedText}>{category.replace('Enter', '')}</Animated.Text>}
               <TextInput
                 style={styles.input}
                 placeholder={category}
+                placeholderTextColor={COLORS.LightBlue}
                 value={state.categoryName}
                 onChangeText={(text) => setState({ ...state, categoryName: text })}
               />
@@ -322,17 +304,11 @@ const MyModal: React.FC<Props> = ({
               {state.resourceNewTitle && <Animated.Text
                 entering={ZoomIn}
                 exiting={ZoomOut}
-                style={{
-                  fontSize: 10,
-                  zIndex: 8,
-                  backgroundColor: '#fff',
-                  position: 'absolute',
-                  left: 20,
-                  top: 2,
-                }}>{newTitle.replace('Enter', '')}</Animated.Text>}
+                style={styles.animatedText}>{newTitle.replace('Enter', '')}</Animated.Text>}
               <TextInput
                 style={styles.input}
                 placeholder={newTitle}
+                placeholderTextColor={COLORS.LightBlue}
                 value={state.resourceNewTitle}
                 onChangeText={(text) => setState({ ...state, resourceNewTitle: text })}
               />
@@ -350,17 +326,11 @@ const MyModal: React.FC<Props> = ({
             {state.secretKey && <Animated.Text
               entering={ZoomIn}
               exiting={ZoomOut}
-              style={{
-                fontSize: 10,
-                zIndex: 8,
-                backgroundColor: '#fff',
-                position: 'absolute',
-                left: 20,
-                top: 2,
-              }}>Secret Id</Animated.Text>}
+              style={styles.animatedText}>Secret Id</Animated.Text>}
             <TextInput
               style={styles.input}
               placeholder={'Secret Id'}
+              placeholderTextColor={COLORS.LightBlue}
               value={state.secretKey}
               onChangeText={(text) => {
                 let key = text.replace(/[^a-zA-Z\-]/g, '')
@@ -379,18 +349,12 @@ const MyModal: React.FC<Props> = ({
             {state.secretValue && <Animated.Text
               entering={ZoomIn}
               exiting={ZoomOut}
-              style={{
-                fontSize: 10,
-                zIndex: 8,
-                backgroundColor: '#fff',
-                position: 'absolute',
-                left: 20,
-                top: 2,
-              }}>Secret Password</Animated.Text>}
+              style={styles.animatedText}>Secret Password</Animated.Text>}
             <TextInput
               secureTextEntry={true}
               style={styles.input}
               placeholder={'Secret Password'}
+              placeholderTextColor={COLORS.LightBlue}
               value={state.secretValue}
               onChangeText={(text) => {
                 let pass = text.replace(/[^a-zA-Z\#\@]/g, '')
@@ -443,12 +407,12 @@ const MyModal: React.FC<Props> = ({
                     <View style={styles.pickermodalContent}>
                       <TouchableOpacity style={styles.touchable} onPress={() => { requestCameraPermission() }}>
                         <Image style={styles.pickerModalImage} resizeMode='contain' source={IMAGES.camera} />
-                        <Text>Open Camera</Text>
+                        <Text style={{color:'#000'}}>Open Camera</Text>
                       </TouchableOpacity>
 
                       <TouchableOpacity style={styles.touchable} onPress={() => { requestStoragePermission() }}>
                         <Image style={styles.pickerModalImage} resizeMode='contain' source={IMAGES.storage} />
-                        <Text>Select from storage</Text>
+                        <Text style={{color:'#000'}}>Select from storage</Text>
                       </TouchableOpacity>
                     </View>
                   </TouchableOpacity>
@@ -471,7 +435,7 @@ const MyModal: React.FC<Props> = ({
             margin: 20,
           }}>
             {/* <Text onPress={() => modalVisibility()} style={{ ...styles.button, backgroundColor: '#f76060', }}>CANCEL</Text> */}
-            <Text onPress={onSubmit} style={[styles.button, { backgroundColor: '#78eb78', }]}>SUBMIT</Text>
+            <Text onPress={onSubmit} style={[styles.button, { backgroundColor: '#9fb2f5', }]}>SUBMIT</Text>
           </View>
         </View>
       </ScrollView>
@@ -483,7 +447,7 @@ const styles = StyleSheet.create({
 
   modalView: {
     margin: 20,
-    backgroundColor: '#fff',
+    backgroundColor: COLORS.White,
     borderRadius: 20,
     shadowColor: '#bbdefb',
     shadowOffset: {
@@ -493,7 +457,6 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.25,
     shadowRadius: 4,
     elevation: 5,
-    height: '30%',
     padding: 10,
   },
   button: {
@@ -507,15 +470,15 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
   },
   input: {
-    borderColor: '#86b588',
+    borderColor: COLORS.LightBlue,
     borderWidth: 0.5,
     height: 40,
     width: '100%',
     borderRadius: 10,
     marginVertical: 10,
     padding: 10,
-    elevation: 1,
-    zIndex: 0,
+    zIndex: 2,
+    color:COLORS.DarkBlue,
   },
   pickermodalContainer: {
     flex: 1,
@@ -526,15 +489,15 @@ const styles = StyleSheet.create({
   pickermodalContent: {
     height: 80,
     width: '90%',
-    // backgroundColor: '#fff',
+    // backgroundColor: COLORS.White,
     justifyContent: 'center',
     alignItems: 'center',
     flexDirection: 'row',
   },
   touchable: {
     width: '40%',
-    borderColor: '#86b588',
-    backgroundColor: '#fff',
+    borderColor: COLORS.LightBlue,
+    backgroundColor: COLORS.White,
     borderWidth: 0.8,
     borderRadius: 5,
     elevation: 5,
@@ -546,6 +509,15 @@ const styles = StyleSheet.create({
   pickerModalImage: {
     height: 30,
     width: 30
+  },
+  animatedText:{
+    fontSize: 10,
+    zIndex: 8,
+    backgroundColor: COLORS.White,
+    position: 'absolute',
+    left: 20,
+    top: 2,
+    color:COLORS.LightBlue,
   }
 
 });

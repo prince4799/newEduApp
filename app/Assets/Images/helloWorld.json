@@ -1,73 +1,86 @@
 {
-    "name": "Text Animation",
-    "duration": 5.0,
-    "fps": 30,
-    "width": 640,
-    "height": 480,
-    "layers": [
-      {
-        "name": "Background",
-        "type": "solid-color",
-        "properties": {
-          "color": [255, 255, 255]
-        }
-      },
-      {
-        "name": "Text",
-        "type": "text",
-        "properties": {
-          "text": "Hello, World!",
-          "font": "Arial",
-          "fontSize": 50,
-          "fillColor": [0, 0, 0],
-          "position": [320, 240],
-          "alignment": "center"
+  "v": "5.5.9",
+  "fr": 30,
+  "ip": 0,
+  "op": 120,
+  "w": 400,
+  "h": 400,
+  "nm": "Jumping Ball",
+  "layers": [
+    {
+      "ty": 4,
+      "nm": "Ball",
+      "ind": 1,
+      "ks": {
+        "o": { "a": 0, "k": 100 },
+        "rx": { "a": 0, "k": 0 },
+        "ry": { "a": 0, "k": 0 },
+        "rz": { "a": 0, "k": 0 },
+        "p": {
+          "a": 1,
+          "k": [
+            {
+              "i": { "x": 0.667, "y": 1 },
+              "o": { "x": 0.333, "y": 0 },
+              "t": 0,
+              "s": [200, 400],
+              "e": [200, 200]
+            },
+            {
+              "i": { "x": 0.667, "y": 0.667 },
+              "o": { "x": 0.333, "y": 0 },
+              "t": 10,
+              "s": [200, 200],
+              "e": [200, 400]
+            },
+            { "t": 20, "s": [200, 400] }
+          ]
         },
-        "keyframes": [
-          {
-            "time": 0.0,
-            "properties": {
-              "position": [320, 240],
-              "opacity": 0.0
-            }
+        "a": { "a": 0, "k": [20, 20] },
+        "s": { "a": 0, "k": [100, 100] }
+      },
+      "ao": 0,
+      "sh": [
+        {
+          "ty": "el",
+          "d": 1,
+          "s": { "a": 0, "k": [40, 40] },
+          "p": { "a": 0, "k": [0, 0] },
+          "nm": "Ellipse Path 1",
+          "hd": false
+        },
+        {
+          "ty": "fl",
+          "c": { "a": 0, "k": [1, 0.282, 0.282, 1] },
+          "o": { "a": 0, "k": 100 },
+          "r": 1,
+          "nm": "Fill 1",
+          "hd": false
+        },
+        {
+          "ty": "tr",
+          "p": {
+            "a": 0,
+            "k": [20, 20],
+            "ix": 2,
+            "x": "var $bm_rt;\n$bm_rt = $bm_ri;\n",
+            "y": "var $bm_rt;\n$bm_rt = $bm_ri;\n",
+            "nm": "Position"
           },
-          {
-            "time": 1.0,
-            "properties": {
-              "position": [320, 120],
-              "opacity": 1.0
-            }
-          },
-          {
-            "time": 2.0,
-            "properties": {
-              "position": [320, 360],
-              "opacity": 1.0
-            }
-          },
-          {
-            "time": 3.0,
-            "properties": {
-              "position": [120, 240],
-              "opacity": 1.0
-            }
-          },
-          {
-            "time": 4.0,
-            "properties": {
-              "position": [500, 240],
-              "opacity": 1.0
-            }
-          },
-          {
-            "time": 5.0,
-            "properties": {
-              "position": [320, 240],
-              "opacity": 0.0
-            }
-          }
-        ]
-      }
-    ]
-  }
-  
+          "a": { "a": 0, "k": [20, 20], "ix": 1 },
+          "s": { "a": 0, "k": [100, 100], "ix": 3 },
+          "r": { "a": 0, "k": 0, "ix": 6 },
+          "o": { "a": 0, "k": 100, "ix": 7 },
+          "sk": { "a": 0, "k": 0, "ix": 4 },
+          "sa": { "a": 0, "k": 0, "ix": 5 },
+          "nm": "Transform"
+        }
+      ],
+      "ip": 0,
+      "op": 120,
+      "st": 0,
+      "bm": 0
+    }
+  ],
+  "markers": []
+}

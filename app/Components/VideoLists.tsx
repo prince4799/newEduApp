@@ -26,6 +26,7 @@ import MyModal from './MyModal';
 import { alert, apiCaling, printError, printLog, printSucess, retrieveData, storeData } from '../Assets/Utils/ExtenFunc';
 import { eventsName } from '../Constants/Strings';
 import { uploadCategories } from '../Screens/Categories/CategoriesFunc';
+import { useRoute } from '@react-navigation/native';
 // import { uploadCategories } from '../Screens/Categories/Categories';
 
 
@@ -54,7 +55,7 @@ export const VideoLists: React.FC<any> = ({
                         style={{
                             fontSize: 18,
                             fontWeight: 'bold',
-                            color: '#fff',
+                            color: COLORS.White,
                             alignSelf: 'flex-start',
                             textAlignVertical: 'center',
                             marginTop: 10,
@@ -89,7 +90,7 @@ UIManager.setLayoutAnimationEnabledExperimental &&
 
 
 export const VideoPlayLists: React.FC<any | Props> = ({
-    ObjectData,
+    
     screenName,
     title,
     navigation,
@@ -103,8 +104,12 @@ export const VideoPlayLists: React.FC<any | Props> = ({
     const [list, setList] = useState([])
     const [loading, setLoading] = useState<boolean>(false)
     const [uploading, setUploading] = useState<boolean>(false)
+    const [expandedIndex, setExpandedIndex] = useState(null);
 
-
+    const route=useRoute()
+    if(route.params){
+        var videoByCat=route.params.ObjectData
+    }
     interface ModalClose {
         data?: any
     }
@@ -176,10 +181,6 @@ export const VideoPlayLists: React.FC<any | Props> = ({
         }
         try {
             let res = await apiCaling(params)
-            // console.log('\u001b[36m', '........', res.details.contents[0])
-            // if (res.status) {
-            //     alert(res.message)
-            // }
             if (res.message.includes('successfully')) {
                 let revList = res.details.contents.reverse()
                 setList(revList)
@@ -234,10 +235,12 @@ export const VideoPlayLists: React.FC<any | Props> = ({
             if (res.message.includes('successfully')) {
                 setList(prevList => prevList.filter((_, i) => i !== index));
             }
+            return true
         } catch (err) {
             printError("error in deleting videos", err)
             alert(err.message)
             setLoading(false)
+            return false
         }
 
     }
@@ -262,13 +265,19 @@ export const VideoPlayLists: React.FC<any | Props> = ({
         } else {
             setShowListHeader(false);
         }
-        !list.length ? listLoad() : null
+        // printLog("ObjectData", videoByCat.details.contents[0])
+        if (videoByCat == undefined) {
+            !list.length ? listLoad() : null
+        }
+        else{
+            setList(videoByCat.details.contents)
+        }
     }, [secretKeyPromise, secretValPromise]);
 
     useEffect(() => {
         asyncRetrieve()
     }, [secretKeyPromise, secretValPromise])
-
+// console.log("list",list)
     return (
         <SafeAreaView style={{ flex: 1 }}>
             <View style={{ width: '100%', flex: 1 }}>
@@ -281,7 +290,7 @@ export const VideoPlayLists: React.FC<any | Props> = ({
                     }}>
                     <View
                         style={{
-                            backgroundColor: '#fff',
+                            backgroundColor: COLORS.White,
                             height: 50,
                             width: '40%',
                             position: 'absolute',
@@ -303,33 +312,33 @@ export const VideoPlayLists: React.FC<any | Props> = ({
                     </View>
                 </Modal>
                 {showListHeader ?
-                        < TouchableOpacity
-                            onPress={() => {
-                                // printLog('>>>>>>>>>>>>>..', showModal)
-                                setShowModal(true)
+                    < TouchableOpacity
+                        onPress={() => {
+                            // printLog('>>>>>>>>>>>>>..', showModal)
+                            setShowModal(true)
+                        }}
+                    >
+                        <Text
+                            style={{
+                                height: CONSTANTS.DIMENSIONS.HEIGHT / 1.5,
+                                width: CONSTANTS.DIMENSIONS.WIDTH * 9,
+                                backgroundColor: COLORS.Button,
+                                margin: 15,
+                                borderRadius: CONSTANTS.DIMENSIONS.HEIGHT / 2,
+                                alignSelf: 'center',
+                                textAlignVertical: 'center',
+                                textAlign: 'center',
+                                elevation: 5,
+                                color: COLORS.ButtonText,
+                                fontWeight: 'bold',
+                                fontSize: 16,
                             }}
-                        >
-                            <Text
-                                style={{
-                                    height: CONSTANTS.DIMENSIONS.HEIGHT / 1.5,
-                                    width: CONSTANTS.DIMENSIONS.WIDTH * 9,
-                                    backgroundColor: COLORS.Button,
-                                    margin: 15,
-                                    borderRadius: CONSTANTS.DIMENSIONS.HEIGHT / 2,
-                                    alignSelf: 'center',
-                                    textAlignVertical: 'center',
-                                    textAlign: 'center',
-                                    elevation: 5,
-                                    color: COLORS.ButtonText,
-                                    fontWeight: 'bold',
-                                    fontSize: 16,
-                                }}
-                            >UPLOAD VIDEO</Text>
-                        </TouchableOpacity> : null
-                    }
+                        >UPLOAD VIDEO</Text>
+                    </TouchableOpacity> : null
+                }
                 <FlatList
                     style={{ padding: 5, }}
-                    ListEmptyComponent={<Text style={{alignSelf:'center'}}>There are no data to show</Text>}
+                    ListEmptyComponent={<Text style={{ alignSelf: 'center' }}>There are no data to show</Text>}
                     data={list}
                     keyExtractor={(item, index) => index.toString()}
                     renderItem={({ item, index }) =>
@@ -341,6 +350,8 @@ export const VideoPlayLists: React.FC<any | Props> = ({
                                 navigation={navigation}
                                 changeList={changeList}
                                 index={index}
+                                expanded={index === expandedIndex}
+                                onToggleDetails={() => setExpandedIndex(index)}
                             />
                         </View>
                     }
@@ -371,13 +382,13 @@ export const VideoPlayLists: React.FC<any | Props> = ({
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor: '#fff',
+        backgroundColor: COLORS.White,
         alignItems: 'center',
     },
     videoList: {
         width: '95%',
         height: CONSTANTS.DIMENSIONS.HEIGHT * 1.5,
-        backgroundColor: '#fff',
+        backgroundColor: COLORS.White,
         marginHorizontal: 10,
         marginTop: 10,
         alignSelf: 'center',
@@ -415,7 +426,7 @@ const styles = StyleSheet.create({
     flatlisttitle: {
         fontSize: 18,
         fontWeight: 'bold',
-        color: '#fff',
+        color: COLORS.White,
         alignSelf: 'flex-start',
         textAlignVertical: 'center',
         marginLeft: 10,
@@ -425,7 +436,7 @@ const styles = StyleSheet.create({
         elevation: 10,
         height: CONSTANTS.DIMENSIONS.HEIGHT * 2,
         width: CONSTANTS.DIMENSIONS.WIDTH * 4,
-        backgroundColor: '#fff',
+        backgroundColor: COLORS.White,
         borderBottomLeftRadius: CONSTANTS.DIMENSIONS.HEIGHT / 2,
         borderBottomRightRadius: CONSTANTS.DIMENSIONS.HEIGHT / 2,
         borderTopRightRadius: CONSTANTS.DIMENSIONS.HEIGHT / 2,
@@ -479,7 +490,7 @@ const styles = StyleSheet.create({
                 style={{
                     height: '60%',
                     width: '60%',
-                    tintColor: '#fff',
+                    tintColor: COLORS.White,
                     alignSelf: 'center',
                 }}
             />
