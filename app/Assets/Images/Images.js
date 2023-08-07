@@ -29,7 +29,7 @@ export const IMAGES = {
         singleline: require('./single-line.json'),
         tree: require('./tree-posture.json'),
         yogaline: require('./yoga-line.json'),
-        wave: require('./wave.json'),
+        // wave: require('./wave.json'),
 
     },
     plus: require('./plus.png'),

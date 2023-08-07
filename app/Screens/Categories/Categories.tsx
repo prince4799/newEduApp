@@ -126,7 +126,7 @@ const Categories: React.FC<any | Props> = ({ navigation}) => {
       }
       if (res.status && res.message.includes('already present')) {
         const index = state.list.findIndex((item: any) => {
-          printSucess('index', item)
+          // printSucess('index', item)
           if (item && data.categoryName) {
             return item.toLowerCase() === data.categoryName.toLowerCase();
           }
@@ -278,11 +278,11 @@ const Categories: React.FC<any | Props> = ({ navigation}) => {
         }}
         onLongPress={CONSTANTS.stored.USER_TYPE === "Admin" ? handleLongPress : void (null)}
         style={{
-          height: 150,
-          width: 150,
+          height:CONSTANTS.DIMENSIONS.WIDTH*4,
+          width: CONSTANTS.DIMENSIONS.WIDTH*4,
           zIndex: index,
           backgroundColor: getRandomColor(),
-          margin: 15,
+          margin: CONSTANTS.DIMENSIONS.WIDTH/2,
           justifyContent: 'center',
           alignSelf: 'center',
           alignItems:'center',
@@ -341,8 +341,8 @@ const Categories: React.FC<any | Props> = ({ navigation}) => {
           >
             {cardState.showUpdate ?
               <TextInput
-                style={{ ...styles.updata_delete, borderColor: 'green', color: '#000' }}
-                placeholder='Enter new name'
+                style={{ ...styles.updata_delete, borderColor: COLORS.Border, color: '#000',borderWidth:1, }}
+                placeholder='New category'
                 maxLength={25}
                 onChangeText={(text) => {
                   setCardState({
@@ -407,6 +407,10 @@ const Categories: React.FC<any | Props> = ({ navigation}) => {
         flex: 1,
         backgroundColor: COLORS.White,
         height: '100%',
+        alignSelf:'center',
+        justifyContent:'space-around',
+        width:'100%',
+        
       }}>
       {/* search tab and Title */}
       {state.updating && <ActivityIndicator
@@ -418,21 +422,22 @@ const Categories: React.FC<any | Props> = ({ navigation}) => {
         }}
         color={COLORS.Blue}
       />}
-      <View style={{ backgroundColor: '#edeff2', }}>
+      <View style={{ backgroundColor: '#edeff2',justifyContent:'center',alignItems:'center', }}>
         <View
           style={{
             height: 45,
             width: '90%',
             borderWidth: 0.5,
             alignSelf: 'center',
-            margin: 10,
+            // margin: 10,
             // marginBottom: 30,
             borderColor: COLORS.Blue,
             flexDirection: 'row',
             borderRadius: 5,
             justifyContent: 'center',
+            alignItems:'center',
             backgroundColor: COLORS.White,
-
+            
           }}
         >
           <Image

@@ -79,7 +79,7 @@ const Login = ({ navigation }) => {
     }
   }, [userType]);
   const onModalClose = (data) => {
-    printSucess(data)
+    // printSucess(data)
     setSecret(data)
     setShowModal(false);
   };

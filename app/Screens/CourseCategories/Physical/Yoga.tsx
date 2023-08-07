@@ -23,6 +23,17 @@ import { FlatList } from 'react-native-gesture-handler';
 import { DIMENSIONS } from '../../../Constants/Constants';
 import { IMAGES } from '../../../Assets/Images/Images';
 import { VideoLists } from '../../../Components/VideoLists';
+import { getVideoByCategory } from '../../Categories/CategoriesFunc';
+
+// getVideoByCategory=()=>{
+
+// }
+
+const getImages:any=()=>{
+
+
+
+}
 
 
 function Yoga(navigation: any): JSX.Element {
@@ -32,10 +43,17 @@ function Yoga(navigation: any): JSX.Element {
                 flex: 1,
             }}>
             <ScrollView
-                style={{ flex: 1,  }}>
-                <VideoLists ObjectData={[1,2,3,4,]}
-                screenName={'Profile'} title={"Zumba Classes"} 
+            
+                style={{ flex: 1,height:'100%' }}>
+                <VideoLists ObjectData={[1]}
+                screenName={'Profile'} title={"Yoga"} 
+                height={(DIMENSIONS.HEIGHT/2) *Math.floor(Math.random() * 10)}
                 navigation={navigation}/>
+                 <VideoLists ObjectData={[1]}
+                screenName={'Profile'} title={"Yoga"} 
+                height={(DIMENSIONS.HEIGHT/3) *Math.floor(Math.random() * 10)}
+                navigation={navigation}/>
+                
             </ScrollView>
         </SafeAreaView>
     )

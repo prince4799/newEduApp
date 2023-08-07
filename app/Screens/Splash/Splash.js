@@ -31,7 +31,7 @@ const Splash = ({ navigation }) => {
     CONSTANTS.stored.USER_TYPE = $userType.value
     CONSTANTS.stored.SECRET_KEY = $secretKey.value
     CONSTANTS.stored.SECRET_VALUE = $secretVal.value
-    extFun.printLog('\u001b[36m', '........', CONSTANTS.stored)
+    // extFun.printLog('\u001b[36m', '........', CONSTANTS.stored)
   })()
 
   useEffect(() => {
@@ -50,16 +50,23 @@ const Splash = ({ navigation }) => {
       (val) => {
         if (val.status === 'false' && route.name === 'Splash') {
           navigation.replace('SignUpRegisterDrawer')
-        } else {
+          return
+        } 
+        else {
           extFun.retrieveData('@userType', MODULE_NAME).then((screen) => {
             if (route.name === 'Splash' && screen.value == 'Public') {
               navigation.replace('BottomTabUser')
               extFun.printLog("BottomTabUser", screen.value)
+              return
             }
-            else {
+            // Admin
+            if (route.name === 'Splash' && screen.value == 'Admin')  {
               navigation.replace('BottomTabAdmin')
-              extFun.printLog("BottomTabAdmin", screen)
+              extFun.printLog("BottomTabAdmin", screen.value)
+              return
+
             }
+            extFun.alert("Oops! Unexpected Error occured.")
           })
         }
 

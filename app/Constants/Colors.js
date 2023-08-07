@@ -10,6 +10,9 @@ export const COLORS = {
   "LightBlue": '#9fb2f5',
   "DarkBlue": '#102a8f',
   "White": '#fff',
+  "greyBoder":'#d3d3d3',
+  "shadow":'#fff',
+  "darkBg":'#102a8f',
   // "sample":
 }
 

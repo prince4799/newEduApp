@@ -185,9 +185,7 @@ const AdminDashboard = ({ navigation }) => {
                             style={{ ...styles.buttonIcon, left: CONSTANTS.DIMENSIONS.WIDTH * 3.5 }} />
                     </TouchableOpacity>
                 </Animated.View>
-
             </View>
-
         </SafeAreaView>
 
     )
@@ -242,7 +240,9 @@ const styles = StyleSheet.create({
     cardtext: {
         fontSize: 18,
         textAlign: 'center',
-        color: COLORS.White
+        color: COLORS.White,
+        fontWeight:'700'
+
     }
 })
 

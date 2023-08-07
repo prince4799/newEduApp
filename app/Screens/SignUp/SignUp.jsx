@@ -43,7 +43,7 @@ const SignUp = (props) => {
   const [secureText, setSecureText] = useState < boolean > (false)
   const [username, setUsername] = useState(String)
   const [password, setPassword] = useState(String)
-  const [userType, setUserType] = useState('User')
+  const [userType, setUserType] = useState('Public')
   const { state, dispatch, signUpUser } = useSignup();
   const [showModal, setShowModal] = useState(false)
   const [secret, setSecret] = useState < Object > ('')
@@ -53,14 +53,15 @@ const SignUp = (props) => {
   const prevCountRef = useRef();
   const onModalClose = (data) => {
     // printSucess(data)
-    // setSecret(data)
+    setSecret(data)
     setShowModal(false);
   };
   useEffect(() => {
+    printInfo("userType",userType)
     if (userType === 'Admin') {
       setShowModal(true);
     }
-    if (userType === 'User') {
+    if (userType === 'Public') {
       setShowModal(false);
     }
   }, [userType]);
@@ -97,7 +98,7 @@ const SignUp = (props) => {
   };
 
   const SiginUpValidation = async ({ password, email, phone, username, userType }) => {
-    printSucess("SiginUpValidation", password, email, phone, username, userType)
+    // printSucess("SiginUpValidation", password, email, phone, username, userType)
     if (!password || !email || !phone || !username) {
       alert("None of the fields can be empty")
       radio = true
@@ -125,7 +126,7 @@ const SignUp = (props) => {
       signUpUser(user);
     }
 
-    if (userType !== '' && userType === 'User') {
+    if (userType !== '' && userType === 'Public') {
       const user = { password, email, phone, username, userType }
       signUpUser(user);
     }
@@ -166,7 +167,7 @@ const SignUp = (props) => {
                     autoFocus={true}
                     onChangeText={(text) => setUsername(text)}
                     placeholderTextColor={COLORS.White}
-                    placeholder='Enter User Name' />
+                    placeholder='Enter Username' />
                 </View>
 
                 {/* Phone */}
@@ -217,7 +218,12 @@ const SignUp = (props) => {
                   alignItems: 'center',
                 }}>
                   <TouchableOpacity style={{ backgroundColor: 'transparent', flexDirection: 'row', marginHorizontal: 12 }}
-                    onPress={() => setUserType('Admin')}
+                    onPress={() => setUserType((val)=>{
+                      if(userType !=='Admin')
+                        return 'Admin'
+                        else 
+                        return 'Public'
+                    })}
                   >
                     {userType === 'Admin' ? <Icon name="check-box" size={20} color={COLORS.Links} /> :
                       <Icon name="check-box-outline-blank" size={20} color={COLORS.Links} />}

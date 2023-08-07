@@ -8,9 +8,14 @@ import { useNetInfo } from '@react-native-community/netinfo';
 import AnimatedView from '../../Components/AnimatedView';
 import { printError, printSucess, retrieveData } from '../../Assets/Utils/ExtenFunc';
 import AsyncStorage from '@react-native-community/async-storage';
+import { NavigationProp ,ParamListBase} from '@react-navigation/native';
 
+// Define the type for the 'navigation' prop
+type ProfileProps = {
+  navigation: NavigationProp<ParamListBase>;
+};
 
-const Profile = ({ navigation }) => {
+const Profile: React.FC<ProfileProps> = ({ navigation }) => {
     const netInfo = useNetInfo();
     const net = netInfo.isConnected;
     const [values, setValues] = useState<object>({})
@@ -27,7 +32,7 @@ const Profile = ({ navigation }) => {
                 userType: (userType as { value: string }).value,
                 email: (email as { value: string }).value
             })
-            printSucess("values", values); // Handle the result here
+            // printSucess("values", values); // Handle the result here
         } catch (error) {
             printError("Home", error); // Handle any errors here
         }
@@ -142,7 +147,7 @@ const Profile = ({ navigation }) => {
                             style={styles.buttonIcon} />
                         <Text style={styles.buttonText}>Payment History </Text>
                         <Image source={IMAGES.rightarrow}
-                            style={{ ...styles.buttonIcon, left: DIMENSIONS.WIDTH * 4 }} />
+                            style={{ ...styles.buttonIcon, left: DIMENSIONS.WIDTH * 3.5 }} />
                     </TouchableOpacity>
                 </Animated.View>
                 <Animated.View
@@ -154,7 +159,7 @@ const Profile = ({ navigation }) => {
                             style={styles.buttonIcon} />
                         <Text style={styles.buttonText}>About Us!</Text>
                         <Image source={IMAGES.rightarrow}
-                            style={{ ...styles.buttonIcon, left: DIMENSIONS.WIDTH * 4 }} />
+                            style={{ ...styles.buttonIcon, left: DIMENSIONS.WIDTH * 3.5 }} />
                     </TouchableOpacity>
                 </Animated.View>
                 <Animated.View
@@ -166,7 +171,7 @@ const Profile = ({ navigation }) => {
                             style={styles.buttonIcon} />
                         <Text style={styles.buttonText}>Logout</Text>
                         <Image source={IMAGES.rightarrow}
-                            style={{ ...styles.buttonIcon, left: DIMENSIONS.WIDTH * 4 }} />
+                            style={{ ...styles.buttonIcon, left: DIMENSIONS.WIDTH * 3.5 }} />
                     </TouchableOpacity>
                 </Animated.View>
 
@@ -186,13 +191,14 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         borderRadius: 10,
         elevation: 5,
+        paddingHorizontal: 10,
         marginVertical: 5,
     },
     buttonIcon: {
         height: DIMENSIONS.HEIGHT / 3,
         width: DIMENSIONS.HEIGHT / 3,
         alignSelf: 'center',
-        left: 5,
+        // left: 5,
         tintColor:COLORS.Blue,
     },
     buttonText: {

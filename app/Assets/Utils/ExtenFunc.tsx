@@ -77,7 +77,7 @@ interface Params {
   headers?: Record<string, string>;
   secret?: string;
 }
-
+retrieveData('@token', 'splash').then(res=> {CONSTANTS.stored.TOKEN= res.value})
 export const apiCaling = async (params: Params): Promise<any> => {
   const { url, body, method, headers = {}, secret } = params;
 
