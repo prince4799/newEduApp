@@ -13,13 +13,15 @@ retrieveData('@username', 'historyContex').then(res=> {CONSTANTS.stored.USER_NAM
 
 export const HistoryProvider=({children})=>{
 
+  // printLog("CONSTANTS.stored.USER_NAME",CONSTANTS.stored)
+
     const [state,dispatch]=useReducer(historyReducer,initialState)
 
     const loadHistory=async (userid) => {
         
         dispatch(historyRequest());
 
-        var options={
+        var list_options={
           headers:{
             "Content-Type": "application/json",
           },
@@ -30,21 +32,41 @@ export const HistoryProvider=({children})=>{
             url:"history/show/lastactivities",
             secret: 'Yes',
           }
-
-          try {
-            // printLog('HistoryProvider', options);
-            
-            const response = await apiCaling(options);
-            if (response.statuscode == 200) {
-              console.log("HistoryProvider reponse", response)
-              dispatch(historySuccess(response));
-            } else {
-              dispatch(historyFailure(response));
-            }
-          } catch (error) {
-            printError('HistoryProvider', error);
+        var category_options={
+            headers:{
+              "Content-Type": "application/json",
+            },
+              method: 'GET',
+              url:"category/getlist",
+              secret: 'Yes',
           }
-      
+
+            printLog("list_options",list_options)
+            try {
+              const [listResponse, categoryResponse] = await Promise.all([
+                apiCaling(list_options),
+                apiCaling(category_options),
+              ]);
+        
+              if (listResponse.statuscode === 200 && categoryResponse.statuscode === 200) {
+                const data = {
+                  List: listResponse,
+                  Category: categoryResponse,
+                };
+                dispatch(historySuccess(data));
+                CONSTANTS.stored.UPDATED=false
+              } else {
+                dispatch(historyFailure('API call failed'));
+                CONSTANTS.stored.UPDATED=false
+
+              }
+            } catch (error) {
+              dispatch(historyFailure(error.message || 'Unknown error occurred'));
+              CONSTANTS.stored.UPDATED=false
+
+            }
+          
+    
     };
     const value = {
         state,

@@ -30,6 +30,7 @@ export const stored={
     EMAIL:'',
     CONTACT:'',
     USER_TYPE:'',
+    UPDATED:false
 }
 
 

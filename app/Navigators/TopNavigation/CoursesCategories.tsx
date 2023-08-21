@@ -3,7 +3,7 @@ import React, { useState } from 'react';
 
 import { createMaterialTopTabNavigator } from '@react-navigation/material-top-tabs';
 import UPSC from '../../Screens/CourseCategories/Education/UPSC'
-import Yoga from '../../Screens/CourseCategories/Physical/Yoga';
+import Physical from '../../Screens/CourseCategories/Physical/Physcal';
 import { COLORS } from '../../Constants/Colors';
 import { strings } from '../../Constants/Strings';
 
@@ -58,7 +58,7 @@ export default function CoursesCategories() {
       >
         <Tab.Screen
           headerShown={false}
-          name={strings.Physical} component={Yoga} />
+          name={strings.Physical} component={Physical} />
        
         <Tab.Screen
           headerShown={false}

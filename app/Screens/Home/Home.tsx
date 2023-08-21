@@ -21,14 +21,23 @@ import { LoginProvider, useLogin } from '../../Statemanagement/Login/LoginContex
 import { SignupProvider, useSignup } from '../../Statemanagement/Signup/SignupContext';
 import { HistoryProvider, useLoadHistory } from '../../Statemanagement/Load/History/HistoryContext';
 import base64js from 'base64-js';
+import { useIsFocused } from '@react-navigation/native'; // Import the useIsFocused hook
+import { strings } from '../../Constants/Strings';
 
-const HomeScreen = () => {
+
+const HomeScreen = (navigation: any) => {
   const [search, setSearch] = useState('')
   const scrollX = useRef(new Animated.Value(0)).current
   const netInfo = useNetInfo();
   const net = netInfo.isConnected;
   const [username, setUsername] = useState<string>('')
   const { state, dispatch, loadHistory } = useLoadHistory();
+  const isFocused = useIsFocused(); // Get the isFocused boolean from the hook
+
+
+  const nav = navigation.navigation;
+  console.log(">>>",nav);
+  
 
   const asyncRetrieve = async () => {
     try {
@@ -41,39 +50,28 @@ const HomeScreen = () => {
         loadHistory()
         return
       }
-
-      // printSucess("token", token);
-      // printSucess("username", username); // Handle the result here
     } catch (error) {
       printError("Home", error); // Handle any errors here
     }
   };
+  // printError("state in Home",state.data.List.details.data[0])
 
-  const thumbnailImg=(data:any)=>{
+  useEffect(() => {
+    asyncRetrieve()
+  }, [isFocused])
+
+  const thumbnailImg = (data: any) => {
     let imagebase64 = data
     const uint8Array = new Uint8Array(imagebase64);
     const newUnit8Array = new Uint8Array(data)
     const base64String = data ? base64js.fromByteArray(uint8Array) : data;
     // const newbase64String = base64js.fromByteArray(newUnit8Array);
     // printSucess(data)
-    return {uri:`data:image/jpeg;base64,${base64String}`}
+    return { uri: `data:image/jpeg;base64,${base64String}` }
   }
 
-  useEffect(() => {
-    asyncRetrieve()
-
-  }, [username])
-
-  useEffect(() => {
-    // if (!state.loading) {
-    //   if (state.data && state.data.details && state.data.details.data)
-    //     // printLog(".....", state.data.details.data)
-
-    // }
-  }, [state])
-
   return (
-    
+
     <View
       style={styles.container}>
       <Image
@@ -170,15 +168,12 @@ const HomeScreen = () => {
           }}
         >100+ Videos available explore them now!</Text>
         <TouchableOpacity
-          // onPress={() => SignInUser({ email, password })}
-          // onPress={()=>firebaseDB.FirebaseDBPush({email,password})}
-          onPress={() => asyncRetrieve()}
 
           style={{
             ...styles.button,
             width: (CONSTANTS.DIMENSIONS.WIDTH) * 5,
           }}>
-          <Text style={styles.buttonText}>Explore ➝</Text>
+          <Text onPress={() => nav.navigate(strings.Chat)} style={styles.buttonText}>Explore ➝</Text>
         </TouchableOpacity>
 
       </ImageBackground>
@@ -189,7 +184,7 @@ const HomeScreen = () => {
         justifyContent: 'space-between',
         width: CONSTANTS.DIMENSIONS.WIDTH * 10,
         backgroundColor: COLORS.DarkBlue,
-        marginTop:'2%',
+        marginTop: '2%',
       }}>
         <Text style={{
           fontSize: 18,
@@ -211,13 +206,13 @@ const HomeScreen = () => {
             width: '100%',
             justifyContent: 'center',
             alignItems: 'center',
-            backgroundColor:COLORS.darkBg,
+            backgroundColor: COLORS.darkBg,
             // flex:1,
           }}>
           <Animated.FlatList
             // entering={FadeInUp}
             showsHorizontalScrollIndicator={false}
-            data={state.data && state.data.details ? state.data.details.data : []}
+            data={state.data && state.data.List.details ? state.data.List.details.data : []}
             horizontal
             renderItem={({ item }) =>
               <TouchableOpacity
@@ -231,9 +226,9 @@ const HomeScreen = () => {
                   borderBottomRightRadius: CONSTANTS.DIMENSIONS.HEIGHT / 2,
                   borderTopRightRadius: CONSTANTS.DIMENSIONS.HEIGHT / 2,
                   padding: 10,
-                  alignSelf:'center',
+                  alignSelf: 'center',
                   // borderWidth:0.4 ,
-                  borderColor:COLORS.greyBoder,
+                  borderColor: COLORS.greyBoder,
                   margin: 10,
                   elevation: 10,
                   shadowColor: COLORS.shadow, // Slightly darker shade for the card shadow
@@ -245,16 +240,16 @@ const HomeScreen = () => {
                   // marginVertical: CONSTANTS.DIMENSIONS.HEIGHT,
                 }}>
                 <View style={{ flexDirection: 'row' }}>
-                    <Image
+                  <Image
                     resizeMode='contain'
                     style={{
-                        height: '95%',
-                        width: '95%',
-                        alignSelf: 'center',
+                      height: '95%',
+                      width: '95%',
+                      alignSelf: 'center',
                     }}
-                    source={ thumbnailImg(item.thumbnail.data) }
-                // source={IMAGES.aboutus}
-                />
+                    source={thumbnailImg(item.thumbnail.data)}
+                  // source={IMAGES.aboutus}
+                  />
                 </View>
                 <Text style={{ color: '#fff', fontSize: CONSTANTS.DIMENSIONS.HEIGHT / 5, fontWeight: 'bold', paddingTop: 5, }}>{item.title}</Text>
                 <View style={{
@@ -271,14 +266,15 @@ const HomeScreen = () => {
         </View>
       }
     </View>
-  )};
+  )
+};
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#FFF',
     alignItems: 'center',
-    
+
   },
 
   button: {
@@ -309,15 +305,15 @@ const card = (width: any, height: any): ViewStyle => ({
 
 })
 
-const Home = (props: any) => {
-  return (
-    <LoginProvider>
-      <HistoryProvider>
-        <HomeScreen {...props} />
-      </HistoryProvider>
-    </LoginProvider>
-  );
-};
-export default Home
+// const Home = (props: any) => {
+//   return (
+//     <LoginProvider>
+//       <HistoryProvider>
+//         <HomeScreen {...props} />
+//       </HistoryProvider> 
+//     </LoginProvider>
+//   );
+// };
+export default HomeScreen
 
 

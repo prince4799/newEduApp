@@ -13,6 +13,8 @@ import Categories from '../../Screens/Categories/Categories';
 import { stored } from '../../Constants/Constants';
 import { COLORS } from '../../Constants/Colors';
 import { VideoPlayer } from '../../Components/VideoPlayer';
+import UserTab from '../BottomNavigation/BottomTab';
+import Chat from '../../Screens/Chat/chat';
 
 const Stack = createStackNavigator();
 
@@ -57,7 +59,7 @@ export default function AppStack() {
           ...revHorizontalAnimation,
         }}
         name={strings.BottomTabUser}
-        component={BottomTab}
+        component={UserTab}
       />
       <Stack.Screen
         options={{
@@ -73,6 +75,13 @@ export default function AppStack() {
         }}
         name={strings.Videoplayer}
         component={VideoPlayer}
+      />
+        <Stack.Screen
+        options={{
+          headerShown: false,
+        }}
+        name={strings.Chat}
+        component={Chat}
       />
 
       <Stack.Screen

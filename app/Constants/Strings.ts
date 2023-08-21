@@ -1,3 +1,5 @@
+import Chat from "../Screens/Chat/chat"
+
 export const strings = {
     AdminManageUsers:"AdminManageUsers",
     BottomTabUser: "BottomTabUser",
@@ -16,6 +18,9 @@ export const strings = {
     Users: "Users",
     VideoList: "VideoList",
     Videoplayer:"Videoplayer",
+    VideoPlayLists:"VideoPlayLists",
+    VideoPlayListsUser:"VideoPlayListsUser",
+    Chat:"Chat"
 }
 
 export const eventsName={

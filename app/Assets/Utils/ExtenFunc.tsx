@@ -81,7 +81,7 @@ retrieveData('@token', 'splash').then(res=> {CONSTANTS.stored.TOKEN= res.value})
 export const apiCaling = async (params: Params): Promise<any> => {
   const { url, body, method, headers = {}, secret } = params;
 
-
+printSucess(params)
   if (secret && !url.includes('login'||'signup')) {
     headers['Authorization'] = `${CONSTANTS.stored.TOKEN}`;
   }

@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react'
 import { View, Text, TouchableOpacity, Image, ImageBackground, Dimensions, StyleSheet, SafeAreaView } from 'react-native'
 import { IMAGES } from '../../Assets/Images/Images';
 import { COLORS } from '../../Constants/Colors';
-import { DIMENSIONS } from '../../Constants/Constants';
+import { DIMENSIONS, stored } from '../../Constants/Constants';
 import Animated, { BounceInLeft, BounceInRight } from 'react-native-reanimated';
 import { useNetInfo } from '@react-native-community/netinfo';
 import AnimatedView from '../../Components/AnimatedView';
@@ -40,6 +40,15 @@ const Profile: React.FC<ProfileProps> = ({ navigation }) => {
     };
     const logout = async () => {
         await AsyncStorage.clear();
+
+            stored.TOKEN=''
+            stored.SECRET_KEY=''
+            stored.SECRET_VALUE=''
+            stored.USER_NAME=''
+            stored.EMAIL=''
+            stored.CONTACT=''
+            stored.USER_TYPE=''
+            stored.UPDATED=false
         navigation.replace('SignUpRegisterDrawer')
     }
 

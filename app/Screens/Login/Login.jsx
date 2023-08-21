@@ -27,6 +27,7 @@ import {
   View,
   Alert,
   Linking,
+  ActivityIndicator,
 } from 'react-native';
 import Animated from "react-native-reanimated";
 
@@ -43,12 +44,14 @@ import { alert, printError, printInfo, printLog, printSucess, storeData } from '
 import BottomTab from '../../Navigators/BottomNavigation/BottomTab';
 import SignupWrapper from '../SignUp/SignUp';
 import { useNetInfo } from '@react-native-community/netinfo';
+import * as CONSTANTS from '../../Constants/Constants'
+
 const Login = ({ navigation }) => {
   const net = useNetInfo().isConnected;
   const { state, dispatch, loginUser } = useLogin();
   const { height, width, scale, fontScale } = useWindowDimensions()
   const portrait = (height / 10) * 6
-  const landscape = height 
+  const landscape = height
   const [id, setId] = useState('')
   const [password, setPassword] = useState('')
   const [checkValid, setCheckValid] = useState(false)
@@ -60,17 +63,18 @@ const Login = ({ navigation }) => {
   useEffect(() => {
     if (state && state.error && state !== initialState && checkValid) {
       setShowModal(true)
-      if (state.error !== undefined || state.error !== '' || state.error !== {} || state.error !== null) 
-      alert(state.error.message)
+      if (state.error !== undefined || state.error !== '' || state.error !== {} || state.error !== null)
+        alert(state.error.message)
       return;
     }
     if (state.user && state && state !== initialState && checkValid) {
-      if (state.user !== undefined || state.user !== '' || state.user !== {} || state.user !== null) 
-      alert(state.user.message)
+      if (state.user !== undefined || state.user !== '' || state.user !== {} || state.user !== null)
+        alert(state.user.message)
     }
   }, [state])
 
   useEffect(() => {
+    CONSTANTS.stored.USER_TYPE = userType
     if (userType === 'Admin') {
       setShowModal(true);
     }
@@ -95,7 +99,7 @@ const Login = ({ navigation }) => {
     }
   }, [state])
 
-  const storingData = async () => {
+  /*const storingData = async () => {
     try {
       let {contact,email,username,screen,}=state.user.data
       const $token = await storeData('@token','' +state.user.token,"Login")
@@ -113,19 +117,51 @@ const Login = ({ navigation }) => {
     } catch (error) {
       console.error(error); // Handle any errors here
     }
+  };*/
+  const storingData = async () => {
+    try {
+      const { contact, email, username, screen } = state.user.data;
+      const storagePromises = [
+        storeData('@token', '' + state.user.token, 'Login'),
+        storeData('@username', '' + username, 'Login'),
+        storeData('@email', '' + email, 'Login'),
+        storeData('@contact', '' + contact, 'Login'),
+        storeData('@userType', '' + screen, 'Login'),
+        storeData('@isLoggedIn', '' + state.user.status, 'Login')
+      ];
+
+      if (Object.keys(secret).length > 0 && secret.secretKey && secret.secretValue) {
+        storagePromises.push(
+          storeData('@secretKey', '' + secret.secretKey, 'Login'),
+          storeData('@secretVal', '' + secret.secretValue, 'Login')
+        );
+      }
+
+      await Promise.all(storagePromises);
+      CONSTANTS.stored.TOKEN = state.user.token
+      CONSTANTS.stored.USER_NAME = username
+      CONSTANTS.stored.EMAIL = email
+      CONSTANTS.stored.CONTACT = contact
+      CONSTANTS.stored.SECRET_KEY = secret.secretKey
+      CONSTANTS.stored.SECRET_VALUE = secret.secretVal
+    } catch (error) {
+      console.error(error);
+      // Handle any errors here
+    }
   };
+
 
   const loginValidation = async ({ id, password, userType }) => {
     if (!id || !password || !userType) {
       alert('Enter the Credentials!')
       return;
     }
-    if (NET_STATUS == false|| net == false) {
+    if (NET_STATUS == false || net == false) {
       alert('Internet not available!')
       return;
     }
     if (userType == 'User') {
-      const user = { id, password }
+      const user = { id, password ,userType}
       loginUser(user)
       // const result = await storeData('@isLoggedIn', state.user.status.toString(), module='Login.js');
       // console.log('result',result)
@@ -152,25 +188,27 @@ const Login = ({ navigation }) => {
           left: '45%',
           height: '5%',
           width: '5%',
-          backgroundColor: COLORS.White
-        }} /> : null}
-      <ImageBackground style={{  ...styles.form(height, width),height: height, width: width, justifyContent: 'center', alignItems: 'center', }} resizeMode='cover' source={require("../../Assets/Images/gradient_bg.png")} >
+          zIndex:999,
+        }} >
+           <ActivityIndicator size="large"  color={COLORS.DarkBlue}/>
+        </View> : null}
+      <ImageBackground style={{ ...styles.form(height, width), height: height, width: width, justifyContent: 'center', alignItems: 'center', }} resizeMode='cover' source={require("../../Assets/Images/gradient_bg.png")} >
         <ImageBackground style={{ ...styles.form(height, width), }} source={require("../../Assets/Images/half_bg.png")} >
           <View style={{ ...styles.form(height, width), }}>
             <ScrollView style={{}}  >
               {/* LOGO  */}
-               <View style={{ alignSelf: 'center'}}>
-                <Text style={{ fontWeight: 'bold', fontSize: 24, top: 10, color: COLORS.DarkBlue ,textAlign:'center'}}>LOGIN</Text>
+              <View style={{ alignSelf: 'center' }}>
+                <Text style={{ fontWeight: 'bold', fontSize: 24, top: 10, color: COLORS.DarkBlue, textAlign: 'center' }}>LOGIN</Text>
                 <View style={{ height: '10%', width: '25%', backgroundColor: COLORS.White, top: 0, margin: 10 }} />
                 <Text>APP LOGO</Text>
               </View>
-              <KeyboardAvoidingView style={{ 
+              <KeyboardAvoidingView style={{
                 height: height > width ? portrait : landscape,
-                 width: '90%',
-                  alignSelf: 'center', 
-                  marginBottom: 80,
-                  }} behavior='padding' >
-                <View style={{ ...styles.inputContainer ,alignSelf: "stretch",}} >
+                width: '90%',
+                alignSelf: 'center',
+                marginBottom: 80,
+              }} behavior='padding' >
+                <View style={{ ...styles.inputContainer, alignSelf: "stretch", }} >
                   <Image style={styles.inputImg} source={require('../../Assets/Images/mail.png')} />
                   <TextInput style={styles.inputs}
                     value={id}
@@ -179,7 +217,7 @@ const Login = ({ navigation }) => {
                     placeholderTextColor={COLORS.White}
                     placeholder='Mail/Username' />
                 </View>
-                <View style={{...styles.inputContainer,alignSelf: "stretch",}}>
+                <View style={{ ...styles.inputContainer, alignSelf: "stretch", }}>
                   <Image style={styles.inputImg} source={require('../../Assets/Images/padlock.png')} />
                   <TextInput style={styles.inputs}
                     value={password}

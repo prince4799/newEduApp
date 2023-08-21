@@ -87,10 +87,11 @@ const AdminManageUsers = ({ }) => {
                 },
                 secret: token.value + ''
             }
+            extFun.printLog('\u001b[34m', tokenPromise)
+
             try {
                 setLoading(true)
                 const response = await extFun.apiCaling(apiParams)
-                // extFun.printLog('\u001b[34m', response)
                 extFun.alert(response.message)
                 if (response.status == "true" && response.users) {
                     setList(response.users)

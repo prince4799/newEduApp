@@ -8,7 +8,10 @@ import Home from "../../Screens/Home/Home"
 import Profile from '../../Screens/Profile/Profie';
 import Courses from '../../Screens/CourseCategories/Courses';
 import { strings } from '../../Constants/Strings';
-
+import { LoginProvider, useLogin } from '../../Statemanagement/Login/LoginContext';
+import { SignupProvider, useSignup } from '../../Statemanagement/Signup/SignupContext';
+import { HistoryProvider, useLoadHistory } from '../../Statemanagement/Load/History/HistoryContext';
+import { VideoPlayLists } from '../../Components/VideoLists';
 const Tab = createBottomTabNavigator();
 
 
@@ -106,10 +109,25 @@ function BottomTab() {
       <Tab.Screen name={strings.Home} component={Home} />
       <Tab.Screen name={strings.Profile} component={Profile} />
       <Tab.Screen name={strings.Courses} component={Courses} />
+      <Tab.Screen name={strings.VideoPlayLists} component={VideoPlayLists} />
+
+      {/* VideoPlayLists */}
     </Tab.Navigator>
   );
 }
-export default BottomTab;
+// export default BottomTab;
+
+
+const UserTab = (props: any) => {
+  return (
+    <LoginProvider>
+      <HistoryProvider>
+        <BottomTab {...props} />
+      </HistoryProvider> 
+    </LoginProvider>
+  );
+};
+export default UserTab
 
 const styles = StyleSheet.create({
   buttonTextStyle: {

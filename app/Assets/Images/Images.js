@@ -37,5 +37,11 @@ export const IMAGES = {
     hello:require('./helloWorld.json'),
     camera:require('./camera.png'),
     storage:require('./storage.png'),
-    thumbnail: require('./thumbnail.png')
+    thumbnail: require('./thumbnail.png'),
+    cards:{
+        "yoga":require('./yoga-240x400.png'),
+        "meditation":require('./yoga-dhyan-240X400.png'),
+        "zumba":require('./zumba-240X400.png'),
+        "others": require('./others-240X400.png')//others-240X400.png
+    }
 }

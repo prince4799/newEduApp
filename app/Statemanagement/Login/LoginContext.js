@@ -42,6 +42,8 @@ export const LoginProvider = ({ children }) => {
     if (user.userType === 'Admin') {
       options.Admin.headers[user.secret.secretKey] = user.secret.secretValue;
     }
+    console.log("options", options)
+
 
     try {
       const response = await apiCaling(user.userType == 'Admin' ? options.Admin : options.User);

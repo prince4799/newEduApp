@@ -39,7 +39,7 @@ const AdminDashboard = ({ navigation }) => {
         }
     };
 
-    (async function () {
+    /*(async function () {
 
         const $token = await extFun.retrieveData('@token', 'splash')
         const $username = await extFun.retrieveData('@username', 'splash')
@@ -57,6 +57,32 @@ const AdminDashboard = ({ navigation }) => {
         CONSTANTS.stored.SECRET_VALUE = $secretVal.value
         // extFun.printLog('\u001b[36m', '........', CONSTANTS.stored)
     })()
+*/
+
+    (async function () {
+        try {
+            const keys = [
+                '@token', '@username', '@email',
+                '@contact', '@userType', '@secretKey', '@secretVal'
+            ];
+
+            const promises = keys.map(key => extFun.retrieveData(key, 'splash'));
+
+            const results = await Promise.all(promises);
+
+            results.forEach(result => {
+                const { key, value } = result;
+                if (key in CONSTANTS.stored) {
+                    CONSTANTS.stored[key] = value;
+                }
+            });
+
+            extFun.printLog('\u001b[36m', '........', CONSTANTS.stored);
+
+        } catch (error) {
+            console.error(error); // Handle any errors here
+        }
+    })();
 
     useEffect(() => {
         const retrieveData = async () => {
@@ -241,7 +267,7 @@ const styles = StyleSheet.create({
         fontSize: 18,
         textAlign: 'center',
         color: COLORS.White,
-        fontWeight:'700'
+        fontWeight: '700'
 
     }
 })

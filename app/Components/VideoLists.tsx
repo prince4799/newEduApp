@@ -24,7 +24,7 @@ import { SafeAreaView, SafeAreaInsetsContext } from 'react-native-safe-area-cont
 import { VideoDetailsView } from './DetailsView';
 import MyModal from './MyModal';
 import { alert, apiCaling, printError, printLog, printSucess, retrieveData, storeData } from '../Assets/Utils/ExtenFunc';
-import { eventsName } from '../Constants/Strings';
+import { eventsName, strings } from '../Constants/Strings';
 import { uploadCategories } from '../Screens/Categories/CategoriesFunc';
 import { useRoute } from '@react-navigation/native';
 // import { uploadCategories } from '../Screens/Categories/Categories';
@@ -34,46 +34,50 @@ export const VideoLists: React.FC<any> = ({
     ObjectData,
     screenName,
     title,
-    navigation
+    navigation,
+    index,
 }) => {
+    const COLOR = ['#f099ca', '#99b0f0', '#bf99f0']
+    const new_title=title.toLowerCase()
+    printLog("navigation",)
+
     return (
-        <SafeAreaView style={{ flex: 1 }}>
-            <ImageBackground
-                source={IMAGES.gradientbg}
-                style={styles.flatlistContainer}>
+        <TouchableOpacity
+        onPress={()=>navigation.navigation.navigate(strings.VideoPlayLists)}
+        style={{
+            height: CONSTANTS.DIMENSIONS.WIDTH * 5.5,
+            width: CONSTANTS.DIMENSIONS.WIDTH * 9.7,
+            borderRadius: 10,
+            elevation: 2,
+            alignSelf: 'center',
+            margin: 10,
+        }}>
+             {/* <Image
+                    resizeMode='contain'
+                    source={IMAGES.cards[new_title]}
+                    style={{ height: '100%', width: '100%' }}
+                />  */}
+
+            {IMAGES.cards.hasOwnProperty(new_title)?
+                <Image
+                    resizeMode='contain'
+                    source={IMAGES.cards[new_title]}
+                    style={{ height: '100%', width: '100%' }}
+                /> :
                 <View style={{
-                    height: CONSTANTS.DIMENSIONS.HEIGHT / 2,
-                    alignItems: 'center',
-                    flexDirection: 'row',
-                    justifyContent: 'space-between',
-                    // backgroundColor:'red',
-                    width: '100%'
+                    height: CONSTANTS.DIMENSIONS.WIDTH * 5.5,
+                    width: CONSTANTS.DIMENSIONS.WIDTH * 9.7,                    
                 }}>
-                    <Text style={styles.flatlisttitle}>{title}</Text>
-                    <Text
-                        onPress={() => navigation.navigate(screenName)}
-                        style={{
-                            fontSize: 18,
-                            fontWeight: 'bold',
-                            color: COLORS.White,
-                            alignSelf: 'flex-start',
-                            textAlignVertical: 'center',
-                            marginTop: 10,
-                            textDecorationLine: 'underline',
 
-                        }}>View All{`\n`}</Text>
+<Image
+                    resizeMode='contain'
+                    source={IMAGES.cards['others']}
+                    style={{ height: '100%', width: '100%' }}
+                /> 
+
                 </View>
-
-                <FlatList
-                    data={ObjectData}
-                    horizontal
-                    renderItem={({ item }) =>
-                        <View
-                            style={styles.flatlistcard}>
-                        </View>
-                    } />
-            </ImageBackground>
-        </SafeAreaView>
+            }
+        </TouchableOpacity>
     )
 };
 
@@ -90,12 +94,12 @@ UIManager.setLayoutAnimationEnabledExperimental &&
 
 
 export const VideoPlayLists: React.FC<any | Props> = ({
-    
+
     screenName,
     title,
     navigation,
-    SecretKey = '1',
-    SecretPassword = '1'
+    SecretKey,
+    SecretPassword
 }) => {
     let secretValPromise = ''
     let secretKeyPromise = ''
@@ -105,10 +109,10 @@ export const VideoPlayLists: React.FC<any | Props> = ({
     const [loading, setLoading] = useState<boolean>(false)
     const [uploading, setUploading] = useState<boolean>(false)
     const [expandedIndex, setExpandedIndex] = useState(null);
-
-    const route=useRoute()
-    if(route.params){
-        var videoByCat=route.params.ObjectData
+    printLog("CONSTANTS.stored.USER_TYPE",CONSTANTS.stored.USER_TYPE)
+    const route = useRoute()
+    if (route.params) {
+        var videoByCat = route.params.ObjectData
     }
     interface ModalClose {
         data?: any
@@ -260,7 +264,8 @@ export const VideoPlayLists: React.FC<any | Props> = ({
     }
 
     useEffect(() => {
-        if (secretKeyPromise !== undefined && secretValPromise !== undefined) {
+        printLog("secretKeyPromise",secretKeyPromise)
+        if (secretKeyPromise.value !== undefined && secretValPromise.value !== undefined) {
             setShowListHeader(true);
         } else {
             setShowListHeader(false);
@@ -269,7 +274,7 @@ export const VideoPlayLists: React.FC<any | Props> = ({
         if (videoByCat == undefined) {
             !list.length ? listLoad() : null
         }
-        else{
+        else {
             setList(videoByCat.details.contents)
         }
     }, [secretKeyPromise, secretValPromise]);
@@ -277,7 +282,7 @@ export const VideoPlayLists: React.FC<any | Props> = ({
     useEffect(() => {
         asyncRetrieve()
     }, [secretKeyPromise, secretValPromise])
-// console.log("list",list)
+    // console.log("list",list)
     return (
         <SafeAreaView style={{ flex: 1 }}>
             <View style={{ width: '100%', flex: 1 }}>
@@ -311,7 +316,7 @@ export const VideoPlayLists: React.FC<any | Props> = ({
                             color={COLORS.Blue} />
                     </View>
                 </Modal>
-                {showListHeader ?
+                {CONSTANTS.stored.USER_TYPE== 'Admin' ?
                     < TouchableOpacity
                         onPress={() => {
                             // printLog('>>>>>>>>>>>>>..', showModal)
@@ -378,6 +383,9 @@ export const VideoPlayLists: React.FC<any | Props> = ({
         </SafeAreaView >
     )
 }
+
+
+
 
 const styles = StyleSheet.create({
     container: {

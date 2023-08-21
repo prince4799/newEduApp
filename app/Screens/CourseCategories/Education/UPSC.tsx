@@ -87,11 +87,11 @@ function UPSC(): JSX.Element {
                     />
                 </ImageBackground> */}
 
-                <VideoLists
+                {/* <VideoLists
                 ObjectData={[1,2,3]}
                 title={"History"}
                 screenName={"UPSC"}
-                />
+                /> */}
 
 
             </ScrollView>

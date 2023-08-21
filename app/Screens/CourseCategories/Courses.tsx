@@ -22,7 +22,7 @@ import { COLORS } from '../../Constants/Colors';
 import { IMAGES } from '../../Assets/Images/Images';
 import { DIMENSIONS } from '../../Constants/Constants';
 import UPSC from './Education/UPSC';
-import Yoga from './Physical/Yoga';
+import Yoga from './Physical/Physcal';
 import CoursesCategories from '../../Navigators/TopNavigation/CoursesCategories';
 import AnimatedView from '../../Components/AnimatedView';
 import { useNetInfo } from '@react-native-community/netinfo';

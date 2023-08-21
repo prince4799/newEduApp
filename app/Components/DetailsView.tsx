@@ -27,7 +27,7 @@ import Animated, {
     Value,
 } from "react-native-reanimated";
 import { COLORS } from '../Constants/Colors';
-import { alert, apiCaling, printError, printLog } from '../Assets/Utils/ExtenFunc';
+import { alert, apiCaling, printError, printLog, printSucess } from '../Assets/Utils/ExtenFunc';
 // import { SharedValue } from "react-native-reanimated";
 const { UIManager } = NativeModules;
 
@@ -324,10 +324,45 @@ export const VideoDetailsView: React.FC<VideoDetailsViewProps> = ({
             onToggleDetails(index); // Pass the index of the card being expanded
         }
     };
+// printLog("CONSTANTS",stored)
 
-    useEffect(() => {
+const updateUserHistory=async(data:object)=>{
+
+    let historyUpdateOptions={
+        url: 'history/update/lastactivities',
+        method: "PUT",
+        secret: stored.TOKEN,
+        headers: {"Content-Type": "application/json"},
+        body: {
+            "userid":stored.USER_NAME,
+            "value":data
+        }        
+    }
+    try {
+
+        let res = await apiCaling(historyUpdateOptions)
+        alert(res.message)
+        printSucess(res)
+        if (res.status == true) {
+            // setLoading(false)
+        }
+        if (res.message.includes('successfully')) {
+            // setList(prevList => prevList.filter((_, i) => i !== index));
+        }
+        return true
+    } catch (err:any) {
+        printError("error in updating videos history", err)
+        alert(err.message)
+        return false
+    }
+}
+
+useEffect(() => {
+        // printLog("secretKeyID",secretKeyID)
         setShowDetails(!!expanded);
-    }, [expanded]);    return (
+    }, [expanded]);   
+
+    return (
         <View
             style={{
                 ...styles2.videoList,
@@ -339,8 +374,9 @@ export const VideoDetailsView: React.FC<VideoDetailsViewProps> = ({
             {/* Thumbnail thumbnail.data */}
             <TouchableOpacity
                 onPress={() => {
-                    console.log("data.thumbnail.", data.videolink);
-                    navigation?.navigate(strings.Videoplayer)
+                    // console.log("data.thumbnail.", data);
+                    // navigation?.navigate(strings.Videoplayer)
+                    updateUserHistory(data)
                 }}
                 style={{
                     justifyContent: 'center',
@@ -366,13 +402,14 @@ export const VideoDetailsView: React.FC<VideoDetailsViewProps> = ({
             </View>
             {/* BUTTONS */}
             {
-                secretKeyID != undefined && secretPassword != undefined && showDetails ?
+                stored.USER_TYPE== 'Admin'?
                     <View>
                         <View style={{
                             flexDirection: 'row',
                             justifyContent: 'space-between',
                             alignItems: 'center',
                             padding: 15,
+                            // backgroundColor:'red'
                         }}>
                             <TouchableOpacity
                                 style={{
@@ -425,7 +462,7 @@ export const VideoDetailsView: React.FC<VideoDetailsViewProps> = ({
                     </View> : null
             }
             {/* expand button */}
-            {secretKeyID != undefined && secretPassword != undefined ? <TouchableOpacity
+            { stored.USER_TYPE== 'Admin'? <TouchableOpacity
                 onPress={() => { setShowDetails(!showDetails); LayoutAnimation.easeInEaseOut();handleToggleDetails() }}
                 style={{
                     height: 40,
